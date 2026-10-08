@@ -10,6 +10,6 @@
 *.yml text eol=lf
 *.yaml text eol=lf
 
-# Reviewed catalog and template snapshots are hashed as exact bytes, including line endings.
-.agents/skills/** -text
-templates/** -text
+# Reviewed markdown preserves its accepted hard breaks and final blank lines as exact bytes.
+.agents/skills/** -text whitespace=cr-at-eol,-blank-at-eol,-blank-at-eof
+templates/** -text whitespace=cr-at-eol
