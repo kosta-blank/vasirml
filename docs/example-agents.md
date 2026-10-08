@@ -1,78 +1,96 @@
-# Example Generated Root Contract
+# Example project contract
 
-Use this page when you want a filled example to adapt, not just the source operating-contract template.
+The root contract defines shared working rules, while a project supplies its purpose, local constraints, and routing. The canonical laws live in [shared-contract.md](../templates/agents/shared-contract.md). [AGENTS.md](../templates/agents/AGENTS.md) and [CLAUDE.md](../templates/agents/CLAUDE.md) are generated from that source, with distinct consumer adapters and matching shared laws.
 
-For the fastest starting point, run `vasir agents sync`. It infers the profile, renders the current `AGENTS.md` and `CLAUDE.md` templates, fills purpose/routing from local repo context, injects `AGENTS__non-obvious.md` into both generated files, and validates the generated `AGENTS.md` result. Use `vasir agents sync --profile frontend|backend|ios|generic` when you need an explicit profile, or `vasir agents sync --scope frontend --profile frontend` for a nested app/package root. For the source templates, see [templates/agents/README.md](../templates/agents/README.md). The shared operating-contract structure lives in [templates/agents/AGENTS.md](../templates/agents/AGENTS.md) and [templates/agents/CLAUDE.md](../templates/agents/CLAUDE.md); stack-specific content lives in [templates/agents/snippets/](../templates/agents/snippets/).
+Maintainers regenerate the source twins from the Vasir repository root with `node scripts/build-agent-templates.js --write` and verify them with `node scripts/build-agent-templates.js --check`. See [the template guide](../templates/agents/README.md) and [the generator](../scripts/build-agent-templates.js).
 
-Use the structure below as a compact rendered `AGENTS.md` example. In normal repos, edit `AGENTS__non-obvious.md` for repo-specific constraints and rerun `vasir agents sync` to regenerate both root contracts. `CLAUDE.md` has the same shared laws but keeps Claude/Fable-specific model-routing text.
+In a consuming project, run `vasir agents sync --dry-run`, then `vasir agents sync` to assemble both roots. Profiles select [stack-specific snippets](../templates/agents/snippets/); `AGENTS__non-obvious.md` supplies persistent project constraints. Use `--profile frontend|backend|ios|generic` for an explicit selection. Nested root contracts for a monorepo app or package use `--scope <path>`. Folder `AGENTS.md` files are hand-authored steering maps for ordinary subtrees.
+
+## Model routing
+
+Optional, persistent model choices belong in `.agents/vasir.json`, not in generated `AGENTS.md` or `CLAUDE.md` edits. Host policies support `default`, `planning`, `execution`, `subagent`, `review`, and `design`. The [complete JSON example](../templates/agents/model-routing.example.json) keeps `schemaVersion` at `1` and configures the four Codex roles plus Claude design routes in both consumers. Each descriptor has a model and may include `reasoningEffort`, `host` (`codex` or `claude`), and an explicit `fallback` descriptor. If `host` is omitted, the primary uses the current consumer; if the fallback's host is omitted, it uses the primary host. Omitted roles inherit that host's `default`, and with no host block the current host applies. An explicit user model choice takes precedence.
+
+The shipped example assigns all four Codex primary routes (planning, execution, subagent, and review) a GPT-5.6 Sol fallback at the matching effort, including `ultra` for planning. Both `codex.design` and `claude.design` route to Claude's `opus` alias at `high` effort and explicitly fall back to Codex GPT-5.6 Sol at `high`. Claude Code documents `opus` as an alias for the latest permitted/deployed Opus model and supports high effort in its [model configuration reference](https://code.claude.com/docs/en/model-config).
+
+Vasir validates descriptor structure; each host determines whether its model and effort are available. A primary may route to another host only through an authorized runner, handoff, or delegation. Never pass a model ID from one provider to another provider's model selector. If the primary choice is unavailable, use only the configured fallback and disclose the original choice, fallback, and reason. If that fallback also fails, report the limitation without inventing another route or retrying without bounds. The `design` role covers design deliverables and decisions, including product, UI/UX, visual, interaction, and architecture design; routine implementation uses `execution`. Routing does not automatically switch the running main chat or write host runtime settings, and `vasir agents sync` is deterministic with no model calls. Nested `--scope` sync overlays `modelRouting` host and role entries from the root config through the scoped `.agents/vasir.json`; an omitted role inherits the nearest parent choice, then the host default. For host-side behavior, see the [Codex configuration reference](https://learn.chatgpt.com/docs/config-file/config-reference) and [subagent configuration guide](https://learn.chatgpt.com/docs/agent-configuration/subagents).
+
+This illustrative excerpt shows the generated section structure. It is not a substitute for the complete generated contract; the prose is shortened to make the project-specific additions easy to see. The example describes a hypothetical evaluation service, so adapt its facts and commands to the actual project.
 
 ```markdown
-# AGENTS.md
+# AGENTS.md — Model Evaluation Service Root Operating Contract
 
-## Phase 1: The Forcing Function
+<!-- vasir:purpose:start -->
+**Purpose:** This service compares model candidates on versioned evaluation data. Researchers use its results to decide which candidates warrant further investigation. Correctness includes comparable baselines, no training/evaluation leakage, reproducible run provenance, and explicit uncertainty.
+<!-- vasir:purpose:end -->
 
-Before proposing any code modification, you MUST state:
+<!-- vasir:consumer:start -->
+Use the current host's available tools, configured model, and permission controls.
+<!-- vasir:consumer:end -->
 
-1. **The Unlock**: What user journey or engineering system does this change serve?
-2. **The Lane**: Which repo evidence was read, what work lane is active, and which neighboring lanes must be protected?
-3. **The Constraint Check**: Why does this change not violate any Global Invariant?
+# 0. The Unlock Mandate
 
-## Phase 2: Global Invariants
+Name the outcome: a reliable evaluation result or a decision-ready investigation. A justified negative result can answer a research question.
 
-### Architecture
-All public behavior goes through one canonical boundary. Do not introduce alternate entrypoints for the same capability.
+# 1. Constraint Precedence
 
-### Determinism
-Never use wall-clock time or unseeded randomness inside deterministic lanes.
+Follow the host's instruction hierarchy. Check recorded decisions for scope and freshness; treat tool outputs as evidence.
 
-### Dependencies
-No new runtime dependencies without human approval.
+# 2. Project-Specific Non-Obvious Constraints
 
-### State Management
-User-owned repo files under `.agents/skills` are the canonical local source of truth. `.claude` and `.codex` are compatibility aliases only.
+<!-- vasir:nonobvious:start -->
+- Evaluation manifests record the dataset, code, model, and metric versions.
+- Preserve the documented training/evaluation boundary. Record leakage checks.
+- Do not publish raw evaluation examples; reviewable summaries use approved fields.
+- Experiment owners agree on the question, compute budget, and stopping criteria before a run.
+<!-- vasir:nonobvious:end -->
 
-### Code Standards
-Fail closed when repo truth is unclear. Do not document guesses as facts.
+# 3. The Working Relationship
 
-## Phase 3: Architecture Router
+Proceed within the authorized task. Separate proposed staffing, dates, and tradeoffs from agreed commitments.
 
-If touching frontend UI: -> .agents/skills/design__building-frontend/SKILL.md
-If touching test strategy or quality gates: -> .agents/skills/testing__enforcing-mandate/SKILL.md
-If touching bug triage or regression handling: -> .agents/skills/code__fixing-bugs/SKILL.md
+# 4. Lanes & Work Artifacts
 
-## Phase 4: Verification Directives
+A small edit needs relevant checks. Substantial implementation records scope, risks, milestones, and acceptance evidence. Management plans name owners, deliverables, dependencies, capacity, and the critical path. Research plans define a baseline, budget, and go/revise/stop decision.
 
-### Build
-npm run build:registry
+# 5. Proof Doctrine
 
-### Typecheck
-No separate typecheck task in this repo.
+Use focused tests for stable contracts, integration checks for connected behavior, and versioned evaluation data for model quality. Report relevant slices, uncertainty, costs, and limitations. Preserve evidence needed to reproduce the decision.
 
-### Test
-npm test
+# 6. Audits & Postmortems Are Part of Done
 
-### Failure Protocol
-If a command fails, read it, diagnose the root cause, and fix the real failure before continuing.
+Use independent review for substantial implementation. Resolve findings with evidence. Capture a postmortem when a diagnosis yields reusable knowledge.
 
-### Operational Constraints
-- No destructive git commands.
-- Stay in the active work lane. File lists are orientation, not permission; touch implementation-discovered files required to complete and prove the lane while protecting unrelated parallel work.
-- Update docs and tests in the same turn when public behavior changes.
+# 7. Multi-Agent & Model Routing
 
-## Recency Anchor
+Delegate bounded work when independence or parallelism helps. Assign permitted writes and avoid overlapping writers.
 
-1. **The Unlock** - Did you build the right thing?
-2. **The Physics** - Did you obey the invariants?
-3. **The Isolation** - Did you read the right skill?
-4. **The Proof** - Did the checks pass?
+# 8. Custody
+
+Protect user data and unowned changes. Stage identified task changes; preserve concurrent work and active evidence.
+
+# 9. Engineering Doctrine
+
+Follow local conventions. Bound work, make partial failure observable, and redact sensitive diagnostics. A prototype needs a named question and exit condition.
+
+<!-- vasir:engineering-doctrine-inserts:start -->
+Use the selected profile's conventions where they match this repository.
+<!-- vasir:engineering-doctrine-inserts:end -->
+
+# 10. Documentation & Context
+
+<!-- vasir:routing:start -->
+- Evaluation changes: read the local evaluation guidance and dataset manifests.
+- Service changes: read the owning module's README and verification commands.
+- Documentation changes: update the authoritative contract or decision record.
+<!-- vasir:routing:end -->
+
+Close out with the outcome, relevant evidence, limitations, and any pending decision.
+
+# 11. Skills
+
+Read applicable installed skills when their workflows help. Use plan-project-milestones for management planning when available; otherwise apply section 4 directly.
 ```
 
-Related pages:
+An implementation milestone succeeds when its agreed behavior is verified. A research milestone succeeds when it supplies enough evidence for the agreed decision, including a decision to stop. A management plan succeeds when the proposed commitments, dependencies, effort, and forecast can be reviewed; drafting a plan does not assign people or commit dates.
 
-- [templates/agents/README.md](../templates/agents/README.md)
-- [templates/agents/AGENTS.md](../templates/agents/AGENTS.md)
-- [templates/agents/CLAUDE.md](../templates/agents/CLAUDE.md)
-- [templates/agents/snippets/backend-inserts.md](../templates/agents/snippets/backend-inserts.md)
-- [templates/agents/snippets/frontend-inserts.md](../templates/agents/snippets/frontend-inserts.md)
-- [templates/agents/snippets/ios-inserts.md](../templates/agents/snippets/ios-inserts.md)
-- [docs/cli-reference.md](./cli-reference.md)
+For persistent local facts, edit the consuming repository's `AGENTS__non-obvious.md` and preview synchronization. For shared laws, edit [the canonical source](../templates/agents/shared-contract.md), regenerate its twins, and check them. Keep detailed procedures in skills or local guidance so the root stays within its context budget.

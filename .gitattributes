@@ -1,3 +1,15 @@
 # Ensure symlinks are preserved across platforms
 .claude/skills symlink=true
 .codex/skills symlink=true
+
+# Catalog manifests hash file bytes; keep their text inputs stable across platforms.
+*.md text eol=lf
+*.json text eol=lf
+*.js text eol=lf
+*.html text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+
+# Reviewed catalog and template snapshots are hashed as exact bytes, including line endings.
+.agents/skills/** -text
+templates/** -text

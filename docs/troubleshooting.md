@@ -12,7 +12,7 @@ Use this section for:
 
 Recommended path:
 
-1. Confirm Node is installed and recent enough for this repo.
+1. Confirm Node 18.20 or later within 18.x, or Node 20.10 or newer is installed.
 2. Confirm `node --version` succeeds on your shell `PATH`.
 3. Rerun the same `vasir` command.
 
@@ -203,8 +203,10 @@ Recommended path:
 Verification:
 
 - `AGENTS.md` and `CLAUDE.md` exist at the repo root.
-- The generated `AGENTS.md` file no longer contains scaffold text like `[Project Name]`, `[Example]`, or untouched purpose/routing markers.
-- Any routed directory in Section 1 exists and owns the required local `AGENTS.md`, or that route has been removed.
+- Both generated contracts contain complete purpose and routing content; permanent composition markers remain in place.
+- Any marked route exists and owns an explicitly required local `AGENTS.md`, or the route has been adjusted.
+- Each rendered contract fits within 32 KiB. Move long workflow instructions into skills or scoped guidance if validation reports an oversized file.
+- Generated twins agree on shared policy and profile guidance. If validation reports drift, inspect both changes, move intended project policy into the sidecar, and preview synchronization before applying it.
 
 ## Eval Errors
 
@@ -238,7 +240,7 @@ Recommended path:
    - zero-cost smoke test: `vasir eval run <skill> --model mock`
    - explicit live override: `vasir eval run <skill> --model openai` or `--model opus`
    - faster single-sample run: `vasir eval run <skill> --trials 1`
-5. If using live providers, prefer a repo-local `keys.json` copied from [keys.json.example](../keys.json.example), or confirm the matching provider credentials are set in the environment:
+5. If using live providers, prefer a repo-local `keys.json` using the documented [provider configuration](../cli/eval/provider-config.js), or confirm the matching provider credentials are set in the environment:
    - `OPENAI_API_KEY`
    - `ANTHROPIC_API_KEY`
 6. If the terminal is interactive, rerun without `--json` and let Vasir prompt you to paste or skip a missing provider key.

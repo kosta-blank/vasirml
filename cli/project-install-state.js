@@ -129,7 +129,7 @@ function listRelativeFilePathsRecursively(rootDirectory, currentDirectory = root
     }
 
     if (directoryEntry.isFile()) {
-      relativeFilePaths.push(path.relative(rootDirectory, entryPath));
+      relativeFilePaths.push(path.relative(rootDirectory, entryPath).replace(/\\/g, "/"));
     }
   }
 

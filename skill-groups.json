@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "groups": {
+    "base": {
+      "description": "General planning, documentation, debugging, review, and proof skills for any engineering project.",
+      "skills": [
+        "documentation-writing",
+        "doc-guard-drift",
+        "writing-response-quality-style-guide",
+        "code-fixing-bugs",
+        "code-auditing",
+        "plan-maintain-work-spec",
+        "plan-question-spec",
+        "eval-design-proof-gates",
+        "testing-auditing",
+        "prompt-perform-root-cause-analysis",
+        "plan-project-milestones"
+      ]
+    },
+    "frontend": {
+      "description": "Frontend foundations, interface implementation, data visualization, typography, and animation.",
+      "skills": [
+        "design-frontend-foundations",
+        "design-building-frontend-interfaces",
+        "design-visualizing-data",
+        "design-designing-typography",
+        "design-animating-interfaces"
+      ]
+    }
+  }
+}

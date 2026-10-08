@@ -13,7 +13,7 @@ This tutorial assumes you can edit files in the repo and run the npm scripts alr
 ## Prerequisites
 
 - You are inside the Vasir repo.
-- Node 18.17+ is installed.
+- Node 18.20 or later within 18.x, or Node 20.10 or newer is installed.
 - Git is available on `PATH`.
 
 ## Step 1: Choose one failure mode and one skill name
@@ -108,12 +108,16 @@ Expected result:
 Run:
 
 ```bash
+npm run check:registry
+npm run check:agents
 npm test
 ```
 
 Expected result:
 
-- The inferred file inventory and markdown links still validate.
+- Registry and root template projections match their sources.
+- The nested-file replacement safety and named-group tests pass.
+- Review newly added Markdown links separately; this local package's test suite does not validate them.
 
 ## Step 6: Decide whether the root skill is too broad
 

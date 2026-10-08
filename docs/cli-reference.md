@@ -4,17 +4,14 @@ Use this page when you need facts about commands, flags, JSON output, filesystem
 
 ## Install
 
-Until Vasir is published on npm, install it directly from GitHub and pin the exact release you want:
+Requires Node 18.20 or later within 18.x, or Node 20.10 or newer. Install the local archive in your chosen project:
 
-```bash
-npm install -g git+https://github.com/erikhazzard/vasir.git#<tag-or-sha>
+```sh
+npm install --offline --no-audit --no-fund /absolute/path/vasir-slim-0.1.0-slim.2.tgz
+./node_modules/.bin/vasir --version
 ```
 
-Verify the installed binary:
-
-```bash
-vasir --version
-```
+The dependency is bundled. See [local installation and pnpm instructions](../README.md#local-install).
 
 ## Commands
 
@@ -28,14 +25,15 @@ vasir --version
 | `init` | `vasir init [--json] [--repo-root <path>]` | Sync the installed bundled catalog into `~/.agents/vasir`; inside a repo, also install and track the full catalog there |
 | `update` | `vasir update [--json] [--dry-run] [--repo-root <path>]` | Sync `~/.agents/vasir`; then refresh whatever that repo is tracking: the full catalog or a selected installed subset |
 | `list` | `vasir list [--json]` | Read the global catalog and list available skills |
-| `add` | `vasir add <skill> [skill...] [--json] [--replace] [--agents-profile <name>] [--repo-root <path>]` | Copy skills into the current repo root at `.agents/skills`, with optional one-command AGENTS/CLAUDE scaffolding; use `vasir add all` for the full catalog |
+| `add` | `vasir add [skill...] [--group <name>] [--json] [--replace] [--agents-profile <name>] [--repo-root <path>]` | Copy selected skills or named groups into the repo; repeat `--group` to combine groups; use `all` for full-catalog tracking |
+| `groups` | `vasir groups [group...] [--json]` | Read bundled named-group descriptions and memberships without creating a cache or project files |
 | `adopt` | `vasir adopt [--json] [--repo-root <path>]` | Snapshot an existing `.agents/skills` tree into Vasir-managed state without copying or overwriting files |
 | `remove` | `vasir remove <skill> [skill...] [--json] [--repo-root <path>]` | Remove project-local skills from the current repo root |
 | `agents sync` | `vasir agents sync [--scope <path>] [--profile <backend\|frontend\|ios\|generic>] [--json] [--dry-run] [--repo-root <path>]` | Reconcile root or nested root `AGENTS.md` and `CLAUDE.md` from the canonical templates, local context, and `AGENTS__non-obvious.md` |
 | `agents init` | `vasir agents init <backend\|frontend\|ios\|generic> [--json] [--replace] [--repo-root <path>]` | Write canonical `AGENTS.md` and `CLAUDE.md` starters in the current repo root |
 | `agents draft-purpose` | `vasir agents draft-purpose [--json] [--write] [--model <name>] [--repo-root <path>]` | Draft a repo-specific `Purpose` paragraph for the current repo root `AGENTS.md` |
-| `agents draft-routing` | `vasir agents draft-routing [--json] [--write] [--repo-root <path>]` | Draft repo-aware Section 1 routing lanes for the current repo root `AGENTS.md` |
-| `agents validate` | `vasir agents validate [--scope <path>] [--json] [--repo-root <path>]` | Fail closed when a root or nested root `AGENTS.md` still contains scaffold placeholders or broken repo routes |
+| `agents draft-routing` | `vasir agents draft-routing [--json] [--write] [--repo-root <path>]` | Draft repo-aware routing lanes for the current root contracts |
+| `agents validate` | `vasir agents validate [--scope <path>] [--json] [--repo-root <path>]` | Check both root contracts for placeholders, malformed markers, broken routes, shared-policy drift, and the 32 KiB byte limit |
 | `eval run` | `vasir eval run <skill> [--json] [--model <name>] [--trials <count>] [--repo-root <path>]` | Run the built-in baseline vs treatment eval for a skill |
 | `eval inspect` | `vasir eval inspect <skill> [run-id] [--json] [--repo-root <path>]` | Inspect the latest or named saved eval artifact for a skill |
 | `eval rescore` | `vasir eval rescore <skill> [run-id] [--json] [--repo-root <path>]` | Recompute a saved eval artifact with the current scorer |
@@ -148,7 +146,7 @@ Examples:
 
 ```bash
 vasir diff
-vasir diff react
+vasir diff code-auditing
 vasir diff --json
 vasir diff --exit-code
 vasir diff --repo-root packages/web
@@ -212,9 +210,53 @@ Example:
 vasir list
 ```
 
+### `groups`
+
+Named groups are a shortcut for selecting skills. Repeated `--group` flags combine their members into a deduplicated union, and you can mix individual skill names with groups. Group selection does not select an AGENTS profile or model routing. Use `--agents-profile frontend` explicitly when you want the optional frontend root-contract scaffold.
+
+```sh
+npm exec -- vasir groups
+npm exec -- vasir groups --json
+npm exec -- vasir add --group base --group frontend --repo-root /path/to/project
+npm exec -- vasir add code-auditing --group frontend --repo-root /path/to/project
+npm exec -- vasir add --group frontend --agents-profile frontend --repo-root /path/to/project
+```
+
+Groups expand to tracked individual skill snapshots when you run `add`. Later `update` refreshes the tracked skills; editing a group definition does not automatically install new group members. To select current members when some are already installed, run `npm exec -- vasir add --group <name> --replace --repo-root /path/to/project`. Replacement succeeds for unchanged tracked files; local edits still block replacement. Use `update` for routine refreshes. `remove` remains per-skill. `all` cannot be combined with groups or individual skills.
+
+For a globally installed CLI, use the same commands directly: `vasir groups` and `vasir add --group base --group frontend --repo-root /path/to/project`.
+
+Group definitions live in the source ZIP's root `skill-groups.json`. To add a named group, add a key under `groups` with a `description` and a `skills` array of canonical IDs from the catalog; to edit a group, change those fields. Keep `schemaVersion: 1`, use lowercase hyphenated group names, and list each member once. The CLI validates definitions against the bundled registry before installing. This changes selection metadata without editing any skill content. Install the extracted source's one declared dependency first. After editing the extracted source, run `node bin/vasir.js groups` to inspect the result and `npm pack` to create a local package with your definitions. For releases generated by the external local release builder, memberships in this documentation are generated from its authoritative group definitions.
+
+### base (11 skills)
+
+General planning, documentation, debugging, review, and proof skills for any engineering project.
+
+- `documentation-writing`
+- `doc-guard-drift`
+- `writing-response-quality-style-guide`
+- `code-fixing-bugs`
+- `code-auditing`
+- `plan-maintain-work-spec`
+- `plan-question-spec`
+- `eval-design-proof-gates`
+- `testing-auditing`
+- `prompt-perform-root-cause-analysis`
+- `plan-project-milestones`
+
+### frontend (5 skills)
+
+Frontend foundations, interface implementation, data visualization, typography, and animation.
+
+- `design-frontend-foundations`
+- `design-building-frontend-interfaces`
+- `design-visualizing-data`
+- `design-designing-typography`
+- `design-animating-interfaces`
+
 ### `add`
 
-- Purpose: copy one or more skills into the current repo root.
+- Purpose: copy individual skills or the deduplicated union of selected groups into the current repo root.
 - Result:
   - `.agents/skills/<name>/...` is created in the resolved repo root.
   - `.claude/skills` and `.codex/skills` are repaired as aliases to `.agents/skills`.
@@ -229,15 +271,19 @@ vasir list
   - Existing project-local skills are never overwritten unless `--replace` is explicitly provided.
   - Pass `--agents-profile backend`, `--agents-profile frontend`, `--agents-profile ios`, or `--agents-profile generic` when you want to override inference and force a specific root-contract profile.
   - If you pass `--agents-profile` and `AGENTS.md` or `CLAUDE.md` already exists, the command fails closed unless `--replace` is explicitly provided.
-  - `all` cannot be combined with specific skill names in the same command.
+  - Repeat `--group <name>` to combine groups, optionally with individual skill names. Unknown groups or invalid definitions fail before project writes.
+  - Groups expand to tracked individual skills; see `groups` above for update and removal semantics.
+  - `all` cannot be combined with groups or specific skill names in the same command.
 
 Examples:
 
 ```bash
-vasir add design__building-frontend
+vasir add design-building-frontend-interfaces
 vasir add all
-vasir add design__building-frontend --agents-profile frontend
-vasir add code__fixing-bugs testing__enforcing-mandate
+vasir add --group base --group frontend --repo-root /path/to/project
+vasir add --group frontend --agents-profile frontend --repo-root /path/to/project
+vasir add design-building-frontend-interfaces --agents-profile frontend
+vasir add code-fixing-bugs testing-enforcing-mandate
 ```
 
 Text-mode success output also prints the resolved project skills directory so you can see exactly where Vasir wrote files.
@@ -282,8 +328,8 @@ vasir adopt --repo-root packages/web
 Examples:
 
 ```bash
-vasir remove design__building-frontend
-vasir remove design__building-frontend testing__enforcing-mandate
+vasir remove design-building-frontend-interfaces
+vasir remove design-building-frontend-interfaces testing-enforcing-mandate
 vasir remove
 ```
 
@@ -291,7 +337,7 @@ vasir remove
 
 `vasir agents` exists for one generated path: make root and nested root `AGENTS.md` + `CLAUDE.md` pairs obvious to create, refresh, and keep aligned.
 
-Folder `AGENTS.md` files are different. They are hand-authored steering maps for ordinary subtrees. Do not generate them with `vasir agents sync --scope`; use the installed `agents__creating-folder-agents` skill or edit the folder file directly.
+Folder `AGENTS.md` files are different. They are hand-authored steering maps for ordinary subtrees. Do not generate them with `vasir agents sync --scope`; use the installed `agents-creating-folder-agents` skill or edit the folder file directly.
 
 ### `agents sync`
 
@@ -299,14 +345,19 @@ Folder `AGENTS.md` files are different. They are hand-authored steering maps for
 - Result:
   - renders `AGENTS.md` and `CLAUDE.md` from the current canonical templates and the inferred or explicit profile
   - stores explicit root profile intent in `.agents/vasir.json`, not in generated root contract files
+  - projects optional `agents.modelRouting` policy from `.agents/vasir.json` into the generated contracts; this persistent source configuration is not edited in generated roots
   - fills the purpose paragraph from deterministic local repo context without a model call
-  - generates Section 1 routing from existing repo directories
+  - generates marked routing from existing repo directories
   - injects repo-owned non-obvious constraints from `AGENTS__non-obvious.md`
-  - validates the generated `AGENTS.md` result before writing the pair
+  - validates both generated contracts before writing either file; each must fit within 32 KiB of UTF-8 text
 - Notes:
   - By default, sync targets the resolved repo root.
   - Use `--scope <path>` when a folder is a nested app/package root, such as `frontend/AGENTS.md` + `frontend/CLAUDE.md` or `apps/web/AGENTS.md` + `apps/web/CLAUDE.md`.
   - Use `--profile frontend`, `--profile backend`, `--profile ios`, or `--profile generic` when inference is wrong or when the scope is mixed.
+  - Model routing is optional and host-specific. Configure roles under `agents.modelRouting.codex` or `agents.modelRouting.claude`; supported roles are `default`, `planning`, `execution`, `subagent`, `review`, and `design`. A descriptor has a `model` and optional `reasoningEffort`, `host` (`codex` or `claude`), and explicit `fallback` descriptor. The descriptor host defaults to the current consumer; a fallback host defaults to its primary descriptor's host. Missing roles inherit the configured host default; with no host block, the current host applies. An explicit user model choice takes precedence. No fallback is inferred.
+  - Vasir checks routing descriptor structure, not model availability. The selected host validates model IDs and supported reasoning efforts. A project setting does not automatically change a running main chat's model. Cross-host work must use an authorized runner, handoff, or delegation; never send a provider's model ID to another provider's selector. If the primary is unavailable, use only its configured fallback and disclose the original choice, fallback, and reason. If the fallback also fails, report the limitation without inventing further routes or unbounded retries. The `design` role covers design deliverables and decisions, including product, UI/UX, visual, interaction, and architecture design; routine implementation uses `execution`. Vasir does not write host runtime files or change host permissions.
+  - Sync is deterministic and makes no model calls. It projects the configured routing policy into the generated contracts.
+  - For nested scopes, sync overlays `modelRouting` host and role entries from root through the scoped `.agents/vasir.json`. An omitted role inherits the nearest parent choice, then the host's configured default; a missing host uses the current host.
   - Use `vasir agents sync --dry-run` to preview without writing.
   - The legacy positional profile form, such as `vasir agents sync frontend`, still works, but new scripts should use `--profile`.
   - If `AGENTS__non-obvious.md` is missing, sync creates it. Existing `.agents/non-obvious.md` sidecars are moved to the root file, and legacy manual `AGENTS.md` or `CLAUDE.md` files can seed the root file from the old non-obvious block.
@@ -323,6 +374,8 @@ vasir agents sync --scope frontend
 vasir agents sync --scope packages/web --profile frontend
 vasir agents sync --scope services/api --profile backend
 ```
+
+See [the project model-routing example](./example-agents.md#model-routing) for a complete `.agents/vasir.json` and the limits of host-side model selection.
 
 ### `agents init`
 
@@ -349,7 +402,7 @@ vasir agents init frontend --replace
 - Purpose: inspect the current repo and draft a repo-specific opening paragraph for `AGENTS.md`.
 - Result:
   - Prints a 2-3 sentence `Purpose` draft based on local repo context.
-  - When `--write` is set, replaces the untouched Vasir placeholder block in `AGENTS.md`.
+  - When `--write` is set, replaces the untouched Vasir placeholder in `AGENTS.md` and an untouched corresponding `CLAUDE.md` purpose when present. A customized Claude purpose is preserved.
 - Notes:
   - Reads repo-local context such as the root name, top-level entries, `package.json`, and the first screen of `README.md` when present.
   - Defaults to `openai:gpt-5.4`.
@@ -367,14 +420,14 @@ vasir agents draft-purpose --write --model openai
 
 ### `agents draft-routing`
 
-- Purpose: inspect the current repo and draft a repo-aware Section 1 routing block for `AGENTS.md`.
+- Purpose: inspect the current repo and draft repo-aware routing for the root contracts.
 - Result:
   - Prints a set of local AGENTS routing lanes based on the actual repo directories.
-  - When `--write` is set, replaces the writable routing block in Section 1.
+  - When `--write` is set, updates marked routing in the root contracts after preflighting both results.
 - Notes:
   - Uses deterministic repo signals such as top-level directories and common stack lanes.
   - Drafted lanes point at real directories first, then expect a local `AGENTS.md` inside those directories if the lane truly needs local steering rules.
-  - `--write` keeps the routing markers in place until you finalize Section 1. `agents validate` will keep failing until you remove those markers and either create the referenced local `AGENTS.md` files or collapse the rules back into the root file.
+  - Routing markers are permanent composition seams. Keep them; create any explicitly required local `AGENTS.md` files or adjust the routes to the actual guidance available.
 
 Examples:
 
@@ -385,15 +438,16 @@ vasir agents draft-routing --write
 
 ### `agents validate`
 
-- Purpose: catch leftover scaffold markers and broken repo routes before you treat `AGENTS.md` as finished.
+- Purpose: check both root contracts before treating them as finished.
 - Result:
-  - Succeeds cleanly when `AGENTS.md` no longer contains known placeholders, write-back markers, or broken repo routes.
-  - Fails closed with structured issue details when scaffold markers are still present or a routed directory is missing its required local `AGENTS.md`.
+  - Accepts completed, well-formed composition markers and checks `CLAUDE.md` when present; legacy AGENTS-only repositories remain supported.
+  - Reports file-specific issues for unfinished placeholders, malformed markers, broken routes, and rendered contracts exceeding 32 KiB.
+  - For twins identified by Vasir's generation header and consumer block, reports differences in shared policy, including profile guidance. Provider adapters, purpose, non-obvious context, and local routing may differ. Unmarked legacy/manual files are not subjected to shared-policy comparison.
 - Notes:
   - `agents sync` runs this check automatically.
   - Use `--scope <path>` to validate a generated nested root AGENTS file such as `frontend/AGENTS.md`.
   - This is still useful after manual edits or lower-level `agents init`, `agents draft-purpose --write`, and `agents draft-routing --write` flows.
-  - Common failures include `[Project Name]`, `[Example]`, untouched purpose/routing markers, missing routed directories, and routed lanes that do not yet own a required local `AGENTS.md`.
+  - Common failures include `[Project Name]`, `[Example]`, untouched placeholder content, missing routed directories, and routes requiring a local `AGENTS.md` that does not exist. The markers themselves are valid when their structure and content are complete.
 
 Examples:
 
@@ -405,10 +459,12 @@ vasir agents validate --json
 
 ## Eval
 
+This reviewed local release does not ship eval suites. Examples in this section require a consumer-authored `.agents/skills/<skill>/evals/suite.json` beside the installed skill; inspect and rescore also require a saved run. The sample `testing-enforcing-mandate` command is illustrative and cannot run unchanged against the exported pack. No behavioral skill trials were performed for this release.
+
 `vasir eval run <skill>` is the one-command developer workflow for measuring whether a skill improved steering.
 
 ```bash
-vasir eval run testing__enforcing-mandate
+vasir eval run testing-enforcing-mandate
 ```
 
 What it does:
@@ -440,7 +496,7 @@ What it does:
 
 Local provider keys:
 
-- Create `keys.json` at the repo root by copying [keys.json.example](../keys.json.example).
+- Create `keys.json` at the repo root using the fields documented in [provider configuration](../cli/eval/provider-config.js).
 - Supported keys are:
   - `OPENAI_API_KEY`
   - `ANTHROPIC_API_KEY`
@@ -466,28 +522,28 @@ Override surface:
 Examples:
 
 ```bash
-vasir eval run testing__enforcing-mandate
+vasir eval run testing-enforcing-mandate
 
 # repo-local wrapper with the same built-in defaults
-npm run eval testing__enforcing-mandate
+npm run eval testing-enforcing-mandate
 
-# inspect the latest saved testing__enforcing-mandate eval
-vasir eval inspect testing__enforcing-mandate
+# inspect the latest saved testing-enforcing-mandate eval
+vasir eval inspect testing-enforcing-mandate
 
-# rescore the latest saved testing__enforcing-mandate eval with the current scorer
-vasir eval rescore testing__enforcing-mandate
+# rescore the latest saved testing-enforcing-mandate eval with the current scorer
+vasir eval rescore testing-enforcing-mandate
 
 # repo-local zero-cost smoke test without the npm -- delimiter
-npm run eval testing__enforcing-mandate mock
+npm run eval testing-enforcing-mandate mock
 
 # only OpenAI gpt-5.4
-vasir eval run testing__enforcing-mandate --model openai
+vasir eval run testing-enforcing-mandate --model openai
 
 # zero-cost local smoke test
-vasir eval run testing__enforcing-mandate --model mock
+vasir eval run testing-enforcing-mandate --model mock
 
 # explicit multi-model override
-vasir eval run testing__enforcing-mandate --model openai:gpt-5.4 --model anthropic:claude-opus-4-6
+vasir eval run testing-enforcing-mandate --model openai:gpt-5.4 --model anthropic:claude-opus-4-6
 ```
 
 Notes:
@@ -506,7 +562,7 @@ Notes:
 - If a default live provider is missing credentials and the terminal is interactive, Vasir prompts you to paste a key or skip that provider.
 - In non-interactive environments, missing live-provider credentials cause those providers to be skipped. If nothing runnable remains, the command fails cleanly and points you to `--model mock`.
 - Live provider rows use a request timeout. If a row times out or a provider call fails, the run stays on disk and the final report is marked incomplete instead of discarding the successful rows.
-- `npm run eval` prints setup, launches the batch in parallel, streams completions, and accepts positional model shorthands like `npm run eval testing__enforcing-mandate mock` or `npm run eval testing__enforcing-mandate openai`.
+- `npm run eval` prints setup, launches the batch in parallel, streams completions, and accepts positional model shorthands like `npm run eval testing-enforcing-mandate mock` or `npm run eval testing-enforcing-mandate openai`.
 - Eval artifacts are tool-owned local files and are ignored by this repo via `.agents/vasir-evals/`.
 - Every saved run is stored as a single `run.json` artifact.
 
@@ -521,7 +577,7 @@ vasir --version
 Expected text output:
 
 ```text
-vasir 0.1.0
+vasir-slim 0.1.0-slim.2
 ```
 
 ## Replace
@@ -529,7 +585,7 @@ vasir 0.1.0
 `--replace` is the explicit refresh path for an existing project-local skill copy.
 
 ```bash
-vasir add design__building-frontend --replace
+vasir add design-building-frontend-interfaces --replace
 ```
 
 Facts:
@@ -559,7 +615,7 @@ Success envelope:
 - `skills` for `list`
 - `projectRootDirectory`, `projectConfigFilePath`, `projectSkillsDirectory`, `installedSkills`, `replacedSkills`, `agentsFilePath`, `claudeFilePath`, `wroteAgentsFile`, and `wroteClaudeFile` for `add`
 - `subcommand`, `agentsFilePath`, `claudeFilePath`, `profile`, `wroteAgentsFile`, and `wroteClaudeFile` for `agents init`
-- `subcommand`, `agentsFilePath`, `claudeFilePath`, `profile`, `profileSource`, `purposeSource`, `nonobviousFilePath`, `wroteAgentsFile`, `wroteClaudeFile`, `wroteNonobviousFile`, `routingLines[]`, and `issues[]` for `agents sync`
+- `subcommand`, `agentsFilePath`, `claudeFilePath`, `profile`, `profileSource`, `purposeSource`, `nonobviousFilePath`, `wroteAgentsFile`, `wroteClaudeFile`, `wroteNonobviousFile`, `routingLines[]`, `modelRouting`, `modelRoutingSources[]`, and `issues[]` for `agents sync`
 - `projectRootDirectory`, `projectConfigFilePath`, `projectSkillsDirectory`, `adoptedSkills`, and `skippedSkills` for `adopt`
 - `projectRootDirectory`, `projectConfigFilePath`, `projectSkillsDirectory`, `removedSkills`, and `missingSkills` for `remove`
 
@@ -596,7 +652,7 @@ Example success envelope:
   "globalCatalogDirectory": "/Users/example/.agents/vasir",
   "projectRootDirectory": "/repo",
   "projectSkillsDirectory": "/repo/.agents/skills",
-  "installedSkills": ["design__building-frontend"],
+  "installedSkills": ["design-building-frontend-interfaces"],
   "replacedSkills": [],
   "agentsFilePath": "/repo/AGENTS.md",
   "claudeFilePath": "/repo/CLAUDE.md",
@@ -613,14 +669,14 @@ Example eval success envelope:
   "status": "success",
   "subcommand": "run",
   "runId": "2026-03-18T12-00-00-000Z__abc123def456",
-  "skillName": "testing__enforcing-mandate",
+  "skillName": "testing-enforcing-mandate",
   "suiteId": "testing-value-path",
   "suiteHash": "4d5e6f...",
   "runStatus": "complete",
   "trialCount": 3,
   "scorerVersion": 4,
   "modelIds": ["mock:skill-aware"],
-  "outputDirectory": "/repo/.agents/vasir-evals/testing__enforcing-mandate/2026-03-18T12-00-00-000Z__abc123def456",
+  "outputDirectory": "/repo/.agents/vasir-evals/testing-enforcing-mandate/2026-03-18T12-00-00-000Z__abc123def456",
   "summary": {
     "rowCounts": {
       "planned": 6,
@@ -647,10 +703,10 @@ Example error envelope:
   "command": "add",
   "status": "error",
   "code": "PROJECT_SKILL_UNTRACKED",
-  "message": "Project skill cannot be safely replaced because Vasir has no install snapshot for /repo/.agents/skills/design__building-frontend.",
+  "message": "Project skill cannot be safely replaced because Vasir has no install snapshot for /repo/.agents/skills/design-building-frontend-interfaces.",
   "suggestion": "Delete the project-local skill directory manually if you want a fresh copy, then rerun `vasir add <skill>`.",
   "context": {},
-  "docsRef": "https://github.com/erikhazzard/vasir/blob/main/docs/troubleshooting.md#replace-safety-errors"
+  "docsRef": "file:///path/to/node_modules/vasir-slim/docs/troubleshooting.md#replace-safety-errors"
 }
 ```
 
@@ -676,7 +732,7 @@ Project-local:
 ```
 
 Project-local skills are copied files that you own and can edit. They are never linked back to the global catalog.
-`.agents/vasir.json` is the committed repo-level source of truth for what the repo wants Vasir to track and which root AGENTS profile it should preserve.
+`.agents/vasir.json` is the committed repo-level source of truth for what the repo wants Vasir to track, which root AGENTS profile it should preserve, and optional project model routing.
 `.agents/vasir-install-state.json` is Vasir's operational snapshot of which files it last installed for each project-local skill. Vasir uses it to make `add --replace` fail closed on edited copies, prunes entries automatically when the matching skill directory is gone, and records catalog provenance such as the installed Vasir version, catalog hash, and per-skill source version so `vasir update --dry-run` can explain pending refreshes.
 
 ## Advanced Override

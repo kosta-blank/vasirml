@@ -1,34 +1,38 @@
 # iOS Inserts
 
 <!-- vasir:purpose:start -->
-**Purpose:** [Describe this iOS repository in 2-3 repo-specific sentences. Replace this block first. State the main user experience, what correctness means here, and what agents must optimize for.]
+**Purpose:** [Describe this iOS repository in 2-3 repo-specific sentences. State its users, main experience, supported environments, and what correctness means here.]
 <!-- vasir:purpose:end -->
 
 <!-- vasir:routing:start -->
-* **App Lifecycle:** If touching `/ios/App/`, startup, or backgrounding code, read the platform manifest before changing lifecycle behavior.
-* **Networking / Sync:** If touching `/ios/Sync/`, `/ios/Networking/`, or cache layers, read the sync manifest before changing offline or retry behavior.
-* **UI Modules:** If touching `/ios/UI/`, feature screens, or design-system components, read the screen or UI manifest before editing layout or navigation.
-* **Cold Storage:** Do not read `/docs/legacy/` unless explicitly instructed by the user.
+- **Lifecycle and synchronization:** Before changing startup, backgrounding, networking, or persistence, inspect the nearest instructions and actual lifecycle/sync documentation.
+- **UI and platform:** Before changing screens, navigation, accessibility, signing, or deployment, inspect the existing platform configuration, UI patterns, and relevant tests.
 <!-- vasir:routing:end -->
 
 <!-- vasir:engineering-doctrine-inserts:start -->
+## iOS Guidance
 
-## Suggested Global Constraints
+### Existing platform
 
-* **Main Thread:** Do not block the main thread with parsing, disk, or network work.
-* **Memory:** Avoid hot-path allocations and large transient copies on scrolling, animation, or decode paths.
-* **Reachability:** Do not assume stable connectivity; offline and resume behavior must be explicit.
-* **Dependencies:** No new SDKs without approval, privacy review, and lifecycle ownership.
+Follow the repository's supported OS versions, language, UI framework, concurrency model, dependency policy, and build/test commands. Use existing modules and design-system components. Read the actual project or package configuration before changing targets, entitlements, signing, or startup.
 
-## Suggested Landmines
+### Lifecycle and resources
 
-* App lifecycle transitions can interrupt work at any point; background-safe persistence may be intentional.
-* Local clocks, push delivery, and connectivity are not reliable ordering sources.
-* Some UI behavior may trade elegance for battery, thermal, or startup constraints.
+Keep blocking parsing, disk, and network work off the main thread, and update UI through the framework's required execution context. Make actor/thread ownership clear when sharing mutable state.
 
-## Suggested Philosophy
+Treat foreground/background transitions, suspension, cancellation, and process termination as expected conditions. Define persistence and recovery for interrupted work. Do not assume completion handlers, timers, or background execution will run indefinitely.
 
-* Prefer predictable lifecycle handling over clever background magic.
-* Prefer measured UI smoothness and memory discipline over abstraction-heavy convenience layers.
-* Do not "clean up" platform quirks until you have verified the original failure mode they guard against.
+Respect memory, battery, thermal, and launch budgets. Measure material changes to scrolling, animation, decoding, or startup. Avoid large transient copies and unnecessary hot-path allocations. Verify the original failure mode before removing a platform workaround.
+
+### Connectivity and data
+
+Specify offline, reconnect, resume, and retry behavior. Do not use device clocks, push arrival, or connectivity signals as reliable ordering guarantees. Bound retries and make repeatable side effects safe.
+
+Follow existing secure-storage and privacy practices. Keep credentials and sensitive data out of logs and evidence. When adding a capability or SDK, identify required permissions, data collection, ownership, and lifecycle behavior under the repository's dependency policy.
+
+### Verification
+
+Use focused logic tests for stable contracts and simulator/device checks for changed platform behavior. Exercise relevant lifecycle, denied-permission, offline, and recovery cases when the change depends on them.
+
+For material UI changes, render the affected screen or journey and check layout, keyboard, accessibility, and supported device sizes as relevant. Preserve useful evidence of the result. Identify what was checked on a simulator and what still requires a physical device, entitlement, credential, or deployment environment. Report unavailable verification explicitly.
 <!-- vasir:engineering-doctrine-inserts:end -->

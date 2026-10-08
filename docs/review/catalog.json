@@ -1,0 +1,1476 @@
+{
+  "schemaVersion": 1,
+  "collection": "vasir-slim-reviewed",
+  "tierPolicy": "Core, Optional and Outside pack describe selection recommendations. Explicit selections are recorded separately from shortlist and coordinator recommendations. These tiers do not install skills or select AGENTS profiles.",
+  "sourceReviewsCompleted": 39,
+  "counts": {
+    "all": 38,
+    "core": 13,
+    "optional": 10,
+    "outside": 15,
+    "explicitSelections": 7,
+    "files": 81
+  },
+  "groups": [
+    {
+      "id": "decide",
+      "name": "Decide & coordinate",
+      "skills": [
+        "plan-question-spec",
+        "plan-maintain-work-spec",
+        "plan-project-milestones",
+        "plan-prepare-summary",
+        "plan-prepare-goal",
+        "plan-question-spec-architecture",
+        "plan-question-spec-infra"
+      ]
+    },
+    {
+      "id": "explain",
+      "name": "Explain to people",
+      "skills": [
+        "writing-response-quality-style-guide",
+        "documentation-writing",
+        "doc-guard-drift",
+        "explaining-creating-interactive-articles"
+      ]
+    },
+    {
+      "id": "build",
+      "name": "Understand & change software",
+      "skills": [
+        "code-auditing",
+        "code-fixing-bugs",
+        "code-crafting-dev-ux",
+        "code-enforcing-principles",
+        "design-designing-cli",
+        "audit-optimizing-node-backend",
+        "security-auditing-code"
+      ]
+    },
+    {
+      "id": "show",
+      "name": "Show the system",
+      "skills": [
+        "design-building-frontend-interfaces",
+        "design-visualizing-data",
+        "design-designing-typography",
+        "design-animating-interfaces",
+        "design-frontend-foundations"
+      ]
+    },
+    {
+      "id": "prove",
+      "name": "Prove & learn",
+      "skills": [
+        "eval-design-proof-gates",
+        "testing-enforcing-mandate",
+        "testing-auditing",
+        "prompt-perform-root-cause-analysis",
+        "eval-implement-proof-gate",
+        "handoff-final-quality-gate",
+        "ops-maintain-incident-postmortem"
+      ]
+    },
+    {
+      "id": "tune",
+      "name": "Tune the assistant",
+      "skills": [
+        "prompt-create-analysis",
+        "prompt-improving-rewriting",
+        "skills-create-skill",
+        "skills-create-analysis",
+        "prompt-writing-persona",
+        "persona-selecting",
+        "prompt-reverse-engineering",
+        "agents-creating-folder-agents"
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "a": "plan-project-milestones",
+      "b": "plan-maintain-work-spec",
+      "type": "Complement",
+      "why": "Ownership and convergence vs requirements, decisions, and state."
+    },
+    {
+      "a": "plan-question-spec",
+      "b": "plan-maintain-work-spec",
+      "type": "Challenge",
+      "why": "Test the approach before or during planning."
+    },
+    {
+      "a": "plan-question-spec",
+      "b": "plan-project-milestones",
+      "type": "Clarify → plan",
+      "why": "Carry interview context into milestones when requested."
+    },
+    {
+      "a": "plan-question-spec-architecture",
+      "b": "plan-question-spec-infra",
+      "type": "Complement",
+      "why": "Architecture reviews component necessity, ownership, contracts, dependencies, failures, and reversibility. Infrastructure reviews operating topology, primitives, and costs."
+    },
+    {
+      "a": "plan-prepare-summary",
+      "b": "plan-maintain-work-spec",
+      "type": "Complement",
+      "why": "A concise goal and resumption brief complements the living specification."
+    },
+    {
+      "a": "writing-response-quality-style-guide",
+      "b": "documentation-writing",
+      "type": "Complement",
+      "why": "Prose quality vs document organization and reader tasks."
+    },
+    {
+      "a": "doc-guard-drift",
+      "b": "documentation-writing",
+      "type": "Verify",
+      "why": "Check documented claims against implementation and evidence."
+    },
+    {
+      "a": "code-auditing",
+      "b": "testing-auditing",
+      "type": "Complement",
+      "why": "Implementation quality vs what the tests establish."
+    },
+    {
+      "a": "code-enforcing-principles",
+      "b": "code-auditing",
+      "type": "Related judgment",
+      "why": "Engineering principles supply risk and premise checks relevant to code review."
+    },
+    {
+      "a": "code-enforcing-principles",
+      "b": "code-fixing-bugs",
+      "type": "Related judgment",
+      "why": "Engineering principles support decisions within the repair workflow."
+    },
+    {
+      "a": "eval-design-proof-gates",
+      "b": "testing-enforcing-mandate",
+      "type": "Define → check",
+      "why": "Define software success, then implement useful checks."
+    },
+    {
+      "a": "testing-enforcing-mandate",
+      "b": "testing-auditing",
+      "type": "Build → assess",
+      "why": "Implement checks, then assess meaningful coverage."
+    },
+    {
+      "a": "eval-design-proof-gates",
+      "b": "eval-implement-proof-gate",
+      "type": "Define → build",
+      "why": "A dedicated harness is optional when existing checks suffice."
+    },
+    {
+      "a": "prompt-perform-root-cause-analysis",
+      "b": "ops-maintain-incident-postmortem",
+      "type": "Overlap",
+      "why": "Causal analysis vs retaining incident knowledge."
+    },
+    {
+      "a": "design-building-frontend-interfaces",
+      "b": "design-designing-typography",
+      "type": "Specialist reference",
+      "why": "The unchanged typography recipes target mobile games UI; use them when that context fits the interface."
+    },
+    {
+      "a": "design-building-frontend-interfaces",
+      "b": "design-animating-interfaces",
+      "type": "Reference",
+      "why": "Motion recipes can be optional supporting material."
+    },
+    {
+      "a": "design-visualizing-data",
+      "b": "explaining-creating-interactive-articles",
+      "type": "Complement",
+      "why": "Present evidence vs teach a mechanism."
+    },
+    {
+      "a": "code-crafting-dev-ux",
+      "b": "design-designing-cli",
+      "type": "Specialize",
+      "why": "General developer experience vs terminal interfaces."
+    },
+    {
+      "a": "prompt-create-analysis",
+      "b": "prompt-improving-rewriting",
+      "type": "Diagnose and revise",
+      "why": "Prompt analysis diagnoses weaknesses; prompt rewriting applies scoped improvements. They remain separate skills."
+    },
+    {
+      "a": "skills-create-analysis",
+      "b": "prompt-create-analysis",
+      "type": "Related method",
+      "why": "Skill packages and prompt chains are different artifacts."
+    },
+    {
+      "a": "skills-create-skill",
+      "b": "skills-create-analysis",
+      "type": "Author and review",
+      "why": "Author owns creation and requested revision. Analyze owns explicitly requested review-only domain diagnosis and recommendations. Keep the pair separate."
+    },
+    {
+      "a": "prompt-writing-persona",
+      "b": "persona-selecting",
+      "type": "Author → select",
+      "why": "Create expertise guidance vs choose an existing persona."
+    },
+    {
+      "a": "design-building-frontend-interfaces",
+      "b": "design-frontend-foundations",
+      "type": "Companion",
+      "why": "Applied: interface guidance owns task flow and truthful interaction states; frontend foundations owns visual direction, the chosen CSS contract, and semantic HTML/CSS."
+    }
+  ],
+  "skills": [
+    {
+      "id": "agents-creating-folder-agents",
+      "sourceId": "agents__creating-folder-agents",
+      "label": "Repository instructions",
+      "tier": "Outside pack",
+      "tierBasis": "shortlist-recommendation",
+      "group": "tune",
+      "reviewStatus": "complete",
+      "reviewCompletedOn": "2026-10-05",
+      "origin": "downloaded source",
+      "changeStatus": "edited",
+      "summary": "Use verified repository conventions instead of assumed Vasir generator, root-template, and sidecar conventions. Keep this skill limited to hand-authored folder guidance; repository and app/package root contracts remain outside its scope. Consolidate repeated steering categories into the checklist in step 4 and shorten the default template and self-audit. Move the question restriction into step 1 and remove the redundant Hard Rules section. Retain source evidence, generated/vendored ownership, local defaults, verification purposes, and deeper-map routing. Explicitly route ML evaluation choices to the dedicated workflow.",
+      "historicalBaselineBundleSha256": "77e75b32c72f909b11562d6bcf76eaf63d17fd7320f4bf00548e133c9d769037",
+      "consolidatedFrom": [],
+      "canonicalId": "agents-creating-folder-agents",
+      "description": "Creates, rewrites, audits, or declines folder AGENTS.md files as local steering maps for one subtree. Use when a folder needs durable agent orientation, local instructions, and folder-specific non-obvious constraints; not for repo-root AGENTS, nested app/package root generation, generic coding standards, ordinary API reference, or one-off task plans.",
+      "skillPath": "../../.agents/skills/agents-creating-folder-agents/SKILL.md",
+      "mainWords": 1136,
+      "bundleSha256": "cf5bd3504173f2c29ae7895f2fcf767003901c4aef28cbe0b8a5e08fbe259173",
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 7840,
+          "sha256": "ecbce49a1641a9f105f0055079398faeb5723fc6d43a61214082850bf2a2ddea"
+        }
+      ]
+    },
+    {
+      "id": "audit-optimizing-node-backend",
+      "sourceId": "audit__optimizing-node-backend",
+      "label": "Backend optimization",
+      "tier": "Outside pack",
+      "tierBasis": "shortlist-recommendation",
+      "group": "build",
+      "reviewStatus": "complete",
+      "reviewCompletedOn": "2026-10-05",
+      "origin": "downloaded source",
+      "changeStatus": "edited",
+      "summary": "Rewrote the skill as Backend Optimization across languages and runtimes. Replaced vendor-specific workflows with concrete resource, access, correctness, and overload patterns; made reporting proportionate and verification evidence-based.",
+      "historicalBaselineBundleSha256": "1c57c13f7a8281967815bb85eebe9ad1a67297071e17968d4bdce53a3d32fdc0",
+      "consolidatedFrom": [],
+      "canonicalId": "audit-optimizing-node-backend",
+      "description": "Audits backend services in any language for latency, throughput, scalability, resource cost, and concurrency or overload risks. Use for performance reviews, bottleneck analysis, capacity assessment, and optimization decisions grounded in code, workload, or runtime evidence.",
+      "skillPath": "../../.agents/skills/audit-optimizing-node-backend/SKILL.md",
+      "mainWords": 1037,
+      "bundleSha256": "c31e3f0768f4fb89d0903ec9b1d922b55d1bbec4e254ef1d2c288b27e218cc64",
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 7825,
+          "sha256": "620596f7a4c784c2b8c92b1b81e15c70c123a7a710560e323a74d6e7205f04e4"
+        },
+        {
+          "path": "references/evaluation-suite.md",
+          "bytes": 2761,
+          "sha256": "4a36d1eb9a66f0005866a62a9ab284cb297f467101d91e4954696fbfbf93bcf3"
+        },
+        {
+          "path": "references/verification.md",
+          "bytes": 2536,
+          "sha256": "2ca22810ddd456fa145c803b9697e8fc2c062b2eabaa20d5ad9d304963e8eb17"
+        }
+      ]
+    },
+    {
+      "id": "code-auditing",
+      "sourceId": "code__auditing",
+      "label": "Code / PR review",
+      "tier": "Core",
+      "tierBasis": "shortlist-recommendation",
+      "group": "build",
+      "reviewStatus": "complete",
+      "reviewCompletedOn": "2026-10-06",
+      "origin": "downloaded source",
+      "changeStatus": "edited",
+      "summary": "Added distinct PR review, source walkthrough, and production audit modes. PR review uses available base/head revisions, the diff and surrounding callers/contracts/tests, and attributed CI evidence; missing revisions or diff are explicit scope limitations. Walkthroughs trace behavior from source. Priorities cover correctness, regressions, data/API contract compatibility, maintainability, and meaningful tests. Reviews remain static and do not rewrite code or run code/benchmarks. Supplied and available runtime evidence is attributed rather than presented as executed checks. ML evaluation and project planning remain separate. Existing detailed production audit rules now explicitly apply to production audit mode; the new modes have their own deliverables. Removed the invented career biography, root AGENTS section references, mandatory clean-context delegation, fixed report artifact path, and orchestrator-specific completion rules. Replaced them with scoped, independent reasoning, flexible delivery, and release recommendations that respect the active repository policy when one applies.",
+      "historicalBaselineBundleSha256": "8151947fbe60b792d4d83f6402920d7126f32eb70cf686cc42cfd4875a953d70",
+      "consolidatedFrom": [],
+      "canonicalId": "code-auditing",
+      "description": "Understand code through source-grounded walkthroughs, review PR diffs for correctness and contract changes, or audit production readiness. Uses code and available CI evidence to explain behavior and prioritize actionable feedback; never rewrites code. ML evaluation and project planning remain separate workflows.",
+      "skillPath": "../../.agents/skills/code-auditing/SKILL.md",
+      "mainWords": 1922,
+      "bundleSha256": "b6311eb4d5ddbfd447f2da69eb95cd3817717505ac63e5f5d5f5a040c2ebfde8",
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 13466,
+          "sha256": "883091c617f2c601113085f8a5436aa62e48a8b72719331da5905d434df25758"
+        }
+      ]
+    },
+    {
+      "id": "code-crafting-dev-ux",
+      "sourceId": "code__crafting-dev-ux",
+      "label": "Developer experience",
+      "tier": "Optional",
+      "tierBasis": "explicit-selection",
+      "group": "build",
+      "reviewStatus": "complete",
+      "reviewCompletedOn": "2026-10-06",
+      "origin": "downloaded source",
+      "changeStatus": "edited",
+      "summary": "Consolidated repeated design reports into one proportionate consumer walkthrough, removed game and repository-specific assumptions, added a runnable Python example, and made audit, planning, and verification integrations optional.",
+      "historicalBaselineBundleSha256": "a9d430e2f7582a2e63cd139fd8f8f26eb49344cf95dc09629d3d3254419eb3a2",
+      "consolidatedFrom": [],
+      "canonicalId": "code-crafting-dev-ux",
+      "description": "Design or review developer-facing APIs, SDKs, configuration, errors, events, and CLIs for shared libraries and internal tools. Use when creating or changing how colleagues or coding agents find, use, debug, and upgrade these surfaces. Owns interface ergonomics; ML evaluation and project planning remain separate workflows.",
+      "skillPath": "../../.agents/skills/code-crafting-dev-ux/SKILL.md",
+      "mainWords": 2793,
+      "bundleSha256": "e215c3dcbee30602232048ffd3e3453763e91b6fc314771590241270d508c67e",
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 21195,
+          "sha256": "c228fbd4200b1a37293eb3aedc65744b2fcf26477a4fad1a05df932770ad361f"
+        }
+      ]
+    },
+    {
+      "id": "code-enforcing-principles",
+      "sourceId": "code__enforcing-principles",
+      "label": "Engineering principles",
+      "tier": "Outside pack",
+      "tierBasis": "shortlist-recommendation",
+      "group": "build",
+      "reviewStatus": "complete",
+      "reviewCompletedOn": "2026-10-05",
+      "origin": "downloaded source",
+      "changeStatus": "edited",
+      "summary": "Made the change protocol portable, separated documentation size from risk obligations, and moved conditional expertise into four references. Dependency fidelity and test form are independent decisions; planning, ML evaluation, and software verification retain distinct ownership.",
+      "historicalBaselineBundleSha256": "88ac731d2d61032e65bb53b06dcb6314ab3fee98b87d9c14988fe5a3994aff45",
+      "consolidatedFrom": [],
+      "canonicalId": "code-enforcing-principles",
+      "description": "Classify concrete repository changes by risk, identify the boundary that could fail, and derive contract, verification, migration, and rollout obligations. Use before implementing or reviewing a proposed software change, especially retries, interfaces, persistence, dependencies, and deployments. Planning and model-quality evaluation remain separate.",
+      "skillPath": "../../.agents/skills/code-enforcing-principles/SKILL.md",
+      "mainWords": 1512,
+      "bundleSha256": "2a49aef2b7ec410e10c37e567c7de8ac49a0eb2d3fc0dbb6581cd11fa0bbe64f",
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 11257,
+          "sha256": "6b51d99a9272ba2ac44d62919483c5d5ed9892ed6c5f8e6b9fd121dcfb046fde"
+        },
+        {
+          "path": "references/boundary-verification.md",
+          "bytes": 2678,
+          "sha256": "dce292080c84dc406ade8a3c843db8ca3963b6f5a4238883a1983d1b1ea0f709"
+        },
+        {
+          "path": "references/design-review.md",
+          "bytes": 1068,
+          "sha256": "06492571680ce2c6da300878db9dd97d444df852dc6f01a6bf6fc5620caffaa4"
+        },
+        {
+          "path": "references/migration-rollout.md",
+          "bytes": 2587,
+          "sha256": "83c1933fcf77f39b9d527fd81e9e14543b88f492e59c215d00e19b2a8ecfb4e8"
+        },
+        {
+          "path": "references/observability.md",
+          "bytes": 1791,
+          "sha256": "0f50788ede081ee58ac9a38c5ec2415714254568e50972afb80a3be0953139f6"
+        }
+      ]
+    },
+    {
+      "id": "code-fixing-bugs",
+      "sourceId": "code__fixing-bugs",
+      "label": "Fix bugs",
+      "tier": "Core",
+      "tierBasis": "shortlist-recommendation",
+      "group": "build",
+      "reviewStatus": "complete",
+      "reviewCompletedOn": "2026-10-06",
+      "origin": "downloaded source",
+      "changeStatus": "edited",
+      "summary": "Reviewed skill bundle with authorized changes and preserved expertise.",
+      "historicalBaselineBundleSha256": "a5be3e70fc06912ae8a3f3a242be121bb78786e157c54f3805c1c110bda8b6a1",
+      "consolidatedFrom": [],
+      "canonicalId": "code-fixing-bugs",
+      "description": "Reproduce, diagnose, repair, and verify software or POC defects with regression evidence. Use for code failures, regressions, flaky behavior, concurrency faults, performance regressions, and replay divergence. Model quality, metric selection, and experimental validity belong to ML evaluation.",
+      "skillPath": "../../.agents/skills/code-fixing-bugs/SKILL.md",
+      "mainWords": 1351,
+      "bundleSha256": "23fc16211b8ce3a9a951d79e0f92125b8c0445e71861afc814d945ef45665087",
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 9870,
+          "sha256": "96b492b02dad6659bca44578d3f175fc181451c29dbc7525f6f61e1e5bd3cc38"
+        }
+      ]
+    },
+    {
+      "id": "design-animating-interfaces",
+      "sourceId": "design__animating-interfaces",
+      "label": "Interface motion",
+      "tier": "Optional",
+      "tierBasis": "explicit-selection",
+      "group": "show",
+      "reviewStatus": "complete",
+      "reviewCompletedOn": "2026-10-06",
+      "origin": "downloaded source",
+      "changeStatus": "edited",
+      "summary": "Reviewed skill bundle with authorized changes and preserved expertise.",
+      "historicalBaselineBundleSha256": "23fa60be858c2eab5d5ba0ffd488370a081dda5c1412bd9df9a914c9d7ae724f",
+      "consolidatedFrom": [],
+      "canonicalId": "design-animating-interfaces",
+      "description": "Design, implement, review, and debug DOM interface motion for web products and internal tools. Use for component transitions, loading and action feedback, easing and duration choices, animation performance, or motion tokens. Excludes SVG path morphing, canvas/WebGL, React Native, and Lottie implementations.",
+      "skillPath": "../../.agents/skills/design-animating-interfaces/SKILL.md",
+      "mainWords": 1443,
+      "bundleSha256": "fd4ef5b2726b42989021c566a44742c34c3e7b3041944c529f1527a66136588b",
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 10231,
+          "sha256": "52319eaac469111e8ebe4c3a898bce06f0cc8547bfe8fe23b6ed9d7629456c62"
+        },
+        {
+          "path": "references/accessibility-and-input.md",
+          "bytes": 7210,
+          "sha256": "9c215c23ab0a45307ea048199d9294ea1fcac04ecea85d92cd8b0fd5cd6b1470"
+        },
+        {
+          "path": "references/component-recipes.md",
+          "bytes": 13348,
+          "sha256": "bf86ace2da738ce42bea0c1a6ee7b84366fc6109383c4b429cd7b4bec8734e57"
+        },
+        {
+          "path": "references/easing-and-springs.md",
+          "bytes": 5312,
+          "sha256": "8877f262e7775bc875c065cd8d23d8fcf1aadffd6b5ee6e746853df701bcbeb0"
+        },
+        {
+          "path": "references/motion-systems-and-integrations.md",
+          "bytes": 6349,
+          "sha256": "8269b610751e1b8cf825ad5dc3d4532bd29a7415ebf0233e92301281c22698c7"
+        },
+        {
+          "path": "references/performance-and-debugging.md",
+          "bytes": 6689,
+          "sha256": "d76f51bd6c6eee11218ef48c181271ff1eb0de0bed0d1921e014dbf280cf5fa1"
+        }
+      ]
+    },
+    {
+      "id": "design-building-frontend-interfaces",
+      "sourceId": "design__building-frontend-interfaces",
+      "label": "POC interfaces",
+      "tier": "Core",
+      "tierBasis": "shortlist-recommendation",
+      "group": "show",
+      "reviewStatus": "complete",
+      "reviewCompletedOn": "2026-10-05",
+      "origin": "downloaded source",
+      "changeStatus": "edited",
+      "summary": "Completed the approved proportional POC scope, conditional references, and honest demo/inference evidence boundary. All eight quality priorities and all four detailed references remain.",
+      "historicalBaselineBundleSha256": "809c0d73b9413b44948c1719593b6edba25de2aa81707d2b85ea39082033a1da",
+      "consolidatedFrom": [],
+      "canonicalId": "design-building-frontend-interfaces",
+      "description": "Build, adapt, or review usable web interfaces for model demos, comparisons, and workflow prototypes. Apply when frontend task flow, interaction states, accessibility, responsiveness, or visual clarity needs work; match polish to the audience and purpose.",
+      "skillPath": "../../.agents/skills/design-building-frontend-interfaces/SKILL.md",
+      "mainWords": 973,
+      "bundleSha256": "2f845b31b3d0c064472b99ed5480726410a7c49f4334e03457c9939433561a11",
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 7153,
+          "sha256": "7b0cc3d11fda2106b6a663d98554220c7083c4027f6e56005617bd2072981173"
+        },
+        {
+          "path": "components-forms.md",
+          "bytes": 8216,
+          "sha256": "2be833e99f3baaaee5a8f69625a7b7e91bfccb76a0c76a60edbd906b183df1aa"
+        },
+        {
+          "path": "craft-rules.md",
+          "bytes": 10091,
+          "sha256": "3672dbbe08690992f8f1195ac840fe5356abd22499a3149b46357c2185bb01fc"
+        },
+        {
+          "path": "mobile-accessibility.md",
+          "bytes": 5232,
+          "sha256": "2e27ffd08562203b16031fc7aabab3732712af5212c14eed1624341d1b2048a5"
+        },
+        {
+          "path": "motion-performance.md",
+          "bytes": 8559,
+          "sha256": "81eae655f65fd1ceb6ae35bd37e9bc8f83cde25685cd2667aa1bcbfbed4e4615"
+        }
+      ]
+    },
+    {
+      "id": "design-designing-cli",
+      "sourceId": "design__designing-cli",
+      "label": "CLI design",
+      "tier": "Optional",
+      "tierBasis": "explicit-selection",
+      "group": "build",
+      "reviewStatus": "complete",
+      "reviewCompletedOn": "2026-10-06",
+      "origin": "downloaded source",
+      "changeStatus": "unchanged",
+      "summary": "Reviewed CLI design and classified it as optional for creating, improving, or reviewing command-line tools. Routine command execution does not need this skill.",
+      "historicalBaselineBundleSha256": "a31073e006726f5f0c013be534f4c00a21e114dbab7edd8ec5cf914ba1324562",
+      "consolidatedFrom": [],
+      "canonicalId": "design-designing-cli",
+      "description": "Designs distinctive, production-grade terminal UIs that balance aesthetics with pragmatism. Covers layout composition, color palettes for terminal environments, progress indicators, table formatting, interactive prompts, and output hierarchy. Use when building CLI tools, formatting terminal output, designing interactive prompts, or creating dashboard-style terminal interfaces.",
+      "skillPath": "../../.agents/skills/design-designing-cli/SKILL.md",
+      "mainWords": 1241,
+      "bundleSha256": "d8058ead4f6192c32ee019a437ef05ed5dbeea3e851835d94372f8ccf5a86e2a",
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 9074,
+          "sha256": "7f75f84c741cc7c165ee3d9f418ace13d6719d984898f780dc068d266cf4bf89"
+        }
+      ]
+    },
+    {
+      "id": "design-designing-typography",
+      "sourceId": "design__designing-typography",
+      "label": "mobile games UI",
+      "tier": "Outside pack",
+      "tierBasis": "shortlist-recommendation",
+      "group": "show",
+      "reviewStatus": "complete",
+      "reviewCompletedOn": "2026-10-05",
+      "origin": "downloaded source",
+      "changeStatus": "unchanged",
+      "summary": "Reviewed unchanged; retained for mobile games UI.",
+      "historicalBaselineBundleSha256": "94d5f3c0d27522074cfe14fe815a108e74dd11b0891fbc21cdff052f2ff481c0",
+      "consolidatedFrom": [],
+      "canonicalId": "design-designing-typography",
+      "description": "Designs and implements typography systems for web interfaces and mobile game UI. Use when choosing fonts, type scales, hierarchy, readability, numerals, localization behavior, web-font loading, or layout-shift-safe text.",
+      "skillPath": "../../.agents/skills/design-designing-typography/SKILL.md",
+      "mainWords": 2920,
+      "bundleSha256": "bb7193f9b272eabfce2e3728dea6ffe038aa9a1b82e97e3f66491c0a1b03ccbe",
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 21359,
+          "sha256": "3dbbd67615db05fafde5aa07ade71f826b8eb78246d0a1ffd7de7892e8aee5d8"
+        }
+      ]
+    },
+    {
+      "id": "design-frontend-foundations",
+      "sourceId": "design-frontend-foundations",
+      "label": "Frontend foundations",
+      "tier": "Optional",
+      "tierBasis": "coordinator-recommendation",
+      "group": "show",
+      "reviewStatus": "complete",
+      "reviewCompletedOn": "2026-10-06",
+      "origin": "approved consolidation",
+      "changeStatus": "consolidated-added",
+      "summary": "Reviewed skill bundle with authorized changes and preserved expertise.",
+      "historicalBaselineBundleSha256": null,
+      "consolidatedFrom": [
+        "design__implementing-frontend-css-html",
+        "design__kicking-off"
+      ],
+      "canonicalId": "design-frontend-foundations",
+      "description": "Establish a frontend visual foundation or implement and maintain semantic HTML/CSS within a chosen design system. Use for visual direction, component naming, tokens, layout, themes, and styling; broader user-flow and interaction-quality reviews use interface-engineering guidance when available.",
+      "skillPath": "../../.agents/skills/design-frontend-foundations/SKILL.md",
+      "mainWords": 1486,
+      "bundleSha256": "6d0e20bebaf1e95deada18af243f15c4d14510ac73d5c0e9ddf683693735f4dd",
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 11264,
+          "sha256": "130d1fd1b5e123c8c32a427ba2e54caf006ae739c4d3a77bdbeed84c12a48f71"
+        },
+        {
+          "path": "references/component-architecture.md",
+          "bytes": 902,
+          "sha256": "b6e8a6f4c4c3975109de64a20ab01a200798c0aa437f6c78774984c485a94c7b"
+        },
+        {
+          "path": "references/motion.md",
+          "bytes": 8690,
+          "sha256": "43e6f6ddb4a762e5358ec0f662a374a0fe742559b22e2f38b1f9551ce72d2947"
+        },
+        {
+          "path": "references/shadows.md",
+          "bytes": 21364,
+          "sha256": "cf97d456d7c01a0fed4be73aa7627b2c6781847d7db56d17f68e74f967c86099"
+        },
+        {
+          "path": "references/toast-example.md",
+          "bytes": 8303,
+          "sha256": "078d8febd60baf8ba61a3af116dccc53b74a0b02e0b1920b7a7d2b0ffb2d413f"
+        },
+        {
+          "path": "references/tokens.md",
+          "bytes": 4854,
+          "sha256": "f4caa8eb19b0d4ac3b76a5a04c85c24ee7006f075dfd56f12f4c06433ee2c767"
+        },
+        {
+          "path": "references/typography.md",
+          "bytes": 7209,
+          "sha256": "d9bff3c7fb44fd4978e557498b8af8fc4a63c9b8fdb51103a65d5242e03051af"
+        }
+      ]
+    },
+    {
+      "id": "design-visualizing-data",
+      "sourceId": "design__visualizing-data",
+      "label": "Charts & evidence",
+      "tier": "Core",
+      "tierBasis": "shortlist-recommendation",
+      "group": "show",
+      "reviewStatus": "complete",
+      "reviewCompletedOn": "2026-10-05",
+      "origin": "downloaded source",
+      "changeStatus": "edited",
+      "summary": "Condense repeated workflow and report requirements. Replace twelve passes and the thirteen-section default report with six proportional decision checks and task-sized output. Consolidate artifact-specific guidance in one table, remove repeated report requirements and fabricated persona credentials, and preserve the Story proof for consequential claims. Main entrypoint reduced from 3552 to 2329 words. Make presentation and implementation medium-aware. Cover web, slides, print, technical reports, and suitable artifact tools. Retain web SVG, keyboard, focus, tooltip, motion, performance, responsive layout, and implementation-layer guidance conditionally. Add relevant export and rendered-value verification. React/D3/SVG remains an option rather than a compulsory default.",
+      "historicalBaselineBundleSha256": "a8fbdd89d55db6336c9bff9ef6ca257651f16ddaaa277f6bf458414fe8cbfbaa",
+      "consolidatedFrom": [],
+      "canonicalId": "design-visualizing-data",
+      "description": "Designs, audits, and implements charts, tables, and evidence presentations across web, slides, print, and technical reports. Use for supplied model results, experiment comparisons, trends, uncertainty, chart selection, or visualization reviews needing defensible framing and explicit statistical assumptions.",
+      "skillPath": "../../.agents/skills/design-visualizing-data/SKILL.md",
+      "mainWords": 2322,
+      "bundleSha256": "b541bb7b081b6580fae5d34ac0cf2094b3419d4cf6d0496eb3e4c8477eeda8b5",
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 17215,
+          "sha256": "b2d2042d45f232140b1f4b7cdae1a9145d8361d6372a826630571ff7a8cf4a8d"
+        },
+        {
+          "path": "references/statistical-foundations.md",
+          "bytes": 7394,
+          "sha256": "7fb30605b61fe5bc283c2957280a8e84cbd7cf2821a8511004cc2511c60164f5"
+        }
+      ]
+    },
+    {
+      "id": "doc-guard-drift",
+      "sourceId": "doc__guard-drift",
+      "label": "Documentation accuracy",
+      "tier": "Core",
+      "tierBasis": "shortlist-recommendation",
+      "group": "explain",
+      "reviewStatus": "complete",
+      "reviewCompletedOn": "2026-10-05",
+      "origin": "downloaded source",
+      "changeStatus": "edited",
+      "summary": "Separate review and repair by the user's request and existing authorization. Reviews return evidence-backed findings and replacement wording without applying edits. Requests to correct, update, synchronize, or apply approved proposals authorize verified repairs within the requested documentation scope. Edit-tool availability no longer selects repair mode. The description now emphasizes documentation accuracy requests and excludes prose-only editing. Make reporting proportional and recurrence prevention conditional. Replace the fixed seven-section report with compact findings retaining classification, severity, location, evidence, counter-evidence, impact, and correction or unresolved question. Counts and documentation-trust assessments cover only inspected scope. Recurrence advice applies when structural or repeated causes are found or prevention is requested; applying prevention changes requires that work to be in the user's scope.",
+      "historicalBaselineBundleSha256": "2add0c9d452d49a8f3c76f0ee00857e29fb3bf7e847a85da940d617fd0ca2ae7",
+      "consolidatedFrom": [],
+      "canonicalId": "doc-guard-drift",
+      "description": "Check repository documentation against source evidence. Use for doc accuracy reviews, documentation impact in PR/release reviews, or syncing docs after refactors; not prose-only editing.",
+      "skillPath": "../../.agents/skills/doc-guard-drift/SKILL.md",
+      "mainWords": 2306,
+      "bundleSha256": "c9fc9a7679b4f9b8fd6bcf152e846734137639db9ce99d9190fe5e8b39c5da9e",
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 15952,
+          "sha256": "218706f77864abbbe119544a735f9406ed9dd949eb2e8a313a9165d9005b3e63"
+        }
+      ]
+    },
+    {
+      "id": "documentation-writing",
+      "sourceId": "documentation__writing",
+      "label": "Technical documentation",
+      "tier": "Core",
+      "tierBasis": "shortlist-recommendation",
+      "group": "explain",
+      "reviewStatus": "complete",
+      "reviewCompletedOn": "2026-10-05",
+      "origin": "downloaded source",
+      "changeStatus": "edited",
+      "summary": "Applied the general simplification and boundary improvements, then the approved ML, API, and larger-system documentation guidance. The entrypoint routes to separate optional references. ML system overviews and evaluation evidence summaries are prioritized for managerial review; model/data lookup, interface integration, architecture maps, and operational tasks remain available according to reader need.",
+      "historicalBaselineBundleSha256": "d8858801e4c53c8d03eebcbb5044e98a979bc2ac1c552f8d3fe319c5f9aff187",
+      "consolidatedFrom": [],
+      "canonicalId": "documentation-writing",
+      "description": "Write, review, and organize documentation for ML and engineering systems around reader tasks using Diátaxis. Use for ML system overviews, supplied evaluation evidence summaries, API docs, architecture explanations, onboarding, reference pages, and documentation sets.",
+      "skillPath": "../../.agents/skills/documentation-writing/SKILL.md",
+      "mainWords": 1374,
+      "bundleSha256": "a4fd692b9c51d4e3a0c084d62297a31dd2bc1a05bb6fe5fcff026e2018690e68",
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 9802,
+          "sha256": "6136bf6ad2686a47a281d20d12af8f44ebd873ed2883af3641ca0d015083e1e6"
+        },
+        {
+          "path": "references/api-documentation.md",
+          "bytes": 1994,
+          "sha256": "421586e743cc747169dff13e510422a471ad76c1001c18743eabcd479ba34b97"
+        },
+        {
+          "path": "references/documentation-patterns.md",
+          "bytes": 1897,
+          "sha256": "9a2291be3eddac63c9f76cc79da9c926decfa9a9149fbf9e360939f2899ac250"
+        },
+        {
+          "path": "references/ml-documentation.md",
+          "bytes": 3522,
+          "sha256": "304065de90038fa6328f8b8bac0ec1fcc30ce18fd71381dcab19bec061768c6e"
+        },
+        {
+          "path": "references/system-documentation.md",
+          "bytes": 2204,
+          "sha256": "a76028eb76b1897eb3e28032c415a40ca62b1ca07ddf1db34f5f62f126576fb1"
+        }
+      ]
+    },
+    {
+      "id": "eval-design-proof-gates",
+      "sourceId": "eval__design-proof-gates",
+      "label": "Define success",
+      "tier": "Core",
+      "tierBasis": "shortlist-recommendation",
+      "group": "prove",
+      "reviewStatus": "complete",
+      "reviewCompletedOn": "2026-10-06",
+      "origin": "downloaded source",
+      "changeStatus": "edited",
+      "summary": "All three accepted improvements are applied: canonical schemas, portable software proof design, and compact four-group checks on explicit request. Full plans remain the default; proof and ML-evaluation boundaries are preserved. Review complete.",
+      "historicalBaselineBundleSha256": "e7d83ed48537ab8963654f9cae420d10308a7e31cc67e9261756f098787cf7aa",
+      "consolidatedFrom": [],
+      "canonicalId": "eval-design-proof-gates",
+      "description": "Designs falsifiable software and POC proof gates and a durable eval-plan.md, with compact checks on explicit request. Use before substantial implementation, when defining software success, for performance, realtime, or scale claims, or when specifying missing proof harnesses. ML evaluation and milestone planning remain separate.",
+      "skillPath": "../../.agents/skills/eval-design-proof-gates/SKILL.md",
+      "mainWords": 4128,
+      "bundleSha256": "f6f029b3e26d724ed4d95a4abee738edeee6db880d64fe785da307a5dfc9da51",
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 28563,
+          "sha256": "a8e89744ac39c2714462417f75da63dd6c2b9166f65e22429a660be21da52e36"
+        },
+        {
+          "path": "references/domain-proof-guidance.md",
+          "bytes": 2063,
+          "sha256": "445a737d3632660b392aecb6ced98c9627c55bc072dcf96fc34ebe0b6f0dab14"
+        },
+        {
+          "path": "references/eval-plan-template.md",
+          "bytes": 1069,
+          "sha256": "a6d200f7a135f2dd8de2fc9974c510637949d15809c6887d968d552d7eb843d4"
+        },
+        {
+          "path": "references/gold-standard-proof-gate-examples.md",
+          "bytes": 29691,
+          "sha256": "535bc46f38b59bc14ec03c84585249d4e5cd9c446011f1e50eed106557f00190"
+        }
+      ]
+    },
+    {
+      "id": "eval-implement-proof-gate",
+      "sourceId": "eval__implement-proof-gate",
+      "label": "Build proof harnesses",
+      "tier": "Outside pack",
+      "tierBasis": "shortlist-recommendation",
+      "group": "prove",
+      "reviewStatus": "complete",
+      "reviewCompletedOn": "2026-10-06",
+      "origin": "downloaded source",
+      "changeStatus": "edited",
+      "summary": "Resolved mutation authority, consolidated repeated contract and boundary rules, and made repository planning, delegation, and kernel assumptions conditional while preserving software proof expertise.",
+      "historicalBaselineBundleSha256": "3a3f1f46f17702b5575a4bbec84eee3115217b0013c5e875828f50fdb246b68f",
+      "consolidatedFrom": [],
+      "canonicalId": "eval-implement-proof-gate",
+      "description": "Builds or repairs a missing or defective harness for an approved objective software gate, runs it, and records evidence and the gate state. Use when an acceptance criterion needs a literal runnable command. Gate design, product implementation, and ML evaluation remain separate.",
+      "skillPath": "../../.agents/skills/eval-implement-proof-gate/SKILL.md",
+      "mainWords": 1408,
+      "bundleSha256": "685007ca3dcf1af16f86a21da5b4ad201a7a570b1e9f5ffe3d083defee0cec3e",
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 10178,
+          "sha256": "2169e8a81974642537d4d6232a453c28bac043c46e38f0f21037f36cb71d3da0"
+        }
+      ]
+    },
+    {
+      "id": "explaining-creating-interactive-articles",
+      "sourceId": "explaining__creating-interactive-articles",
+      "label": "Interactive explanations",
+      "tier": "Optional",
+      "tierBasis": "explicit-selection",
+      "group": "explain",
+      "reviewStatus": "complete",
+      "reviewCompletedOn": "2026-10-06",
+      "origin": "downloaded source",
+      "changeStatus": "edited",
+      "summary": "Reviewed skill bundle with authorized changes and preserved expertise.",
+      "historicalBaselineBundleSha256": "99aea8ccf79728afed17ec5daf129f413a111ffaeeab2d26657486ec5b51592a",
+      "consolidatedFrom": [],
+      "canonicalId": "explaining-creating-interactive-articles",
+      "description": "Create, revise, outline, or audit interactive technical explanations and focused teaching prototypes that help readers predict a mechanism. Use for explorable articles and training material; ordinary documents, operational dashboards, and production ML evaluation use their own workflows.",
+      "skillPath": "../../.agents/skills/explaining-creating-interactive-articles/SKILL.md",
+      "mainWords": 2059,
+      "bundleSha256": "687edec5e74e86d08e9c1144c89f2aff569b7d312ea728decf3d59b15f8f2378",
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 15219,
+          "sha256": "b7702398448832034724f6e096c3edd7153a97cd6a6447cf6daaded206f4344e"
+        },
+        {
+          "path": "lib/README.md",
+          "bytes": 1011,
+          "sha256": "225d9f92c1d47048d65d2b5d55d953c844bae489a775dc45889039c7a1276748"
+        },
+        {
+          "path": "references/article.md",
+          "bytes": 23375,
+          "sha256": "67786bd337fa9349c2721efde58856709427fd5219f78f2fa65821e328471f1b"
+        },
+        {
+          "path": "references/visuals.md",
+          "bytes": 33195,
+          "sha256": "a91748b279a71200506e37e8a12bd0b81d664d328d20ff1bc7ed697cc403cde0"
+        },
+        {
+          "path": "references/writing-style.md",
+          "bytes": 20396,
+          "sha256": "a8ecd4794ecf4a1f2a64d0f369f51285ab8dcbad57b8d6d3f0fcdc9baeddfe2b"
+        }
+      ]
+    },
+    {
+      "id": "handoff-final-quality-gate",
+      "sourceId": "handoff__final-quality-gate",
+      "label": "Final handoff",
+      "tier": "Outside pack",
+      "tierBasis": "shortlist-recommendation",
+      "group": "prove",
+      "reviewStatus": "complete",
+      "reviewCompletedOn": "2026-10-06",
+      "origin": "downloaded source",
+      "changeStatus": "edited",
+      "summary": "Made the independent handoff gate portable, resolved blocker and risk-acceptance authority, and consolidated evidence and closure requirements into one report with a short caller summary.",
+      "historicalBaselineBundleSha256": "59b2f9c05c736b85fa2ae468dab52e7ae6a19ed76ec7b282e6f119860b8398e7",
+      "consolidatedFrom": [],
+      "canonicalId": "handoff-final-quality-gate",
+      "description": "Independent evidence audit before substantial engineering work is declared complete, a milestone closes, or a release is handed off. Checks outcome proof, required reviews, documentation, acceptance, and remaining work; consumes existing evaluation results rather than designing or running evaluations.",
+      "skillPath": "../../.agents/skills/handoff-final-quality-gate/SKILL.md",
+      "mainWords": 1375,
+      "bundleSha256": "03631baa4d96d0346fc5643f436f1fb58b1d2465f234e4fd7bb8f06a1900bdb8",
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 9858,
+          "sha256": "de18f15c3c1d1f85f13250c938af6d2cbb01a072a2942b8995435f32a8076bf6"
+        }
+      ]
+    },
+    {
+      "id": "ops-maintain-incident-postmortem",
+      "sourceId": "ops__maintain-incident-postmortem",
+      "label": "Incident postmortems",
+      "tier": "Optional",
+      "tierBasis": "explicit-selection",
+      "group": "prove",
+      "reviewStatus": "complete",
+      "reviewCompletedOn": "2026-10-06",
+      "origin": "downloaded source",
+      "changeStatus": "edited",
+      "summary": "Made postmortem creation and updates portable, accepted evidence-supported drafting without an automatic missing-brief blocker, added human accountability and action tracking alongside enforcement artifacts, separated ML evaluation, and consolidated repeated rules while retaining diagnostic expertise.",
+      "historicalBaselineBundleSha256": "9a17ff39435c4fea89f25026235652f2bc2f78edd49076d62bdd2beb67850272",
+      "consolidatedFrom": [],
+      "canonicalId": "ops-maintain-incident-postmortem",
+      "description": "Preserve difficult operational incident diagnoses as durable postmortems: causal evidence, ruled-out hypotheses, misleading signals, and a first discriminator. Create when the diagnostic search has reusable value; routine obvious bugs return not owed. Update existing postmortems for new evidence, corrective-action progress, or closure.",
+      "skillPath": "../../.agents/skills/ops-maintain-incident-postmortem/SKILL.md",
+      "mainWords": 1833,
+      "bundleSha256": "9cb314243546edd8162178d6384413b4d71e2a2364dc84ad06c49d30ed7dec1d",
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 13090,
+          "sha256": "4912f1987af95c4091b08d0306e41a073d2864c9066c3f28824dc016a3f9309f"
+        }
+      ]
+    },
+    {
+      "id": "persona-selecting",
+      "sourceId": "persona__selecting",
+      "label": "Choose personas",
+      "tier": "Outside pack",
+      "tierBasis": "shortlist-recommendation",
+      "group": "tune",
+      "reviewStatus": "complete",
+      "reviewCompletedOn": "2026-10-05",
+      "origin": "downloaded source",
+      "changeStatus": "edited",
+      "summary": "Grounded engineering and management roles in the actual task, replaced duplicated verification and evaluation mandates with exact companion pointers, clarified persona lifetime, and made explanation evidence-led. Gaming expertise remains available in a conditionally loaded reference.",
+      "historicalBaselineBundleSha256": "f8c23cfeea124ffdce8b7a9d06ef0624a9e2314fa7e4062d685c864ee47fbcc3",
+      "consolidatedFrom": [],
+      "canonicalId": "persona-selecting",
+      "description": "Select a task persona when explicitly invoked or asked to choose a persona. Supports engineering and ML management perspectives, with gaming roles available for relevant requests. Ordinary coding, planning, or explanation requests do not activate this selector.",
+      "skillPath": "../../.agents/skills/persona-selecting/SKILL.md",
+      "mainWords": 1171,
+      "bundleSha256": "c98ec940c2965001b221d62edc970934a4ebd3b9025f0c857525ab20c5880f0c",
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 8702,
+          "sha256": "5193bc0c42e56ca2c4f2ece611167197eeb5ed872ceb3a5b7c6bc4288120c395"
+        },
+        {
+          "path": "references/gaming-personas.md",
+          "bytes": 2104,
+          "sha256": "a5c7204a1b731ac332b97384617ffc263124ab4991e8c12b7c34f49c383a889f"
+        }
+      ]
+    },
+    {
+      "id": "plan-maintain-work-spec",
+      "sourceId": "plan__maintain-work-spec",
+      "label": "Living specifications",
+      "tier": "Core",
+      "tierBasis": "shortlist-recommendation",
+      "group": "decide",
+      "reviewStatus": "complete",
+      "reviewCompletedOn": "2026-10-06",
+      "origin": "downloaded source",
+      "changeStatus": "edited",
+      "summary": "Separated deliverable type from document depth, added architecture/documentation and runnable application/foundation POC guidance and combined use, replaced the fixed author-repository template and policies with portable conventions, and clarified boundaries with milestone planning, software verification, and dedicated ML evaluation.",
+      "historicalBaselineBundleSha256": "e844913f1c1083ff6daf43a770a1407176e807fd5454182f28880a422624d889",
+      "consolidatedFrom": [],
+      "canonicalId": "plan-maintain-work-spec",
+      "description": "Create or maintain a living work specification when goals, scope, requirements, decisions, acceptance criteria, or progress must survive across sessions. Supports POC architecture and documentation, runnable application POCs and their foundations, and substantial ongoing work. Separate from project scheduling, implementation, and detailed ML evaluation.",
+      "skillPath": "../../.agents/skills/plan-maintain-work-spec/SKILL.md",
+      "mainWords": 1493,
+      "bundleSha256": "b059892098cead9c544f88a3c203906832a738738e0ad465ad9d92632d80546d",
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 10842,
+          "sha256": "e51d157e0738ad415ab68b480a3fc93c586413a1aafe47e16c7f10c00a5ddb5c"
+        },
+        {
+          "path": "references/spec-formats.md",
+          "bytes": 7942,
+          "sha256": "8461de786ee18965c638b9b1b9a6d6c6c9c98e4fd78651e2327cc1106afa917a"
+        }
+      ]
+    },
+    {
+      "id": "plan-prepare-goal",
+      "sourceId": "plan__prepare-goal",
+      "label": "Execution launcher",
+      "tier": "Outside pack",
+      "tierBasis": "shortlist-recommendation",
+      "group": "decide",
+      "reviewStatus": "complete",
+      "reviewCompletedOn": "2026-10-06",
+      "origin": "downloaded source",
+      "changeStatus": "edited",
+      "summary": "Made launch authorization depend on session decisions, replaced repeated mandatory skill runs with proportionate verification and optional helpers, and defined a current-source preflight and resume contract.",
+      "historicalBaselineBundleSha256": "afd795b59141f7c8cc9d2c6e9beae7cfcd08bda9a26adf56cdccc47ea68c5f8c",
+      "consolidatedFrom": [],
+      "canonicalId": "plan-prepare-goal",
+      "description": "Launch or resume implementation of an approved work spec with durable milestone state, proportionate software verification, and explicit human acceptance boundaries. Use when asked to execute a grounded spec; milestone planning and ML evaluation remain separate.",
+      "skillPath": "../../.agents/skills/plan-prepare-goal/SKILL.md",
+      "mainWords": 578,
+      "bundleSha256": "06e6d8cd270ee1a6468d98d9d5ea98bf32b95cc2d4493b8d54d005f44dc7cf85",
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 4182,
+          "sha256": "76d32c18698ec998584318ecc3f0344b3a03100a3dc59a2224224b06b24ed95d"
+        }
+      ]
+    },
+    {
+      "id": "plan-prepare-summary",
+      "sourceId": "plan__prepare-summary",
+      "label": "Goal / resumption brief",
+      "tier": "Outside pack",
+      "tierBasis": "shortlist-recommendation",
+      "group": "decide",
+      "reviewStatus": "complete",
+      "reviewCompletedOn": "2026-10-06",
+      "origin": "downloaded source",
+      "changeStatus": "edited",
+      "summary": "Made the brief independent of author-specific root sections and fixed schema addresses, added current resumption state and evidence freshness, and focused grounding on agreed scope and contracts. Clarified readiness versus completion, legitimate limited POCs, and the separation of ML evaluation.",
+      "historicalBaselineBundleSha256": "4eca71d202696060c97660f7b67b7d262295671a03493e8fd12752f80c7db5eb",
+      "consolidatedFrom": [],
+      "canonicalId": "plan-prepare-summary",
+      "description": "Prepare a read-only goal and resumption brief from current work commitments, contracts, and completion evidence. Use before launching or resuming implementation, including after compaction or handoff. Detects summary drift and gaps; implementation, gate design, and ML evaluation remain separate.",
+      "skillPath": "../../.agents/skills/plan-prepare-summary/SKILL.md",
+      "mainWords": 654,
+      "bundleSha256": "ed6dfd532b8dd9aabd8bfdbe8d51b0f12c28697ae774b432342ec3228057deda",
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 4569,
+          "sha256": "86e27452eab5ffca11e6f4eeddb6cf5e9cc255f8e4ba6a8aaa71e7bd28cf2ad7"
+        }
+      ]
+    },
+    {
+      "id": "plan-project-milestones",
+      "sourceId": "plan-project-milestones",
+      "label": "Team milestones",
+      "tier": "Core",
+      "tierBasis": "shortlist-recommendation",
+      "group": "decide",
+      "reviewStatus": "complete",
+      "reviewCompletedOn": "2026-10-06",
+      "origin": "custom import",
+      "changeStatus": "custom-added",
+      "summary": "Made the ML evaluation boundary explicit, consolidated repeated output guidance, and required reassessing affected acceptance evidence during replanning.",
+      "historicalBaselineBundleSha256": "8894670803b4ad21dda6b5bcc5edf99fd1948c20a1a7ee295c23eda374e0a321",
+      "consolidatedFrom": [],
+      "canonicalId": "plan-project-milestones",
+      "description": "Turn vague or evolving ML/AI and engineering system ideas into workstreams, proposed team or person ownership, effort ranges, and milestones that converge into a working system. Use for an ML or engineering manager planning a multi-component project or replanning one with new context. Do not use for simple personal reminders, isolated coding tasks, or status reporting without a planning request.",
+      "skillPath": "../../.agents/skills/plan-project-milestones/SKILL.md",
+      "mainWords": 1632,
+      "bundleSha256": "9c0f1556ca0bc21deda788fdc1d3c3a56a52b0aae70adfcc48b98906477074fe",
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 11713,
+          "sha256": "93a92c078e65056f8f94c4cd082c048603cd364bbb7e88e241a3742e6f15a9f9"
+        },
+        {
+          "path": "agents/openai.yaml",
+          "bytes": 304,
+          "sha256": "4047c683e2a857ef3586d86691b6fe5b1fb7f7e6b3663a4eadc950bae8e3bb21"
+        },
+        {
+          "path": "references/creation-system-example.md",
+          "bytes": 12228,
+          "sha256": "e37b836afd6218a57acfaa6fa5dc42c70365a8fd051c32fecd073716bdc6b298"
+        }
+      ]
+    },
+    {
+      "id": "plan-question-spec",
+      "sourceId": "plan__question-spec",
+      "label": "Challenge an idea",
+      "tier": "Core",
+      "tierBasis": "shortlist-recommendation",
+      "group": "decide",
+      "reviewStatus": "complete",
+      "reviewCompletedOn": "2026-10-06",
+      "origin": "downloaded source",
+      "changeStatus": "edited",
+      "summary": "Made drafted-spec review independent of compulsory companion reviews, formal input artifacts, author-specific routing, and A2 formatting. Replaced mandatory sections and a top-three quota with proportionate findings, including zero required changes. Replaced S-tier framing with applicable evidence while preserving the adaptive interview and substantive review expertise.",
+      "historicalBaselineBundleSha256": "cd4f4be5165ed16b414da9272ac79fcc817e34cc16c482bb53319e12abb17032",
+      "consolidatedFrom": [],
+      "canonicalId": "plan-question-spec",
+      "description": "Challenge a project idea or proposed approach through an adaptive interview or a drafted-spec review. Use when the user asks to be grilled, interviewed, or challenged on a rough idea, or wants to review a design before implementation. Probe outcome fit, assumptions, alternatives, scope, failure modes, and evidence.",
+      "skillPath": "../../.agents/skills/plan-question-spec/SKILL.md",
+      "mainWords": 1111,
+      "bundleSha256": "8d5b725e6ccb5659d4c220703bf1c1bb948db8bf9b4433c9b1ce12f116172e7e",
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 7996,
+          "sha256": "02841448f35894de34563ce6e5fe10b8e24c2f792f72545f81e949ba6b2c3a3c"
+        }
+      ]
+    },
+    {
+      "id": "plan-question-spec-architecture",
+      "sourceId": "plan__question-spec-architecture",
+      "label": "Architecture review",
+      "tier": "Outside pack",
+      "tierBasis": "shortlist-recommendation",
+      "group": "decide",
+      "reviewStatus": "complete",
+      "reviewCompletedOn": "2026-10-06",
+      "origin": "downloaded source",
+      "changeStatus": "edited",
+      "summary": "Replaced the architecture-named infrastructure duplicate with a distinct architecture review of component necessity, ownership, interfaces, dependencies, failure behavior, full costs, and reversibility. Reduced the working SKILL.md from 1389 to 1055 words while retaining workload and evidence reasoning.",
+      "historicalBaselineBundleSha256": "2c3ab44aafef411756efd572e8503c9045f42fe54eb0746dbc22219bafe59689",
+      "consolidatedFrom": [],
+      "canonicalId": "plan-question-spec-architecture",
+      "description": "Review a proposed system architecture for component necessity, ownership, interface and dependency risks, and recovery or migration costs. Use before adding a service, queue, cache, database, or subsystem, or when redesigning an ML or engineering system. Detailed infrastructure primitive selection, ML evaluation, and milestone planning remain separate tasks.",
+      "skillPath": "../../.agents/skills/plan-question-spec-architecture/SKILL.md",
+      "mainWords": 1055,
+      "bundleSha256": "1eea9664e111e2b992b5024a4c55fc0cf91cdfe7b8d891a87274fb0b0db913d4",
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 7804,
+          "sha256": "8b30477fcfb5125c4c24b20f732ea11a7556e95f0f9b69c1ccb17eb179c85663"
+        }
+      ]
+    },
+    {
+      "id": "plan-question-spec-infra",
+      "sourceId": "plan__question-spec-infra",
+      "label": "Infrastructure review",
+      "tier": "Outside pack",
+      "tierBasis": "shortlist-recommendation",
+      "group": "decide",
+      "reviewStatus": "complete",
+      "reviewCompletedOn": "2026-10-05",
+      "origin": "downloaded source",
+      "changeStatus": "edited",
+      "summary": "Made infrastructure review self-contained, qualified simultaneous latency/capacity/cost gains and primitive advice, added relevant ML infrastructure costs, and consolidated repeated review/report machinery.",
+      "historicalBaselineBundleSha256": "efc814bb81ce7dc8a45d3c5e530abae1d8f3f34d965003e7b5d93b91f9a690a2",
+      "consolidatedFrom": [],
+      "canonicalId": "plan-question-spec-infra",
+      "description": "Review infrastructure proposals or costly and slow services through workload decomposition, primitive fit, bounds, and grounded latency and cost estimates. Use for material storage, queue, cache, or compute choices in software and ML systems. Produces a design critique; measurement execution, implementation, ML evaluation, and milestone planning are separate tasks.",
+      "skillPath": "../../.agents/skills/plan-question-spec-infra/SKILL.md",
+      "mainWords": 1224,
+      "bundleSha256": "8f19ff146959457e15e87d62493df03557b90d5a132e37c9f3599d379763578d",
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 8794,
+          "sha256": "698cb8fbe005395e7bcbaefa9bc35537b1e19d75f00864e1dc9887c7fc379f40"
+        }
+      ]
+    },
+    {
+      "id": "prompt-create-analysis",
+      "sourceId": "prompt__create-analysis",
+      "label": "Analyze prompts",
+      "tier": "Optional",
+      "tierBasis": "shortlist-recommendation",
+      "group": "tune",
+      "reviewStatus": "complete",
+      "reviewCompletedOn": "2026-10-06",
+      "origin": "downloaded source",
+      "changeStatus": "edited",
+      "summary": "Applied proportionate research and diagnosis, consolidated repeated reporting into prioritized findings, and clarified routing and the analysis-to-rewrite handoff. The skill remains separate from rewriting and skill-bundle analysis.",
+      "historicalBaselineBundleSha256": "79a8aafd4cc649d9126a300fb1e86f44f253e48caf4b1df0942b979b40ec07d1",
+      "consolidatedFrom": [],
+      "canonicalId": "prompt-create-analysis",
+      "description": "Diagnose an existing LLM prompt or prompt chain by mapping intent and domain expertise, then tracing structural gaps and concrete fixes to evidence. Use for reviews of prompt behavior and instruction structure before a separate rewrite.",
+      "skillPath": "../../.agents/skills/prompt-create-analysis/SKILL.md",
+      "mainWords": 1511,
+      "bundleSha256": "fb88e75023f689685cf4573075747f44d298b4fdc8df2f51fe54dc6445a9e59f",
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 11144,
+          "sha256": "59a96186236f5d1bb81993f6d10bfb6214d4fc4ccdd96a344b7b0ed21db5a1ab"
+        }
+      ]
+    },
+    {
+      "id": "prompt-improving-rewriting",
+      "sourceId": "prompt__improving--rewriting",
+      "label": "Rewrite prompts",
+      "tier": "Optional",
+      "tierBasis": "shortlist-recommendation",
+      "group": "tune",
+      "reviewStatus": "complete",
+      "reviewCompletedOn": "2026-10-05",
+      "origin": "downloaded source",
+      "changeStatus": "edited",
+      "summary": "Applied the three approved improvements: repaired the analysis handoff and removed the model pin; prioritized supported fixes while preserving intent, constraints, and unresolved choices; defined the complete prompt deliverable, concise change mapping, and limits of editorial inspection.",
+      "historicalBaselineBundleSha256": "040ce3d0a6a0fb00c959295f78ea2d6acec2bfba32acbfe867335da53147a4d4",
+      "consolidatedFrom": [],
+      "canonicalId": "prompt-improving-rewriting",
+      "description": "Rewrite an existing prompt from prompt-create-analysis findings or equivalent supplied analysis. Use when ready to turn identified gaps and resolved design choices into a complete revised prompt that preserves intent and constraints.",
+      "skillPath": "../../.agents/skills/prompt-improving-rewriting/SKILL.md",
+      "mainWords": 382,
+      "bundleSha256": "5c2840e2b339eeb4daae7d39d2d6cdd8c3cfe1cf4b59eacca938c3ac3f46c51f",
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 2922,
+          "sha256": "17fc109a5b3162da2cefeac86a2e773970687bb86d0af2455af0269de06ab012"
+        }
+      ]
+    },
+    {
+      "id": "prompt-perform-root-cause-analysis",
+      "sourceId": "prompt__perform-root-cause-analysis",
+      "label": "Root-cause analysis",
+      "tier": "Core",
+      "tierBasis": "shortlist-recommendation",
+      "group": "prove",
+      "reviewStatus": "complete",
+      "reviewCompletedOn": "2026-10-05",
+      "origin": "downloaded source",
+      "changeStatus": "edited",
+      "summary": "Removed fabricated credentials and outcomes, replaced cause and policy quotas with evidence-supported analysis, consolidated repeated evidence and summaries, and clarified proportional prevention, human accountability, unresolved investigation handling, and workflow boundaries.",
+      "historicalBaselineBundleSha256": "b036715c79d6f187157c03e676fef2fffffe63454a67b70ff1166ebf57f78ae4",
+      "consolidatedFrom": [],
+      "canonicalId": "prompt-perform-root-cause-analysis",
+      "description": "Analyze consequential or recurring engineering failures and difficult investigations to identify causes and proportionate prevention. Use after significant regressions or incidents, or for an explicit root-cause request. Routine bug fixes do not require a full analysis.",
+      "skillPath": "../../.agents/skills/prompt-perform-root-cause-analysis/SKILL.md",
+      "mainWords": 928,
+      "bundleSha256": "664cf897eee8bc15130d88c24b0c8d61db9a40ff508319d26f998b5134ceb43f",
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 6492,
+          "sha256": "40ced3a6c3b3c746366ff1ea64f94caedb77b8d81cf5b60144e728e3ae52aa56"
+        }
+      ]
+    },
+    {
+      "id": "prompt-reverse-engineering",
+      "sourceId": "prompt__reverse-engineering",
+      "label": "Extract a prompt",
+      "tier": "Outside pack",
+      "tierBasis": "shortlist-recommendation",
+      "group": "tune",
+      "reviewStatus": "complete",
+      "reviewCompletedOn": "2026-10-05",
+      "origin": "downloaded source",
+      "changeStatus": "edited",
+      "summary": "Applied explicit example selection and evidence calibration, compact default output with optional seven-section expansion, and material clarification with preservation of supplied preferences and ML boundaries. Retained the distinctive extraction method while removing fixed counts and repeated requirements.",
+      "historicalBaselineBundleSha256": "21dc483dacbe2d039a65862e1810ef275d0354891e9a3eed957241dc2c6d16db",
+      "consolidatedFrom": [],
+      "canonicalId": "prompt-reverse-engineering",
+      "description": "Extract a plausible reusable system prompt from a selected or supplied successful deliverable. Capture observable structure and cautiously inferred judgment rules for new inputs of the same category. Use when a result contains a method worth repeating; this does not recover hidden original instructions or validate future performance.",
+      "skillPath": "../../.agents/skills/prompt-reverse-engineering/SKILL.md",
+      "mainWords": 1017,
+      "bundleSha256": "7797692ccbb66a87183889d7e88af86fffd3fd1b26ba7418b5dfa59d21715e31",
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 7172,
+          "sha256": "188f49ae6838dfa2ec92648a178db2170d590e9d836b0a75889b36592ea170a3"
+        }
+      ]
+    },
+    {
+      "id": "prompt-writing-persona",
+      "sourceId": "prompt__writing-persona",
+      "label": "Author personas",
+      "tier": "Outside pack",
+      "tierBasis": "shortlist-recommendation",
+      "group": "tune",
+      "reviewStatus": "complete",
+      "reviewCompletedOn": "2026-10-05",
+      "origin": "downloaded source",
+      "changeStatus": "edited",
+      "summary": "Consolidated calibration guidance, made lens counts proportional to the decision without requiring separate agents, and replaced the main worked example with grounded engineering-management framing while preserving ML reasoning examples and workflow boundaries.",
+      "historicalBaselineBundleSha256": "e3306b3f73fc176aed9b509f90fe91537b3387bc474c5cd81ed208747f4a5c7a",
+      "consolidatedFrom": [],
+      "canonicalId": "prompt-writing-persona",
+      "description": "Writes and rewrites LLM prompts and in-skill personas by installing expertise rather than asserting it — character-sheet conditioning, lens sets for competing concerns, earned authority, genuine stakes, and calibration that keeps a confident voice accurate. Triggers when writing or improving a prompt or system prompt, designing expert framing, building the persona or lens set inside an agent skill, or getting expert-grade rather than merely valid output; critique-only prompt review routes to `$prompt-create-analysis`.",
+      "skillPath": "../../.agents/skills/prompt-writing-persona/SKILL.md",
+      "mainWords": 1762,
+      "bundleSha256": "7c80f16dfabdca782a1283684165dcad43cdca0675f64be044ddcc4c61067846",
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 11640,
+          "sha256": "cd441a9fc63c7e9cf1ff18ddb7a93ac1074e0173c8634edcab0bf87a21908736"
+        }
+      ]
+    },
+    {
+      "id": "security-auditing-code",
+      "sourceId": "security__auditing-code",
+      "label": "Security review",
+      "tier": "Optional",
+      "tierBasis": "explicit-selection",
+      "group": "build",
+      "reviewStatus": "complete",
+      "reviewCompletedOn": "2026-10-06",
+      "origin": "downloaded source",
+      "changeStatus": "edited",
+      "summary": "Applied all three approved suggestions. Condensed the entrypoint around evidence, exploitability, coverage, and concrete closure; retained the specialist security analysis; added ML service and agent-tool security boundaries; moved gameplay checks into a conditional reference; and made report-only writing and optional workflow integration explicit.",
+      "historicalBaselineBundleSha256": "3ef850a0c37de847097035f5a267340a1ac0c6eef6591f9eda059b4ffff8a003",
+      "consolidatedFrom": [],
+      "canonicalId": "security-auditing-code",
+      "description": "Static security review of backend APIs, privileged or economic mutations, and ML services. Trace exploit paths through authorization, trust boundaries, state transitions, retries, and storage controls; report evidence, coverage limits, and concrete fixes. Use for a requested security audit or a material security risk requiring focused review. Model quality and experimental validity belong to ML evaluation.",
+      "skillPath": "../../.agents/skills/security-auditing-code/SKILL.md",
+      "mainWords": 2230,
+      "bundleSha256": "7073588e7365b81b34f0c82e178fe92aa0ff87536c79d4655a2647ee9222423e",
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 17151,
+          "sha256": "7c64a2d02b0ca17a10d79293315b4557fea56b4c9710b236954ecd8df71963c6"
+        },
+        {
+          "path": "references/game-authority.md",
+          "bytes": 2082,
+          "sha256": "de40ab58a76dd9ba14c6f3eb28af2aaa52959c0967f010ad47b493de09695f8c"
+        }
+      ]
+    },
+    {
+      "id": "skills-create-analysis",
+      "sourceId": "skills__create-analysis",
+      "label": "Analyze skills",
+      "tier": "Outside pack",
+      "tierBasis": "shortlist-recommendation",
+      "group": "tune",
+      "reviewStatus": "complete",
+      "reviewCompletedOn": "2026-10-05",
+      "origin": "downloaded source",
+      "changeStatus": "edited",
+      "summary": "Applied proportionate research, condensed domain analysis and synthesis, and exact, nonduplicated findings. Added the approved reciprocal pointer routing bundle creation or revision to Author skills; the pair remains separate.",
+      "historicalBaselineBundleSha256": "95711a51ba46615ef38231be8d9eb3c9f4fcc358437e15954927a14717fc0d7e",
+      "consolidatedFrom": [],
+      "canonicalId": "skills-create-analysis",
+      "description": "Analyze an explicitly requested skill for domain expertise, structural gaps, and prioritized fixes with evidence and tradeoffs. The deliverable is a review; skill authoring is separate.",
+      "skillPath": "../../.agents/skills/skills-create-analysis/SKILL.md",
+      "mainWords": 1286,
+      "bundleSha256": "01d68bb137210819e87f6d1ecf6eb0edc0af9a06d10252226c737ec101c21c14",
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 9341,
+          "sha256": "9e82ce46cc900a06502080ef16a2e5b630c865dfcb0cc2e6fae3444867d4b75f"
+        }
+      ]
+    },
+    {
+      "id": "skills-create-skill",
+      "sourceId": "skills__create-skill",
+      "label": "Author skills",
+      "tier": "Outside pack",
+      "tierBasis": "shortlist-recommendation",
+      "group": "tune",
+      "reviewStatus": "complete",
+      "reviewCompletedOn": "2026-10-06",
+      "origin": "downloaded source",
+      "changeStatus": "edited",
+      "summary": "Applied the three approved improvements to Author's working bundle. Narrowed broad audit/review responsibility to checks needed for creation or requested revision, kept expertise reasoning, centralized mode-specific output, made infrastructure conditional, and protected established decisions and source-edit scope.",
+      "historicalBaselineBundleSha256": "e1aab50666f88314b1a33c674bc5f6f8b27b42496b39638096b2eaf1f4e7ee01",
+      "consolidatedFrom": [],
+      "canonicalId": "skills-create-skill",
+      "description": "Creates and revises reusable AI-agent skills by turning expert judgment into instructions with clear triggers, ownership, and rule placement. Trigger: new skills, requested rewrites, trigger fixes, instruction compression, or context extraction; review-only domain analysis belongs to skills-create-analysis.",
+      "skillPath": "../../.agents/skills/skills-create-skill/SKILL.md",
+      "mainWords": 2046,
+      "bundleSha256": "bcf6fbdfa851756553215c131f73011b4be768e61dbe93d4629385839c022e86",
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 14217,
+          "sha256": "317625e89439490cf50b8c33aeb0a473b6bb5fbac2bd48611685fa3c670525ab"
+        },
+        {
+          "path": "references/agent-context-extraction.md",
+          "bytes": 5766,
+          "sha256": "7f05c99411a33ae067570a768bf92ae4fea39e9c9cfc300de8986245cbd0d6c1"
+        },
+        {
+          "path": "references/eval-case-library.md",
+          "bytes": 6127,
+          "sha256": "f461aa91e0eb6647cc11623b17b8dced9f1c034e1b4a8f324937127147301672"
+        },
+        {
+          "path": "references/skill-template.md",
+          "bytes": 9563,
+          "sha256": "9d01e1e5f581e745a2ca5e9d8e7e47455c4c5dc2a69084370abe2125007441c4"
+        }
+      ]
+    },
+    {
+      "id": "testing-auditing",
+      "sourceId": "testing__auditing",
+      "label": "Review test quality",
+      "tier": "Core",
+      "tierBasis": "shortlist-recommendation",
+      "group": "prove",
+      "reviewStatus": "complete",
+      "reviewCompletedOn": "2026-10-05",
+      "origin": "downloaded source",
+      "changeStatus": "edited",
+      "summary": "Made focused test reviews the default, removed unsupported numerical sufficiency/mutation heuristics, and made the review portable with explicit software, ML evaluation, and planning boundaries. Detailed audit expertise is retained in an optional reference.",
+      "historicalBaselineBundleSha256": "e43b1d96d9bf64faf8d97cbf2879e801b2aba1f6189c3c05fc8ea0d48387a46a",
+      "consolidatedFrom": [],
+      "canonicalId": "testing-auditing",
+      "description": "Review whether automated software tests protect important behavior in a PR, feature, or module. Reconstruct guarantees and observable proof before inspecting tests, then identify gaps in assertions, boundary fidelity, and determinism. Use for test quality, test coverage, or test sufficiency reviews; model validity and ML evaluation belong to a separate workflow.",
+      "skillPath": "../../.agents/skills/testing-auditing/SKILL.md",
+      "mainWords": 1729,
+      "bundleSha256": "2b147cc3bd6870e82556202afb0bd72575483495fb60d7ca4806ce3ed5fe02f7",
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 12296,
+          "sha256": "ac31e6c80b3f50ef7a897ddc36cd99067438e988b9d0b2d067939d3fc11109ae"
+        },
+        {
+          "path": "references/full-audit.md",
+          "bytes": 9740,
+          "sha256": "46fc45d27f809c56c2292e09a4d3252d40bfaea8e983a115dc9a9811adf9a60f"
+        }
+      ]
+    },
+    {
+      "id": "testing-enforcing-mandate",
+      "sourceId": "testing__enforcing-mandate",
+      "label": "Build useful tests",
+      "tier": "Optional",
+      "tierBasis": "explicit-selection",
+      "group": "prove",
+      "reviewStatus": "complete",
+      "reviewCompletedOn": "2026-10-06",
+      "origin": "downloaded source",
+      "changeStatus": "edited",
+      "summary": "Made software verification portable and self-contained, consolidated test selection around affected risk and sufficient existing evidence, and scaled implementation and reporting to the change. Preserved useful dependency, assertion, determinism, replay, and performance expertise.",
+      "historicalBaselineBundleSha256": "46e4726b897d2744f0a7ffbd2d15cefb93a671b356b5858de348eef0504a1b96",
+      "consolidatedFrom": [],
+      "canonicalId": "testing-enforcing-mandate",
+      "description": "Choose and implement proportionate software verification for changed behavior, APIs, data pipelines, services, and POC interactions. Use for test strategy, test selection, or writing useful checks; model quality and ML evaluation remain separate.",
+      "skillPath": "../../.agents/skills/testing-enforcing-mandate/SKILL.md",
+      "mainWords": 1831,
+      "bundleSha256": "2b44567d9a1eff140f3747f9c10650243d39f3f074ac6ec2214d19a2de71c0d5",
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 13054,
+          "sha256": "0b96918bc7fe318c521fd9eebeb43eb4aebdae0952641e4d1685cad1bdc5bfba"
+        }
+      ]
+    },
+    {
+      "id": "writing-response-quality-style-guide",
+      "sourceId": "writing__response-quality-style-guide",
+      "label": "Clear writing",
+      "tier": "Core",
+      "tierBasis": "shortlist-recommendation",
+      "group": "explain",
+      "reviewStatus": "complete",
+      "reviewCompletedOn": "2026-10-05",
+      "origin": "downloaded source",
+      "changeStatus": "edited",
+      "summary": "Narrowed activation to substantial artifacts and explicit requests, clarified wiki and planning responsibilities, replaced the abstract reasoning section with proportional argument checks, and added a hypothetical model rollout update whose date depends on supplied quality and operational decisions.",
+      "historicalBaselineBundleSha256": "c9053e2fb3e1227381b5706f065428765cbbb5c4981046feb47253ccd894d291",
+      "consolidatedFrom": [],
+      "canonicalId": "writing-response-quality-style-guide",
+      "description": "Improve prose and arguments in substantial wiki drafts or revisions, written plans and decision memos, strategy critiques, and stakeholder updates needing synthesis. Also use when explicitly requested. Skip routine chat, brief replies, implementation notes, minor wording fixes, and mechanical documentation updates unless requested.",
+      "skillPath": "../../.agents/skills/writing-response-quality-style-guide/SKILL.md",
+      "mainWords": 1924,
+      "bundleSha256": "86b581f26a38167b3f7df94203c62b44a202d0cc950873a4e93c5e2f0378f777",
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 13639,
+          "sha256": "43537928a6b84ca2d54d18a7ed28a522869f084a17d42650ab39ae1f9e9a0558"
+        },
+        {
+          "path": "references/writing-examples.md",
+          "bytes": 7759,
+          "sha256": "e6b69b236fd4445da1a5d7650c5e318ed40424ec0a994b0b74595a3031b9dc2a"
+        }
+      ]
+    }
+  ]
+}

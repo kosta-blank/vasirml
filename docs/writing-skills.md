@@ -32,7 +32,7 @@ Do not create a skill for:
 8. If you want richer catalog metadata than the defaults, set `category`, `tags`, `recommends`, or `version` in `SKILL.md` frontmatter.
 9. If the skill should be measurable with `vasir eval run <skill>`, add `.agents/skills/<name>/evals/suite.json` and `.agents/skills/<name>/evals/README.md`.
 10. Run `npm run build:registry`.
-11. Run `npm test`.
+11. Run `npm run check:registry` and `npm run check:agents`, then `npm test` (nested-file replacement safety and named-group tests). Review newly added Markdown links separately.
 
 ## Writing posture
 

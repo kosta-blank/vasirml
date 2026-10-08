@@ -1,64 +1,66 @@
-# AGENTS/CLAUDE Templates
+# Root contract templates
 
-Start here.
+[shared-contract.md](./shared-contract.md) is the canonical source for shared project guidance. [AGENTS.md](./AGENTS.md) and [CLAUDE.md](./CLAUDE.md) are generated projections: their laws match, and a small consumer adapter identifies the host tools and permissions to use. Model names, shell wrappers, and machine-specific permission settings do not belong in the shared source.
 
-This folder is the canonical source for root operating-contract starter content.
-The shared root operating-contract structure lives in [AGENTS.md](./AGENTS.md)
-and [CLAUDE.md](./CLAUDE.md); stack-specific profile content lives in
-[snippets/](./snippets/) and is inserted into both canonical structures.
+Run these commands from the Vasir repository root after changing the shared source or its adapters:
 
-## Template Assembly Contract
+```sh
+node scripts/build-agent-templates.js --write
+node scripts/build-agent-templates.js --check
+```
 
-Vasir has three layers:
+The generator is [scripts/build-agent-templates.js](../../scripts/build-agent-templates.js). `--check` reports stale projections without rewriting them. Do not edit a shared law independently in the two generated templates.
 
-1. `.agents/skills/<skill>/SKILL.md` is the source of truth for reusable agent behavior. Skill files own their workflow, quality bar, and any skill-specific artifacts.
-2. `templates/agents/AGENTS.md` and `templates/agents/CLAUDE.md` are repo-root operating contracts. They own the shared structure, precedence rules, planning/eval requirements, and the sections that reference skills. `AGENTS.md` is for Codex and other non-Claude agents; `CLAUDE.md` keeps the Claude/Fable-specific routing text.
-3. `templates/agents/snippets/*-inserts.md` is the profile selection layer. Snippets decide which stack-specific purpose, routing, and doctrine content gets inserted for `backend`, `frontend`, or `ios`.
+## What belongs where
 
-Root contract files have three jobs:
-
-- Root `AGENTS.md` + `CLAUDE.md`: repo-wide operating contracts, generated from these templates.
-- Nested root `AGENTS.md` + `CLAUDE.md`: generated app/package root contracts in a monorepo, created with `vasir agents sync --scope <path>`.
-- Folder `AGENTS.md`: hand-authored local steering map for one subtree. Do not generate it with `vasir agents sync --scope`.
-
-Rules:
-
-- Do not duplicate skill instructions in `AGENTS.md` or `CLAUDE.md`; route to skills instead.
-- Do not collapse the twin files into one template. Shared laws must match, but model-routing sections intentionally differ.
-- Do not create `profiles/` templates. CLI profiles are selectors, not source files.
-- Each snippet must contain exactly the marker blocks the composer reads:
-  - `vasir:purpose`
-  - `vasir:routing`
-  - `vasir:engineering-doctrine-inserts`
-- Generated repo-root `AGENTS.md` and `CLAUDE.md` files are outputs. Edit the source files here only when the starter system itself should change.
-
-Fastest path:
-
-1. Run `vasir agents sync`. It infers the profile, renders the current canonical templates, fills purpose/routing from local repo context, injects `AGENTS__non-obvious.md` into both root contracts, and validates the generated `AGENTS.md` result.
-2. Use `vasir agents sync --profile frontend|backend|ios|generic` when inference needs an explicit profile.
-3. Use `vasir agents sync --scope frontend --profile frontend` when a folder is a nested app/package root.
-4. Use `vasir agents sync --dry-run` to preview without writing.
-5. Author ordinary folder AGENTS directly as steering maps, or use the installed `agents__creating-folder-agents` skill.
-6. Run `vasir add <skill>` or `vasir update` separately when the repo-local skill catalog itself needs to change.
-
-If you want to edit the source templates directly, use the table below and stop there.
-
-## Which File Do I Edit?
-
-| Goal | Edit this file |
+| Content | Source |
 |---|---|
-| Change backend profile content | [snippets/backend-inserts.md](./snippets/backend-inserts.md) |
-| Change frontend profile content | [snippets/frontend-inserts.md](./snippets/frontend-inserts.md) |
-| Change iOS profile content | [snippets/ios-inserts.md](./snippets/ios-inserts.md) |
-| Change shared root-contract laws | [AGENTS.md](./AGENTS.md) and [CLAUDE.md](./CLAUDE.md) |
-| Change Codex/non-Claude routing text | [AGENTS.md](./AGENTS.md) |
-| Change Claude/Fable routing text | [CLAUDE.md](./CLAUDE.md) |
-| See a filled example instead of the source template | [../../docs/example-agents.md](../../docs/example-agents.md) |
+| Shared outcomes, authorization, custody, verification, and task-sizing rules | [shared-contract.md](./shared-contract.md) |
+| Consumer adapters and template generation | [scripts/build-agent-templates.js](../../scripts/build-agent-templates.js) |
+| Backend, frontend, or iOS conventions | [snippets/](./snippets/) |
+| Project-specific facts and local policy in a consuming repository | That repository's `AGENTS__non-obvious.md` |
+| Detailed planning, proof, audit, and diagnosis workflows | The installed `.agents/skills/<name>/SKILL.md` catalog |
+| Local orientation for an ordinary subtree | A hand-authored folder `AGENTS.md` |
 
-## Recommended Workflow
+Root guidance is deliberately compact. Small edits need relevant checks; substantial implementation needs a durable work spec and appropriate acceptance evidence. Management planning and ML investigation have their own deliverables and completion criteria. Optional skills provide depth when available; a missing optional workflow does not prevent satisfying the task directly.
 
-1. Run `vasir agents sync --dry-run`.
-2. Run `vasir agents sync` when the preview is right.
-3. Add repo-specific landmines in `AGENTS__non-obvious.md`.
-4. Edit both [AGENTS.md](./AGENTS.md) and [CLAUDE.md](./CLAUDE.md) when shared laws change.
-5. Edit the matching snippet only when the stack-specific doctrine should change.
+Codex builds its applicable instruction chain once per run; you do not need to paste the root contract into every message. Its default 32 KiB discovery limit applies to the combined instruction files, so global and nested guidance also consume that budget. See [Codex instruction discovery](https://developers.openai.com/codex/guides/agents-md). Detailed skill instructions load when the skill is selected, which keeps task-specific procedures out of the permanent root context; see [skill loading](https://developers.openai.com/codex/skills).
+
+The source root and generated source twins each have a **12 KiB UTF-8 budget**. Composed project contracts each have a **32 KiB budget**, including the selected profile and local context. These are byte limits, not token estimates. Move detailed workflows into skills or scoped guidance rather than filling the root to its limit.
+
+## Generated roots and local steering
+
+- Root `AGENTS.md` and `CLAUDE.md` are repository-wide contracts generated by `vasir agents sync`.
+- Nested root `AGENTS.md` and `CLAUDE.md` apply to an app or package in a monorepo; generate them with `vasir agents sync --scope <path>`.
+- Folder `AGENTS.md` files are hand-authored steering maps for an ordinary subtree. Do not generate them with `vasir agents sync --scope`.
+
+Keep persistent project constraints in `AGENTS__non-obvious.md` and preview synchronization before applying it. Generated roots are outputs of the shared source, the selected profile, and local context. Folder guidance should point to the important entrypoints, boundaries, and relevant verification commands without copying the root contract.
+
+## Project model routing
+
+Optional model routing is persistent project policy in `.agents/vasir.json` under `agents.modelRouting`; it is not a generated-root edit. Host blocks support `default`, `planning`, `execution`, `subagent`, `review`, and `design` descriptors. A missing role inherits that host's default. Descriptors and their optional `fallback` may each specify `host` (`codex` or `claude`); when omitted, the primary uses the current consumer and the fallback uses the primary host. Explicit user model choices take precedence. Vasir validates descriptor structure, while each host determines whether a model and effort are available. See [the full example](../../docs/example-agents.md#model-routing) and [model-routing.example.json](./model-routing.example.json).
+
+Run `vasir agents sync` to project the policy into the generated contracts. A scoped sync overlays `modelRouting` host and role entries from the root `.agents/vasir.json` through the scoped config; an omitted role inherits the nearest parent choice, then the host default. Routing never switches the running model or writes host runtime settings. Use an authorized runner, handoff, or delegation for cross-host work; never pass a model ID to another provider's selector. If the primary is unavailable, use only its configured fallback and disclose both choices and the reason. If that fallback also fails, report the limitation without inventing another route or retrying without bounds. The `design` role covers design deliverables and decisions, including product, UI/UX, visual, interaction, and architecture design; routine implementation remains `execution`. Host behavior is governed by the [Codex configuration reference](https://learn.chatgpt.com/docs/config-file/config-reference) and [subagent configuration guide](https://learn.chatgpt.com/docs/agent-configuration/subagents).
+
+## Assembly seams
+
+Each profile snippet contains exactly one ordered pair for each block:
+
+- `vasir:purpose`
+- `vasir:routing`
+- `vasir:engineering-doctrine-inserts`
+
+The shared source adds `vasir:nonobvious`, `vasir:consumer`, and `vasir:model-routing`. The model-routing block projects host-specific choices from project config and is separate from folder/document routing. The consumer block holds `{{agent_adapter}}`; the title holds `{{contract_filename}}`. The template generator resolves these source placeholders before the CLI composes a project contract. Keep section numbers 0–11 stable while skills refer to them.
+
+Profiles select snippets; they are not independent copies of the root. Do not create a parallel `profiles/` template tree.
+
+## Using the templates
+
+1. Run `vasir agents sync --dry-run` to preview inferred profile and local context.
+2. Run `vasir agents sync` to generate the two roots.
+3. Use `vasir agents sync --profile frontend|backend|ios|generic` when selecting a profile explicitly.
+4. Add persistent project constraints to `AGENTS__non-obvious.md`; preview and rerun synchronization.
+5. Author folder steering maps directly, or use the installed `agents-creating-folder-agents` skill.
+6. Use `vasir add <skill>` or `vasir update` separately to change the installed skill catalog.
+
+See [the example](../../docs/example-agents.md) for how the compact contract relates to a project's constraints and workflows.

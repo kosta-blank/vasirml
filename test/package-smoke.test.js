@@ -1,47 +1,28 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import childProcess from "node:child_process";
 import fs from "node:fs";
-import os from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
-const REPO_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+import { createTemporaryDirectory, runCommand, writeEvalFixture } from "./helpers/command-fixtures.js";
 
-function createTemporaryDirectory() {
-  return fs.mkdtempSync(path.join(os.tmpdir(), "vasir-package-"));
-}
+const REPO_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 
 function writeFile(filePath, fileContents) {
   fs.mkdirSync(path.dirname(filePath), { recursive: true });
   fs.writeFileSync(filePath, fileContents);
 }
 
-function runCommand(commandName, argumentList, currentWorkingDirectory, environmentVariables = {}) {
-  const commandResult = childProcess.spawnSync(commandName, argumentList, {
-    cwd: currentWorkingDirectory,
-    encoding: "utf8",
-    stdio: ["ignore", "pipe", "pipe"],
-    env: {
-      ...process.env,
-      ...environmentVariables
-    }
-  });
-
-  if (commandResult.error) {
-    throw commandResult.error;
-  }
-
-  return commandResult;
-}
-
-test("npm pack produces a runnable vasir binary with help and add support", () => {
-  const packDirectory = createTemporaryDirectory();
-  const homeDirectory = createTemporaryDirectory();
-  const projectDirectory = createTemporaryDirectory();
+test("npm pack produces a runnable vasir binary with help and add support", (testContext) => {
+  const packDirectory = createTemporaryDirectory(testContext, "vasir-package-");
+  const homeDirectory = createTemporaryDirectory(testContext, "vasir-package-");
+  const projectDirectory = createTemporaryDirectory(testContext, "vasir-package-");
   const npmCacheDirectory = path.join(packDirectory, "npm-cache");
   const npmEnvironmentVariables = {
-    npm_config_cache: npmCacheDirectory
+    npm_config_cache: npmCacheDirectory,
+    HOME: homeDirectory,
+    USERPROFILE: homeDirectory,
+    NO_COLOR: "1"
   };
   const packResult = runCommand("npm", ["pack", REPO_ROOT], packDirectory, npmEnvironmentVariables);
   assert.equal(packResult.status, 0, packResult.stderr);
@@ -50,7 +31,7 @@ test("npm pack produces a runnable vasir binary with help and add support", () =
   const installPrefixDirectory = path.join(packDirectory, "prefix");
   const installResult = runCommand(
     "npm",
-    ["install", "--prefix", installPrefixDirectory, path.join(packDirectory, tarballFileName)],
+    ["install", "--offline", "--no-audit", "--no-fund", "--prefix", installPrefixDirectory, path.join(packDirectory, tarballFileName)],
     packDirectory,
     npmEnvironmentVariables
   );
@@ -63,10 +44,10 @@ test("npm pack produces a runnable vasir binary with help and add support", () =
     process.platform === "win32" ? "vasir.cmd" : "vasir"
   );
   assert.ok(
-    fs.existsSync(path.join(installPrefixDirectory, "node_modules", "vasir", ".vasir-catalog-manifest.json"))
+    fs.existsSync(path.join(installPrefixDirectory, "node_modules", "vasir-slim", ".vasir-catalog-manifest.json"))
   );
 
-  const helpResult = runCommand(binaryPath, ["--help"], packDirectory);
+  const helpResult = runCommand(binaryPath, ["--help"], packDirectory, npmEnvironmentVariables);
   assert.equal(helpResult.status, 0, helpResult.stderr);
   assert.match(helpResult.stdout, /vasir status \[--json\]/);
   assert.match(helpResult.stdout, /vasir context \[--json\] \[--debug\] \[--repo-root <path>\]/);
@@ -75,7 +56,7 @@ test("npm pack produces a runnable vasir binary with help and add support", () =
   assert.match(helpResult.stdout, /vasir diff \[skill\.\.\.\] \[--json\] \[--exit-code\] \[--repo-root <path>\]/);
   assert.match(
     helpResult.stdout,
-    /vasir add <skill> \[skill...\] \[--json\] \[--replace\] \[--agents-profile <name>\]/
+    /vasir add \[skill\.\.\.\] \[--group <name>\]\.\.\. \[--json\] \[--replace\] \[--agents-profile <name>\]/
   );
   assert.match(helpResult.stdout, /vasir adopt \[--json\]/);
   assert.match(helpResult.stdout, /vasir remove <skill> \[skill...\] \[--json\]/);
@@ -89,11 +70,11 @@ test("npm pack produces a runnable vasir binary with help and add support", () =
   assert.match(helpResult.stdout, /vasir eval rescore <skill> \[run-id\] \[--json\]/);
   assert.match(helpResult.stdout, /vasir add all/i);
 
-  const versionResult = runCommand(binaryPath, ["--version"], packDirectory);
+  const versionResult = runCommand(binaryPath, ["--version"], packDirectory, npmEnvironmentVariables);
   assert.equal(versionResult.status, 0, versionResult.stderr);
-  assert.equal(versionResult.stdout.trim(), "vasir 0.1.0");
+  assert.equal(versionResult.stdout.trim(), "vasir-slim 0.1.0-slim.2");
 
-  const statusResult = runCommand(binaryPath, [], packDirectory);
+  const statusResult = runCommand(binaryPath, [], packDirectory, npmEnvironmentVariables);
   assert.equal(statusResult.status, 0, statusResult.stderr);
   assert.match(statusResult.stdout, /Status/);
 
@@ -109,17 +90,17 @@ test("npm pack produces a runnable vasir binary with help and add support", () =
   writeFile(path.join(projectDirectory, "src", "components", "Button.tsx"), "export function Button() { return null; }\n");
   const addResult = runCommand(
     binaryPath,
-    ["add", "design__building-frontend-interfaces"],
+    ["add", "design-building-frontend-interfaces"],
     projectDirectory,
     addEnvironmentVariables
   );
   assert.equal(addResult.status, 0, addResult.stderr);
-  assert.match(addResult.stdout, /Installed design__building-frontend-interfaces/);
+  assert.match(addResult.stdout, /Installed design-building-frontend-interfaces/);
   assert.match(addResult.stdout, /Project skills ready at/);
   assert.match(addResult.stdout, /Repo config ready at/);
   assert.match(addResult.stdout, /AGENTS starter ready at \(frontend, inferred\)/);
   assert.match(addResult.stdout, /CLAUDE starter ready at \(frontend, inferred\)/);
-  assert.ok(fs.existsSync(path.join(projectDirectory, ".agents", "skills", "design__building-frontend-interfaces", "SKILL.md")));
+  assert.ok(fs.existsSync(path.join(projectDirectory, ".agents", "skills", "design-building-frontend-interfaces", "SKILL.md")));
   assert.ok(fs.existsSync(path.join(projectDirectory, ".agents", "vasir.json")));
   assert.ok(fs.existsSync(path.join(projectDirectory, "AGENTS.md")));
   assert.ok(fs.existsSync(path.join(projectDirectory, "CLAUDE.md")));
@@ -137,26 +118,37 @@ test("npm pack produces a runnable vasir binary with help and add support", () =
   assert.equal(parsedContext.execution.usesModel, false);
   assert.equal(parsedContext.execution.usesNetwork, false);
   assert.equal(parsedContext.repoStatus, "tracked");
-  assert.ok(parsedContext.recommendedSkillNames.includes("design__building-frontend-interfaces"));
-  assert.ok(parsedContext.recommendedSkills.some((skillRecommendation) => skillRecommendation.skillName === "design__building-frontend-interfaces"));
+  assert.ok(parsedContext.recommendedSkillNames.includes("design-building-frontend-interfaces"));
+  assert.ok(parsedContext.recommendedSkills.some((skillRecommendation) => skillRecommendation.skillName === "design-building-frontend-interfaces"));
   assert.equal(parsedContext.debug.kind, "contextDebug");
 
   const validateResult = runCommand(binaryPath, ["agents", "validate", "--json"], projectDirectory, addEnvironmentVariables);
   assert.equal(validateResult.status, 1);
   assert.match(validateResult.stderr, /AGENTS_VALIDATION_FAILED/);
 
-  const removeResult = runCommand(binaryPath, ["remove", "design__building-frontend-interfaces"], projectDirectory, addEnvironmentVariables);
+  const removeResult = runCommand(binaryPath, ["remove", "design-building-frontend-interfaces"], projectDirectory, addEnvironmentVariables);
   assert.equal(removeResult.status, 0, removeResult.stderr);
-  assert.match(removeResult.stdout, /Removed design__building-frontend-interfaces/);
-  assert.ok(!fs.existsSync(path.join(projectDirectory, ".agents", "skills", "design__building-frontend-interfaces")));
+  assert.match(removeResult.stdout, /Removed design-building-frontend-interfaces/);
+  assert.ok(!fs.existsSync(path.join(projectDirectory, ".agents", "skills", "design-building-frontend-interfaces")));
 
+  // Only the command harness is evaluated. The reviewed release catalog
+  // deliberately has no behavioral suites; its skill quality is not measured here.
+  writeEvalFixture(projectDirectory);
   const evalResult = runCommand(
     binaryPath,
-    ["eval", "run", "testing__enforcing-mandate", "--model", "mock"],
-    REPO_ROOT,
-    npmEnvironmentVariables
+    ["eval", "run", "fixture-eval", "--model", "mock", "--trials", "1", "--json"],
+    projectDirectory,
+    addEnvironmentVariables
   );
   assert.equal(evalResult.status, 0, evalResult.stderr);
-  assert.match(evalResult.stdout, /Summary/i);
-  assert.match(evalResult.stdout, /Inspect/i);
+  const parsedEval = JSON.parse(evalResult.stdout);
+  assert.equal(parsedEval.skillName, "fixture-eval");
+  assert.equal(parsedEval.runStatus, "complete");
+  const inspectResult = runCommand(binaryPath, ["eval", "inspect", "fixture-eval", "--json"], projectDirectory, addEnvironmentVariables);
+  assert.equal(inspectResult.status, 0, inspectResult.stderr);
+  const parsedInspect = JSON.parse(inspectResult.stdout);
+  assert.equal(parsedInspect.runId, parsedEval.runId);
+  assert.equal(parsedInspect.rows.length, 2);
+  assert.equal(parsedInspect.rows.find((row) => row.conditionId === "baseline:none").hardScore.passed, false);
+  assert.equal(parsedInspect.rows.find((row) => row.conditionId === "treatment:fixture-eval").hardScore.passed, true);
 });

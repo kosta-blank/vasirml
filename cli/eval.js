@@ -292,8 +292,8 @@ function renderMissingSkillHelp(skills) {
       kind: "warn",
       text: "No skill was specified for `npm run eval`."
     }),
-    ui.formatBullet("Run `npm run eval testing__enforcing-mandate` to target a specific skill."),
-    ui.formatBullet("Run `npm run eval testing__enforcing-mandate mock` for a zero-cost local smoke test.")
+    ui.formatBullet("Run `npm run eval testing-enforcing-mandate` to target a specific skill."),
+    ui.formatBullet("Run `npm run eval testing-enforcing-mandate mock` for a zero-cost local smoke test.")
   ];
 
   if (skills.length > 0) {

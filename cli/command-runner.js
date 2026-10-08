@@ -26,6 +26,7 @@ import {
   UNKNOWN_COMMAND_TROUBLESHOOTING_DOCS_REF
 } from "./docs-ref.js";
 import { readPackageMetadata } from "./package-metadata.js";
+import { readSkillGroups, resolveSkillGroups } from "./skill-groups.js";
 import {
   inspectGlobalCatalog,
   readCatalogSourceRegistry,
@@ -1363,14 +1364,15 @@ Usage:
   vasir init [--json] [--repo-root <path>]         Sync ~/.agents/vasir; inside a repo, install and track the full catalog
   vasir update [--json] [--dry-run] [--repo-root <path>] Sync ~/.agents/vasir and update the tracked Vasir skills in this repo
   vasir list [--json]                               Show available skills from the global catalog
-  vasir add <skill> [skill...] [--json] [--replace] [--agents-profile <name>] [--repo-root <path>] Copy skills into the current repo root at .agents/skills
+  vasir groups [group...] [--json]                 Inspect named skill groups without mutating files
+  vasir add [skill...] [--group <name>]... [--json] [--replace] [--agents-profile <name>] [--repo-root <path>] Copy skills into the current repo root at .agents/skills
   vasir adopt [--json] [--repo-root <path>]        Bring an existing .agents/skills tree under Vasir management without copying files
   vasir remove <skill> [skill...] [--json] [--repo-root <path>] Remove project-local skills from the current repo root
   vasir agents sync [--scope <path>] [--profile <name>] [--json] [--dry-run] [--repo-root <path>] Reconcile root or nested root AGENTS.md from the canonical template and AGENTS__non-obvious.md
   vasir agents init <profile> [--json] [--replace] [--repo-root <path>] Write AGENTS.md from the canonical template plus a stack snippet
   vasir agents draft-purpose [--json] [--write] [--model <name>] [--repo-root <path>] Draft a repo-specific AGENTS purpose paragraph
-  vasir agents draft-routing [--json] [--write] [--repo-root <path>] Draft repo-aware Section 1 routing lanes for AGENTS.md
-  vasir agents validate [--scope <path>] [--json] [--repo-root <path>] Fail closed when AGENTS.md still contains scaffold placeholders
+  vasir agents draft-routing [--json] [--write] [--repo-root <path>] Draft repo-aware routing lanes for the root contracts
+  vasir agents validate [--scope <path>] [--json] [--repo-root <path>] Check both root contracts for placeholders, routes, and size limits
   vasir eval run <skill> [--json] [--model <name>] [--trials <count>] [--repo-root <path>] Run the built-in baseline vs treatment eval for a skill
   vasir eval inspect <skill> [run-id] [--json] [--repo-root <path>] Inspect the latest or named eval artifact for a skill
   vasir eval rescore <skill> [run-id] [--json] [--repo-root <path>] Rescore an existing eval artifact with the current scorer
@@ -1395,14 +1397,17 @@ Notes:
   adopt never copies or overwrites skill files; it snapshots the existing .agents/skills tree into .agents/vasir.json and .agents/vasir-install-state.json.
   Pass --repo-root <path> to target an explicit repo root, including monorepo subprojects.
   Use "vasir add all" to install every catalog skill into the current repo.
+  Use "vasir groups" to inspect group membership and "vasir add --group base --group frontend" to compose groups.
+  Repeat --group once per name; individual skills may be combined with groups. Group installs track the resolved skills as a snapshot.
+  "all" cannot be combined with groups.
   add auto-initializes the global catalog if needed.
   add also seeds AGENTS.md + CLAUDE.md when no root contract already exists; --agents-profile backend|frontend|ios|generic overrides profile inference.
-  agents sync is the one-command generated AGENTS/CLAUDE path: it infers or accepts a profile, can target a nested app/package root with --scope, fills purpose/routing locally, injects AGENTS__non-obvious.md into both root contracts, and validates the generated AGENTS result.
+  agents sync is the one-command generated AGENTS/CLAUDE path: it infers or accepts a profile, can target a nested app/package root with --scope, fills purpose/routing locally, injects AGENTS__non-obvious.md into both root contracts, and validates both generated contracts and their size limits.
   Folder AGENTS files are hand-authored steering maps for ordinary subtrees; do not generate them with agents sync --scope.
   agents init mutates only the current repo root and writes AGENTS.md + CLAUDE.md from the selected profile.
   agents draft-purpose reads local repo context and can replace the AGENTS purpose placeholder when --write is set.
-  agents draft-routing suggests repo-aware Section 1 lanes and can replace the routing placeholder when --write is set.
-  agents validate fails closed when AGENTS.md still contains known scaffold placeholders or broken repo routes.
+  agents draft-routing suggests repo-aware routing lanes and can replace the routing placeholder when --write is set.
+  agents validate checks both existing contracts for known placeholders, malformed markers, broken routes, and the 32 KiB limit.
   Use --replace only to refresh an unmodified project-local skill from the global catalog or intentionally overwrite AGENTS.md + CLAUDE.md during vasir agents init.
   remove mutates only the current repo root and also updates .agents/vasir.json and .agents/vasir-install-state.json.
   eval auto-resolves the local source skill when present, otherwise falls back to the installed or global catalog copy.
@@ -1463,6 +1468,8 @@ function resolveRequestedAddSkillNames({ requestedSkillNames, registry }) {
 function parseCommandInvocation(argumentVector) {
   const rawArguments = argumentVector.slice(2);
   const positionalArguments = [];
+  const skillSelections = [];
+  const groupNames = [];
   let debugRequested = false;
   let jsonOutput = false;
   let helpRequested = false;
@@ -1527,6 +1534,22 @@ function parseCommandInvocation(argumentVector) {
       }
 
       projectRootArgument = projectRootValue;
+      argumentIndex += 1;
+      continue;
+    }
+
+    if (rawArgument === "--group") {
+      const groupName = rawArguments[argumentIndex + 1];
+      if (!groupName || groupName.startsWith("-")) {
+        throw new VasirCliError({
+          code: "GROUP_FLAG_VALUE_REQUIRED",
+          message: "`--group` requires exactly one group name.",
+          suggestion: "Use `vasir add --group base --group frontend`; run `vasir groups` for valid names.",
+          docsRef: ADD_REFERENCE_DOCS_REF
+        });
+      }
+      groupNames.push(groupName);
+      skillSelections.push({ kind: "group", name: groupName });
       argumentIndex += 1;
       continue;
     }
@@ -1637,12 +1660,17 @@ function parseCommandInvocation(argumentVector) {
     }
 
     positionalArguments.push(rawArgument);
+    if (positionalArguments.length > 1) {
+      skillSelections.push({ kind: "skill", name: rawArgument });
+    }
   }
 
   const commandName = positionalArguments[0] ?? "status";
   return {
     commandName,
     commandArguments: positionalArguments.slice(1),
+    groupNames,
+    skillSelections,
     debugRequested,
     jsonOutput,
     agentsProfileName,
@@ -3533,6 +3561,8 @@ function runList({
 
 async function runAdd({
   skillNames,
+  groupNames,
+  skillSelections,
   agentsProfileName,
   replaceExistingSkills,
   homeDirectory,
@@ -3546,6 +3576,42 @@ async function runAdd({
   stdoutWriter,
   jsonOutput
 }) {
+  // Validate selections against the effective source before cache or project mutation.
+  const { registry: sourceRegistry } = readCatalogSourceRegistry({ repositoryUrl });
+  const selectedGroups = [...new Set(groupNames)];
+  let requestedSkillNames = skillNames;
+  if (groupNames.length > 0) {
+    if (skillNames.some((name) => name.toLowerCase() === ADD_ALL_SKILLS_KEYWORD)) {
+      throw new VasirCliError({
+        code: "ALL_SKILLS_REQUEST_CONFLICT",
+        message: "`all` cannot be combined with skill groups.",
+        suggestion: "Use `vasir add all`, or remove `all` and select groups and individual skills.",
+        docsRef: ADD_REFERENCE_DOCS_REF,
+        context: { selectedGroups }
+      });
+    }
+    const definitions = readSkillGroups({ registry: sourceRegistry });
+    resolveSkillGroups({ definitions, requestedGroupNames: groupNames });
+    requestedSkillNames = [...new Set(skillSelections.flatMap((selection) =>
+      selection.kind === "group" ? definitions.groups[selection.name].skills : [selection.name]
+    ))];
+  }
+  const resolvedSkillNames = resolveRequestedAddSkillNames({
+    requestedSkillNames,
+    registry: sourceRegistry
+  });
+  const validSkillNames = new Set(sourceRegistry.skills.map((entry) => entry.name));
+  for (const name of resolvedSkillNames) {
+    if (!validSkillNames.has(name)) {
+      throw new VasirCliError({
+        code: "UNKNOWN_SKILL",
+        message: `Unknown skill: ${name}`,
+        suggestion: "Run `vasir list` to see valid skill names, or `vasir groups` to inspect groups.",
+        docsRef: ADD_REFERENCE_DOCS_REF,
+        context: { skillName: name }
+      });
+    }
+  }
   const { globalPaths, registry, catalogState } = readGlobalRegistry({
     homeDirectory,
     repositoryUrl,
@@ -3555,10 +3621,7 @@ async function runAdd({
   const tracksFullCatalog = skillNames.some(
     (requestedSkillName) => requestedSkillName.toLowerCase() === ADD_ALL_SKILLS_KEYWORD
   );
-  const resolvedSkillNames = resolveRequestedAddSkillNames({
-    requestedSkillNames: skillNames,
-    registry
-  });
+
   const projectPaths = buildProjectPaths({
     currentWorkingDirectory,
     projectRootDirectory
@@ -3698,6 +3761,7 @@ async function runAdd({
   }
 
   return {
+    selectedGroups,
     globalCatalogDirectory: globalPaths.globalCatalogDirectory,
     projectRootDirectory: installResult.projectPaths.projectRootDirectory,
     projectConfigFilePath: installResult.projectPaths.projectConfigFilePath,
@@ -3954,6 +4018,8 @@ async function runEval({
 async function runSelectedCommand({
   commandName,
   commandArguments,
+  groupNames,
+  skillSelections,
   agentsProfileName,
   agentsScopeArgument,
   agentsSyncProfileName,
@@ -3977,6 +4043,15 @@ async function runSelectedCommand({
   environmentVariables,
   fetchImplementation
 }) {
+  if (groupNames.length > 0 && commandName !== "add") {
+    throw new VasirCliError({
+      code: "INVALID_COMMAND_FLAG",
+      message: "--group is only supported by `vasir add`.",
+      suggestion: "Use `vasir groups [group...]` to inspect groups, or `vasir add --group <name>` to install them.",
+      docsRef: ADD_REFERENCE_DOCS_REF
+    });
+  }
+
   if (
     replaceExistingSkills &&
     !(commandName === "add" || (commandName === "agents" && commandArguments[0] === "init"))
@@ -4216,9 +4291,26 @@ async function runSelectedCommand({
     });
   }
 
+  if (commandName === "groups") {
+    const { registry } = readCatalogSourceRegistry({ repositoryUrl });
+    const definitions = readSkillGroups({ registry });
+    const result = resolveSkillGroups({ definitions, requestedGroupNames: commandArguments });
+    if (!jsonOutput) {
+      for (const group of result.groups) {
+        writeLine(stdoutWriter, `${group.name} (${group.skillCount} skills) - ${group.description}`);
+        for (const name of group.skills) writeLine(stdoutWriter, `  ${name}`);
+        writeLine(stdoutWriter, "");
+      }
+      writeLine(stdoutWriter, `${result.skillCount} unique skills across ${result.groups.length} groups.`);
+    }
+    return result;
+  }
+
   if (commandName === "add") {
     return await runAdd({
       skillNames: commandArguments,
+      groupNames,
+      skillSelections,
       agentsProfileName,
       replaceExistingSkills,
       homeDirectory,
@@ -4364,6 +4456,8 @@ export async function runCommandLine(
     const commandResult = await runSelectedCommand({
       commandName,
       commandArguments: invocation.commandArguments,
+      groupNames: invocation.groupNames,
+      skillSelections: invocation.skillSelections,
       agentsProfileName: invocation.agentsProfileName,
       agentsScopeArgument: invocation.agentsScopeArgument,
       agentsSyncProfileName: invocation.agentsSyncProfileName,

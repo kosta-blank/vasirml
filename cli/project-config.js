@@ -3,6 +3,7 @@ import path from "node:path";
 
 import { VasirCliError } from "./cli-error.js";
 import { COMMANDS_REFERENCE_DOCS_REF } from "./docs-ref.js";
+import { normalizeModelRouting } from "./model-routing.js";
 
 const PROJECT_CONFIG_SCHEMA_VERSION = 1;
 const SUPPORTED_AGENTS_PROFILE_NAMES = new Set(["backend", "frontend", "ios", "generic"]);
@@ -58,8 +59,11 @@ function normalizeAgentsPolicy(rawAgentsPolicy) {
     throw new Error("Unexpected agents policy shape.");
   }
 
+  const modelRouting = normalizeModelRouting(rawAgentsPolicy.modelRouting);
+  const agentsPolicy = modelRouting === null ? {} : { modelRouting };
+
   if (rawAgentsPolicy.profile === null || rawAgentsPolicy.profile === undefined || rawAgentsPolicy.profile === "") {
-    return null;
+    return modelRouting === null ? null : agentsPolicy;
   }
 
   if (typeof rawAgentsPolicy.profile !== "string") {
@@ -72,7 +76,8 @@ function normalizeAgentsPolicy(rawAgentsPolicy) {
   }
 
   return {
-    profile: normalizedProfile
+    profile: normalizedProfile,
+    ...agentsPolicy
   };
 }
 
@@ -141,7 +146,10 @@ export function createTrackingProjectConfig({
 
   const agentsPolicy = agentsProfileName === undefined
     ? existingProjectConfig?.agents ?? null
-    : normalizeAgentsPolicy({ profile: agentsProfileName });
+    : normalizeAgentsPolicy({
+        profile: agentsProfileName,
+        modelRouting: existingProjectConfig?.agents?.modelRouting
+      });
 
   return {
     schemaVersion: PROJECT_CONFIG_SCHEMA_VERSION,
@@ -169,6 +177,9 @@ export function createProjectConfigWithAgentsProfile({
   return {
     schemaVersion: PROJECT_CONFIG_SCHEMA_VERSION,
     tracking: normalizedProjectConfig.tracking ?? null,
-    agents: normalizeAgentsPolicy({ profile: agentsProfileName })
+    agents: normalizeAgentsPolicy({
+      profile: agentsProfileName,
+      modelRouting: normalizedProjectConfig.agents?.modelRouting
+    })
   };
 }
