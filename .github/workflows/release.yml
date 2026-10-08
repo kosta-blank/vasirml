@@ -8,10 +8,9 @@ on:
 
 permissions:
   contents: read
-  id-token: write
 
 jobs:
-  publish:
+  package:
     runs-on: ubuntu-latest
 
     steps:
@@ -21,12 +20,26 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: "24"
           cache: npm
-          registry-url: https://registry.npmjs.org
 
       - name: Install Dependencies
         run: npm ci
+
+      - name: Build Agent Templates
+        run: npm run build:agents
+
+      - name: Build Registry
+        run: npm run build:registry
+
+      - name: Check Public Review Projections
+        run: npm run check:review
+
+      - name: Check Generated Agent Templates
+        run: npm run check:agents
+
+      - name: Check Generated Registry
+        run: npm run check:registry
 
       - name: Run Test Suite
         run: npm test
@@ -34,7 +47,14 @@ jobs:
       - name: Validate Package Contents
         run: npm pack --dry-run
 
-      - name: Publish to npm
-        run: npm publish --access public --provenance
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - name: Pack Private Archive
+        run: |
+          archive=$(npm pack --silent)
+          npm run check:package -- "$archive"
+
+      - name: Upload Archive
+        uses: actions/upload-artifact@v4
+        with:
+          name: vasir-slim-${{ github.ref_name }}
+          path: vasir-slim-*.tgz
+          if-no-files-found: error

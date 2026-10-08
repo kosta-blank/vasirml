@@ -2,6 +2,12 @@
 
 Cross-platform agent skills for this repository. These follow the [Agent Skills open standard](https://agentskills.io/specification) and work across Claude Code, OpenAI Codex, GitHub Copilot, Gemini CLI, Kiro, and 20+ other tools.
 
+## Root contract dependencies
+
+Some Vasir skills refer to numbered root sections, such as `root §5` for evidence or `root §8` for custody. Those references resolve to the consuming project's generated `AGENTS.md` or `CLAUDE.md`; the canonical shared definitions live in [shared-contract.md](../templates/agents/shared-contract.md).
+
+When installing a skill independently, check its root-contract references and any required sibling skills. Use the project's applicable contract if present. Otherwise consult the shared definitions as reference material, preserve the user's authorization and host rules, and report a missing required capability instead of inventing one. Template files are reference sources until installed as project instructions.
+
 ## Setup
 
 Symlink into each tool's expected directory so they all read from one source of truth:

@@ -1,0 +1,64 @@
+{
+  "schemaVersion": 1,
+  "tracking": null,
+  "agents": {
+    "profile": "generic",
+    "modelRouting": {
+      "codex": {
+        "planning": {
+          "model": "gpt-6.1-sol",
+          "reasoningEffort": "ultra",
+          "fallback": {
+            "model": "gpt-5.6-sol",
+            "reasoningEffort": "ultra"
+          }
+        },
+        "execution": {
+          "model": "gpt-6.1-sol",
+          "reasoningEffort": "high",
+          "fallback": {
+            "model": "gpt-5.6-sol",
+            "reasoningEffort": "high"
+          }
+        },
+        "subagent": {
+          "model": "gpt-6-luna",
+          "reasoningEffort": "high",
+          "fallback": {
+            "model": "gpt-5.6-sol",
+            "reasoningEffort": "high"
+          }
+        },
+        "review": {
+          "model": "gpt-6.1-sol",
+          "reasoningEffort": "xhigh",
+          "fallback": {
+            "model": "gpt-5.6-sol",
+            "reasoningEffort": "xhigh"
+          }
+        },
+        "design": {
+          "host": "claude",
+          "model": "opus",
+          "reasoningEffort": "high",
+          "fallback": {
+            "host": "codex",
+            "model": "gpt-5.6-sol",
+            "reasoningEffort": "high"
+          }
+        }
+      },
+      "claude": {
+        "design": {
+          "model": "opus",
+          "reasoningEffort": "high",
+          "fallback": {
+            "host": "codex",
+            "model": "gpt-5.6-sol",
+            "reasoningEffort": "high"
+          }
+        }
+      }
+    }
+  }
+}

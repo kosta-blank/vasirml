@@ -1,0 +1,136 @@
+{
+  "status": "passed",
+  "package": "vasir-slim",
+  "version": "0.1.0-slim.2",
+  "node": "v24.19.0",
+  "npm": "10.9.4",
+  "platform": "win32",
+  "focusedAndRegressionTestsPassed": 206,
+  "acceptedSkillFolders": 38,
+  "acceptedSkillFiles": 81,
+  "acceptedSkillBytesUnchanged": true,
+  "archiveSha256": "a630fd6d0669810d508597b61d3e16e70ff3f43b868ee0db8d8a3bd209879841",
+  "archiveMembers": 171,
+  "npmBundledDependencies": [
+    "cli-spinners"
+  ],
+  "installedJourney": {
+    "commands": 35,
+    "checks": 18,
+    "offline": true,
+    "packageManager": "npm"
+  },
+  "checks": [
+    {
+      "label": "build-agents",
+      "exitCode": 0
+    },
+    {
+      "label": "build-registry",
+      "exitCode": 0
+    },
+    {
+      "label": "build-review",
+      "exitCode": 0
+    },
+    {
+      "label": "check-agents",
+      "exitCode": 0
+    },
+    {
+      "label": "check-registry",
+      "exitCode": 0
+    },
+    {
+      "label": "check-review",
+      "exitCode": 0
+    },
+    {
+      "label": "root-contract-validation",
+      "exitCode": 0
+    },
+    {
+      "label": "npm-test",
+      "exitCode": 0
+    },
+    {
+      "label": "npm-pack-dry-run",
+      "exitCode": 0
+    },
+    {
+      "label": "npm-pack",
+      "exitCode": 0
+    },
+    {
+      "label": "installed-package-journey",
+      "exitCode": 0
+    },
+    {
+      "label": "node-version",
+      "exitCode": 0
+    },
+    {
+      "label": "npm-version",
+      "exitCode": 0
+    }
+  ],
+  "limitations": [
+    "No global installation or behavioral skill trials",
+    "Linux/macOS checks delegated to GitHub CI",
+    "Map generator and deterministic interactions verified; rendered browser unavailable"
+  ],
+  "runtimeMatrix": [
+    {
+      "node": "v18.20.0",
+      "platform": "win32",
+      "testsPassed": 206,
+      "testsFailed": 0,
+      "projectionChecks": [
+        "agents",
+        "registry",
+        "review"
+      ],
+      "installedCommands": 35,
+      "installedChecks": 18,
+      "offline": true
+    },
+    {
+      "node": "v20.10.0",
+      "platform": "win32",
+      "testsPassed": 206,
+      "testsFailed": 0,
+      "projectionChecks": [
+        "agents",
+        "registry",
+        "review"
+      ],
+      "installedCommands": 35,
+      "installedChecks": 18,
+      "offline": true
+    },
+    {
+      "node": "v24.19.0",
+      "platform": "win32",
+      "testsPassed": 206,
+      "testsFailed": 0,
+      "projectionChecks": [
+        "agents",
+        "registry",
+        "review"
+      ],
+      "installedCommands": 35,
+      "installedChecks": 18,
+      "offline": true
+    }
+  ],
+  "gitCustody": {
+    "acceptedSkillGitBlobsEqualSource": 81,
+    "catalogAndTemplateGitBlobsEqualWorktree": 90,
+    "priorLocalArchivesUnchanged": 4
+  },
+  "independentReview": {
+    "status": "clear",
+    "resolvedFinding": "Preserve exact reviewed CRLF bytes through Git with catalog/template -text overrides.",
+    "remainingActionableFindings": 0
+  }
+}

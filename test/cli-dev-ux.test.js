@@ -8,7 +8,7 @@ import { pathToFileURL } from "node:url";
 
 import { runCommandLine } from "../cli/command-runner.js";
 
-const DOCS_BASE_URL = "https://github.com/erikhazzard/vasir/blob/main";
+const DOCS_BASE_URL = new URL("../", import.meta.url).href.replace(/\/$/, "");
 
 function createTemporaryDirectory() {
   return fs.mkdtempSync(path.join(os.tmpdir(), "vasir-dev-ux-"));
@@ -221,7 +221,7 @@ test("help output documents json support across commands and the explicit replac
   assert.match(capturedOutput.readStdout(), /vasir list \[--json\]/);
   assert.match(
     capturedOutput.readStdout(),
-    /vasir add <skill> \[skill...\] \[--json\] \[--replace\] \[--agents-profile <name>\]/
+    /vasir add \[skill\.\.\.\] \[--group <name>\]\.\.\. \[--json\] \[--replace\] \[--agents-profile <name>\]/
   );
   assert.match(capturedOutput.readStdout(), /vasir adopt \[--json\]/);
   assert.match(capturedOutput.readStdout(), /vasir remove <skill> \[skill...\] \[--json\]/);
@@ -257,7 +257,7 @@ test("help output documents json support across commands and the explicit replac
   assert.match(capturedOutput.readStdout(), /agents sync is the one-command generated AGENTS\/CLAUDE path/i);
   assert.match(capturedOutput.readStdout(), /Folder AGENTS files are hand-authored steering maps/i);
   assert.match(capturedOutput.readStdout(), /agents init mutates only the current repo root and writes AGENTS\.md \+ CLAUDE\.md/i);
-  assert.match(capturedOutput.readStdout(), /agents validate fails closed/i);
+  assert.match(capturedOutput.readStdout(), /agents validate .*both.*contracts/i);
   assert.match(capturedOutput.readStdout(), /auto-initializes the global catalog if needed/i);
   assert.match(capturedOutput.readStdout(), /remove mutates only the current repo root/i);
   assert.doesNotMatch(capturedOutput.readStdout(), /npx vasir/);
@@ -269,7 +269,7 @@ test("version output gives a beginner the installed cli version immediately", as
   const statusCode = await runCommandLine(["node", "vasir", "--version"], capturedOutput);
 
   assert.equal(statusCode, 0);
-  assert.equal(capturedOutput.readStdout().trim(), "vasir 0.1.0");
+  assert.equal(capturedOutput.readStdout().trim(), "vasir-slim 0.1.0-slim.2");
   assert.equal(capturedOutput.readStderr(), "");
 });
 
@@ -1001,9 +1001,13 @@ test("agents draft-purpose can replace the untouched purpose placeholder with a 
   assert.match(parsedOutput.purpose, /tooling and authored markdown/i);
 
   const agentsText = fs.readFileSync(path.join(projectDirectory, "AGENTS.md"), "utf8");
-  assert.doesNotMatch(agentsText, /<!-- vasir:purpose:start -->/);
+  const claudeText = fs.readFileSync(path.join(projectDirectory, "CLAUDE.md"), "utf8");
+  assert.match(agentsText, /<!-- vasir:purpose:start -->/);
   assert.doesNotMatch(agentsText, /Replace this block first\./);
   assert.match(agentsText, /\*\*Purpose:\*\* This repository appears to ship tooling and authored markdown/i);
+  assert.doesNotMatch(claudeText, /Replace this block first\./);
+  assert.match(claudeText, /\*\*Purpose:\*\* This repository appears to ship tooling and authored markdown/i);
+  assert.deepEqual(parsedOutput.updatedFiles, [path.join(projectDirectory, "AGENTS.md"), path.join(projectDirectory, "CLAUDE.md")]);
 });
 
 test("agents draft-routing can replace the Section 1 placeholder with repo-aware lanes", async () => {
@@ -1041,9 +1045,13 @@ test("agents draft-routing can replace the Section 1 placeholder with repo-aware
   assert.ok(parsedOutput.routingLines.some((line) => line.includes("/src/components/")));
 
   const agentsText = fs.readFileSync(path.join(projectDirectory, "AGENTS.md"), "utf8");
+  const claudeText = fs.readFileSync(path.join(projectDirectory, "CLAUDE.md"), "utf8");
   assert.match(agentsText, /<!-- vasir:routing:start -->/);
   assert.match(agentsText, /\/src\/components\//);
   assert.doesNotMatch(agentsText, /\[Example\]/);
+  assert.match(claudeText, /\/src\/components\//);
+  assert.doesNotMatch(claudeText, /\[Example\]/);
+  assert.deepEqual(parsedOutput.updatedFiles, [path.join(projectDirectory, "AGENTS.md"), path.join(projectDirectory, "CLAUDE.md")]);
 });
 
 test("agents sync reconciles a legacy manual AGENTS file and migrates non-obvious repo context", async () => {
@@ -1113,10 +1121,10 @@ Existing files allowed to edit:
   assert.doesNotMatch(claudeText, /Existing files allowed to edit/);
   assert.doesNotMatch(agentsText, /EDIT THESE FIRST/);
   assert.doesNotMatch(claudeText, /EDIT THESE FIRST/);
-  assert.doesNotMatch(agentsText, /vasir:purpose:start/);
-  assert.doesNotMatch(claudeText, /vasir:purpose:start/);
-  assert.doesNotMatch(agentsText, /vasir:routing:start/);
-  assert.doesNotMatch(claudeText, /vasir:routing:start/);
+  assert.match(agentsText, /vasir:purpose:start/);
+  assert.match(claudeText, /vasir:purpose:start/);
+  assert.match(agentsText, /vasir:routing:start/);
+  assert.match(claudeText, /vasir:routing:start/);
   assert.doesNotMatch(agentsText, /\[Example\]/);
   assert.doesNotMatch(claudeText, /\[Example\]/);
   assert.equal(

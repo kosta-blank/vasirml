@@ -1,3 +1,15 @@
 # Ensure symlinks are preserved across platforms
 .claude/skills symlink=true
 .codex/skills symlink=true
+
+# Catalog manifests hash file bytes; keep their text inputs stable across platforms.
+*.md text eol=lf
+*.json text eol=lf
+*.js text eol=lf
+*.html text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+
+# Reviewed markdown preserves its accepted hard breaks and final blank lines as exact bytes.
+.agents/skills/** -text whitespace=cr-at-eol,-blank-at-eol,-blank-at-eof
+templates/** -text whitespace=cr-at-eol

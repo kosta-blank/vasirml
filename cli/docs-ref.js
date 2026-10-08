@@ -1,4 +1,4 @@
-const REPOSITORY_DOCS_BASE_URL = "https://github.com/erikhazzard/vasir/blob/main";
+const REPOSITORY_DOCS_BASE_URL = new URL("../", import.meta.url).href.replace(/\/$/, "");
 
 export const COMMANDS_REFERENCE_DOCS_REF = `${REPOSITORY_DOCS_BASE_URL}/docs/cli-reference.md#commands`;
 export const STATUS_REFERENCE_DOCS_REF = `${REPOSITORY_DOCS_BASE_URL}/docs/cli-reference.md#status`;

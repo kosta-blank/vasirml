@@ -3,7 +3,7 @@ A skill is a compact expertise capsule that installs a targeted rewrite of the m
 
 Skills are not general docs, repo tours, style guides, or one-off task notes. A good skill earns its context by changing what the agent does: when it triggers, what prior it replaces, what expert judgment it transfers, and what output it reliably improves.
 
-When creating, rewriting, auditing, or debugging a skill, do not hand-roll from this file. Invoke `skills__create-skill` or the local alias for the skill-creation skill, and let it produce the manifest, routing description, reference-file plan, and trigger/eval cases.
+When creating, rewriting, auditing, or debugging a skill, do not hand-roll from this file. Invoke `skills-create-skill` or the local alias for the skill-creation skill, and let it produce the manifest, routing description, reference-file plan, and trigger/eval cases.
 
 Keep this file as orientation only. Real skill manifests live in their own skill directory:
 

@@ -17,9 +17,9 @@ const HASHED_CATALOG_ROOTS = Object.freeze(["registry.json", ".agents/skills", "
 const IGNORED_CATALOG_FILE_NAMES = new Set([".DS_Store"]);
 
 const REGISTRY_HEADER = {
-  version: "0.1.0",
-  repo: "https://github.com/erikhazzard/vasir",
-  raw_base: "https://raw.githubusercontent.com/erikhazzard/vasir/main"
+  version: readPackageVersion(),
+  collection: "vasir-slim-reviewed",
+  source: "bundled-local"
 };
 
 const CATEGORY_ORDER = new Map([

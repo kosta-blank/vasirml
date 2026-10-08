@@ -1,10 +1,13 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import fs from "node:fs";
+import os from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { buildRegistry } from "../registry/build.js";
+import { initializeProjectAgentsFile } from "../cli/agents.js";
+import { renderRootContractTemplates } from "../scripts/build-agent-templates.js";
 
 const REPO_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const SKILLS_ROOT = path.join(REPO_ROOT, ".agents", "skills");
@@ -20,8 +23,33 @@ const ROOT_CONTRACT_MARKER_PAIRS = Object.freeze([
   ["<!-- vasir:purpose:start -->", "<!-- vasir:purpose:end -->"],
   ["<!-- vasir:routing:start -->", "<!-- vasir:routing:end -->"],
   ["<!-- vasir:nonobvious:start -->", "<!-- vasir:nonobvious:end -->"],
-  ["<!-- vasir:engineering-doctrine-inserts:start -->", "<!-- vasir:engineering-doctrine-inserts:end -->"]
+  ["<!-- vasir:model-routing:start -->", "<!-- vasir:model-routing:end -->"],
+  ["<!-- vasir:engineering-doctrine-inserts:start -->", "<!-- vasir:engineering-doctrine-inserts:end -->"],
+  ["<!-- vasir:consumer:start -->", "<!-- vasir:consumer:end -->"]
 ]);
+
+const ROOT_TEMPLATE_MAX_BYTES = 12 * 1024;
+const COMPOSED_ROOT_MAX_BYTES = 32 * 1024;
+
+function assertMarkerPairs(documentText, markerPairs, documentName) {
+  for (const [startMarker, endMarker] of markerPairs) {
+    assert.equal(documentText.split(startMarker).length - 1, 1, `${documentName}: unique ${startMarker}`);
+    assert.equal(documentText.split(endMarker).length - 1, 1, `${documentName}: unique ${endMarker}`);
+    assert.ok(documentText.indexOf(startMarker) < documentText.indexOf(endMarker), `${documentName}: ordered ${startMarker}`);
+  }
+}
+
+function sharedContractText(documentText) {
+  return documentText
+    .replace(/^# (?:AGENTS|CLAUDE)\.md\b/m, "# ROOT.md")
+    .replace(/<!-- vasir:consumer:start -->[\s\S]*?<!-- vasir:consumer:end -->/, "<!-- consumer adapter -->")
+    .replace(/<!-- vasir:model-routing:start -->[\s\S]*?<!-- vasir:model-routing:end -->/, "<!-- project model routing -->");
+}
+
+function assertContractSections(documentText, documentName) {
+  const sectionNumbers = [...documentText.matchAll(/^#{1,6}\s+(\d+)\.\s+/gm)].map((matchEntry) => Number(matchEntry[1]));
+  assert.deepEqual(sectionNumbers, Array.from({ length: 12 }, (_, index) => index), `${documentName}: stable section references §0–11`);
+}
 
 function walkFiles(directoryPath) {
   const discoveredFiles = [];
@@ -87,88 +115,41 @@ test("built registry file inventories match checked-in skill files", () => {
   }
 });
 
-test("built-in eval suites live with their owning skills and include guidelines", () => {
-  const suiteFilePaths = walkFiles(SKILLS_ROOT).filter((filePath) => path.basename(filePath) === "suite.json");
-  assert.ok(suiteFilePaths.length > 0, "expected at least one built-in skill eval suite");
-
-  for (const suiteFilePath of suiteFilePaths) {
-    const relativeSuitePath = path.relative(REPO_ROOT, suiteFilePath).replace(/\\/g, "/");
-    assert.match(
-      relativeSuitePath,
-      /^\.agents\/skills\/[^/]+\/evals\/suite\.json$/,
-      `built-in eval suites must live under .agents/skills/<name>/evals: ${relativeSuitePath}`
-    );
-
-    const readmePath = path.join(path.dirname(suiteFilePath), "README.md");
-    assert.ok(fs.existsSync(readmePath), `missing eval guidelines beside ${relativeSuitePath}`);
-
-    const suiteDefinition = JSON.parse(fs.readFileSync(suiteFilePath, "utf8"));
-    assert.ok(!Object.hasOwn(suiteDefinition, "mode"), `suite should omit mode: ${relativeSuitePath}`);
-    assert.ok(!Object.hasOwn(suiteDefinition, "judge"), `suite should use judgePrompt, not judge: ${relativeSuitePath}`);
-    assert.ok(!Object.hasOwn(suiteDefinition, "validator"), `suite should not define validator commands: ${relativeSuitePath}`);
-    for (const caseDefinition of suiteDefinition.cases) {
-      const hardCheckCount =
-        (Array.isArray(caseDefinition.requiredSubstrings) ? caseDefinition.requiredSubstrings.length : 0) +
-        (Array.isArray(caseDefinition.forbiddenSubstrings) ? caseDefinition.forbiddenSubstrings.length : 0);
-      assert.ok(
-        hardCheckCount > 0,
-        `suite cases must define at least one hard check: ${relativeSuitePath}#${caseDefinition.id}`
-      );
-    }
+test("reviewed slim catalog inventories all 38 canonical skills and their 81 release files", () => {
+  const registry = buildRegistry();
+  assert.equal(registry.skills.length, 38);
+  assert.equal(new Set(registry.skills.map((skill) => skill.name)).size, 38);
+  assert.equal(registry.skills.reduce((count, skill) => count + skill.files.length, 0), 81);
+  for (const skill of registry.skills) {
+    assert.match(skill.name, /^[a-z0-9]+(?:-[a-z0-9]+)+$/);
+    assert.ok(skill.files.includes("SKILL.md"), `${skill.name}: installable manifest`);
+    assert.equal(skill.path, `.agents/skills/${skill.name}`);
+    assert.ok(!skill.files.includes("evals/suite.json"), `${skill.name}: reviewed-only release scope`);
   }
 });
 
-test("work spec skill owns the current schema and projection rules", () => {
-  const workSpecSkillPath = path.join(SKILLS_ROOT, "plan__maintain-work-spec", "SKILL.md");
-
+test("work spec skill owns portable formats and keeps evidence and delivery boundaries explicit", () => {
+  const workSpecSkillPath = path.join(SKILLS_ROOT, "plan-maintain-work-spec", "SKILL.md");
   const workSpecSkillText = fs.readFileSync(workSpecSkillPath, "utf8");
-
-  assert.match(workSpecSkillText, /Work Spec = Product Requirement Doc \+ Engineering Specification \+ Design Document \+ UX Document/);
-  assert.match(workSpecSkillText, /serialization format for judgment state/);
-  assert.match(workSpecSkillText, /Schema truth:\*\* the `plan__maintain-work-spec` skill/);
-  assert.match(workSpecSkillText, /Stale specs are synced, not versioned/);
-  assert.match(workSpecSkillText, /Spec authorship is judgment work/);
-  assert.match(workSpecSkillText, /Milestone rungs are self-contained build packets/);
-  assert.match(workSpecSkillText, /A spec whose header is richer than its active rung is upside down/);
-  assert.match(workSpecSkillText, /Multi-item user asks get an Input Coverage Ledger before synthesis/);
-  assert.match(workSpecSkillText, /`tmp\/` artifacts expire; every recorded artifact keeps a surviving summary/);
-  assert.match(workSpecSkillText, /Parked/);
-  assert.match(workSpecSkillText, /Projection resync/);
-  assert.match(workSpecSkillText, /rung bodies \(§5\.2\) are truth/);
-  assert.match(workSpecSkillText, /header fields, Human Read, §5\.1 index row, and §6 gate table are projections/);
-  assert.match(workSpecSkillText, /gate state resolves toward the eval plan/);
-  assert.match(workSpecSkillText, /# WORK SPEC — <FEATURE_NAME>\n\*\*Human Read:\*\*/);
-  assert.match(workSpecSkillText, /The first field under the title, always/);
-  assert.match(workSpecSkillText, /so that <one-level-higher outcome>/);
-  assert.match(workSpecSkillText, /Weak: `We are trying to make incidents easier to scan so that operators can triage incidents confidently\.`/);
-  assert.match(workSpecSkillText, /Strong: `We are trying to make incidents easier to scan so that Harbor Pulse reduces time-to-mitigation and customer-impact uncertainty during live incidents\.`/);
-  assert.match(workSpecSkillText, /User Journey Unlock/);
-  assert.match(workSpecSkillText, /Engineering System Unlock/);
-  assert.match(workSpecSkillText, /\| # \| User item \| Disposition \| Where it lives \| Notes \|/);
-  assert.match(workSpecSkillText, /Do not reorder or rename top-level sections 1–7 or A1–A5/);
-  assert.match(workSpecSkillText, /no naked `M1`\/`Phase 2` anywhere/);
-  assert.match(workSpecSkillText, /Contracts live in §4 only/);
-  assert.match(workSpecSkillText, /Status vocabulary is root §4's/);
-  assert.match(workSpecSkillText, /Objectively Green/);
-  assert.match(workSpecSkillText, /Waiting Human/);
-  assert.match(workSpecSkillText, /Evidence:/);
-  assert.match(workSpecSkillText, /browser-rendered rungs record real route\/scenario captures/);
-  assert.match(workSpecSkillText, /Taste-critical rungs/);
-  assert.match(workSpecSkillText, /Reference bar:/);
-  assert.match(workSpecSkillText, /Must-feel delta:/);
-  assert.match(workSpecSkillText, /Must-not-feel delta:/);
-  assert.match(workSpecSkillText, /Rejection criteria:/);
-  assert.match(workSpecSkillText, /Rung sizing/);
-  assert.match(workSpecSkillText, /\| Complexity \|/);
-  assert.match(workSpecSkillText, /\| Risk \|/);
-  assert.match(workSpecSkillText, /\| Perf impact \|/);
-  assert.match(workSpecSkillText, /\| Cost impact \|/);
-  assert.match(workSpecSkillText, /\| Rung \| State \| Size \| Unlock \| Proof summary \| Evidence \| Commit \| Notes \|/);
-  assert.match(workSpecSkillText, /\*\*Proof plan:\*\* eval-plan gate IDs plus the shortest real journey loop/);
-  assert.match(workSpecSkillText, /Rung commit:/);
-  assert.match(workSpecSkillText, /Pending — commit after proof, spec sync, and eval sync/);
-  assert.match(workSpecSkillText, /Conformance Check \(run before writing — never stored in the doc\)/);
-  assert.doesNotMatch(workSpecSkillText, /# S-Tier Work Spec Example/);
+  const formatPath = path.join(SKILLS_ROOT, "plan-maintain-work-spec", "references", "spec-formats.md");
+  const formatText = fs.readFileSync(formatPath, "utf8");
+  assert.ok(findLocalMarkdownLinks(workSpecSkillPath).includes("references/spec-formats.md"));
+  assert.match(workSpecSkillText, /intended outcome, requirements, scope, constraints, decisions, current state, acceptance criteria/);
+  assert.match(workSpecSkillText, /Requests remain traceable/);
+  assert.match(workSpecSkillText, /Separate evidence from judgment/);
+  assert.match(workSpecSkillText, /Keep one authoritative copy/);
+  assert.match(workSpecSkillText, /Preserve stable references/);
+  assert.match(workSpecSkillText, /Synchronize summaries/);
+  assert.match(workSpecSkillText, /Evidence must survive/);
+  assert.match(workSpecSkillText, /Protect concurrent decisions/);
+  assert.match(workSpecSkillText, /Dedicated ML evaluation owns metric selection/);
+  assert.match(workSpecSkillText, /record an approval or required human acceptance only when it exists/i);
+  assert.match(formatText, /## Brief spec/);
+  assert.match(formatText, /## Fuller living spec/);
+  assert.match(formatText, /## POC architecture and documentation/);
+  assert.match(formatText, /## Application POC and foundation/);
+  assert.match(formatText, /Separate real integrations from mocks, fixtures, and manual setup/);
+  assert.match(formatText, /Pending or unimplemented checks stay visible/);
 });
 
 test("agent template snippets own profile-specific insertion blocks", () => {
@@ -203,168 +184,122 @@ test("agent template snippets own profile-specific insertion blocks", () => {
   }
 });
 
-test("root contract templates use the operating contract shape and required renderer seams", () => {
-  const agentsTemplateText = fs.readFileSync(path.join(REPO_ROOT, "templates", "agents", "AGENTS.md"), "utf8");
-  const claudeTemplateText = fs.readFileSync(path.join(REPO_ROOT, "templates", "agents", "CLAUDE.md"), "utf8");
-  const exampleAgentsText = fs.readFileSync(path.join(REPO_ROOT, "docs", "example-agents.md"), "utf8");
+test("root contracts have unique renderer seams and stable skill section references", () => {
+  const templateDirectory = path.join(REPO_ROOT, "templates", "agents");
+  for (const templateName of ["shared-contract.md", "AGENTS.md", "CLAUDE.md"]) {
+    const templateText = fs.readFileSync(path.join(templateDirectory, templateName), "utf8");
+    assertMarkerPairs(templateText, ROOT_CONTRACT_MARKER_PAIRS, templateName);
+    assertContractSections(templateText, templateName);
+    assert.ok(
+      Buffer.byteLength(templateText, "utf8") <= ROOT_TEMPLATE_MAX_BYTES,
+      `${templateName} exceeds the 12 KiB source-root budget; move task-specific guidance into scoped files or skills`
+    );
+  }
+});
 
-  assert.match(agentsTemplateText, /# AGENTS\.md — \[Project Name\] Root Operating Contract/);
-  assert.match(claudeTemplateText, /# CLAUDE\.md — \[Project Name\] Root Operating Contract/);
-  assert.match(agentsTemplateText, /contract for codex and other non-Claude agents/);
-  assert.match(claudeTemplateText, /contract for Claude agents \(Fable orchestrator \+ Claude subagents\)/);
-  assert.match(agentsTemplateText, /The orchestrator's tier does orchestration/);
-  assert.match(agentsTemplateText, /Codex gpt-5\.5-thinking xhigh delegates/);
-  assert.match(claudeTemplateText, /Prime Directive — Fable tokens are the scarce resource/);
-  assert.match(claudeTemplateText, /Fable xhigh \(main agent or subagents inheriting it\)/);
-  assert.match(claudeTemplateText, /In-harness Claude subagents/);
+test("provider templates are current projections of one shared contract", () => {
+  const templateDirectory = path.join(REPO_ROOT, "templates", "agents");
+  const sharedText = fs.readFileSync(path.join(templateDirectory, "shared-contract.md"), "utf8");
+  assert.equal(sharedText.split("{{contract_filename}}").length - 1, 1, "one contract filename slot");
+  assert.equal(sharedText.split("{{agent_adapter}}").length - 1, 1, "one provider adapter slot");
 
-  for (const [templateName, templateText] of [
-    ["AGENTS", agentsTemplateText],
-    ["CLAUDE", claudeTemplateText]
-  ]) {
-    assert.doesNotMatch(templateText, /vasir:profile/, `${templateName} template should not persist profile markers`);
-    assert.doesNotMatch(templateText, /Last Updated/, `${templateName} template should not carry stale timestamp fields`);
-    assert.doesNotMatch(templateText, /update alongside major architectural PRs/, `${templateName} template should not carry legacy boilerplate`);
-    for (const [startMarker, endMarker] of ROOT_CONTRACT_MARKER_PAIRS) {
-      assert.match(templateText, new RegExp(startMarker.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")), `${templateName} template missing ${startMarker}`);
-      assert.match(templateText, new RegExp(endMarker.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")), `${templateName} template missing ${endMarker}`);
-      assert.ok(
-        templateText.indexOf(startMarker) < templateText.indexOf(endMarker),
-        `${templateName} template must place ${startMarker} before ${endMarker}`
-      );
+  const renderedTemplates = renderRootContractTemplates({ sharedText });
+  assert.deepEqual(Object.keys(renderedTemplates).sort(), ["AGENTS.md", "CLAUDE.md"]);
+  for (const [templateName, renderedText] of Object.entries(renderedTemplates)) {
+    assert.equal(
+      fs.readFileSync(path.join(templateDirectory, templateName), "utf8").replaceAll("\r\n", "\n"),
+      renderedText,
+      `${templateName} is stale; run node scripts/build-agent-templates.js --write`
+    );
+    assert.ok(renderedText.startsWith(`# ${templateName}`), `${templateName}: correct consumer filename`);
+    assert.doesNotMatch(renderedText, /\{\{(?:contract_filename|agent_adapter)\}\}/, `${templateName}: resolved source slots`);
+  }
+  assert.equal(sharedContractText(renderedTemplates["AGENTS.md"]), sharedContractText(renderedTemplates["CLAUDE.md"]));
+  assert.notEqual(renderedTemplates["AGENTS.md"], renderedTemplates["CLAUDE.md"], "provider adapters remain distinct");
+});
+
+test("shared renderer rejects invalid slots and UTF-8 budget overflow before producing templates", () => {
+  const minimalSource = "# {{contract_filename}}\n{{agent_adapter}}\n";
+  assert.throws(() => renderRootContractTemplates({ sharedText: minimalSource.replace("{{agent_adapter}}", "") }), /exactly one/);
+  assert.throws(() => renderRootContractTemplates({ sharedText: `${minimalSource}{{agent_adapter}}` }), /exactly one/);
+  assert.throws(() => renderRootContractTemplates({ sharedText: `${minimalSource}${"é".repeat(ROOT_TEMPLATE_MAX_BYTES / 2)}` }), /12 KiB source budget/);
+
+  const atSourceBudget = `${minimalSource}${"x".repeat(ROOT_TEMPLATE_MAX_BYTES - Buffer.byteLength(minimalSource, "utf8"))}`;
+  assert.throws(() => renderRootContractTemplates({ sharedText: atSourceBudget }), /after inserting its adapter/);
+});
+
+test("every built-in profile composes both contracts within the output budget", (testContext) => {
+  const temporaryRoot = fs.mkdtempSync(path.join(os.tmpdir(), "vasir-contract-profiles-"));
+  testContext.after(() => {
+    assert.equal(path.dirname(temporaryRoot), path.resolve(os.tmpdir()), "cleanup stays in the created temporary directory");
+    fs.rmSync(temporaryRoot, { recursive: true, force: true });
+  });
+
+  for (const profileName of ["generic", "backend", "frontend", "ios"]) {
+    const projectRootDirectory = path.join(temporaryRoot, profileName);
+    fs.mkdirSync(projectRootDirectory);
+    const initialized = initializeProjectAgentsFile({
+      globalCatalogDirectory: REPO_ROOT,
+      projectRootDirectory,
+      profileName
+    });
+    assert.equal(initialized.profile, profileName);
+    const contracts = {};
+    for (const templateName of ["AGENTS.md", "CLAUDE.md"]) {
+      const contractText = fs.readFileSync(path.join(projectRootDirectory, templateName), "utf8");
+      assert.ok(Buffer.byteLength(contractText, "utf8") <= COMPOSED_ROOT_MAX_BYTES, `${profileName}/${templateName}: 32 KiB output budget`);
+      assertMarkerPairs(contractText, ROOT_CONTRACT_MARKER_PAIRS, `${profileName}/${templateName}`);
+      assertContractSections(contractText, `${profileName}/${templateName}`);
+      contracts[templateName] = contractText;
     }
-    assert.match(templateText, /# 0\. The Unlock Mandate/);
-    assert.match(templateText, /# 1\. Constraint Precedence/);
-    assert.match(templateText, /# 3\. The Working Relationship/);
-    assert.match(templateText, /# 5\. Proof Doctrine/);
-    assert.match(templateText, /# 8\. Custody/);
-    assert.match(templateText, /Senior-engineer latitude/);
-    assert.match(templateText, /The lane is a journey boundary, not a file list/);
-    assert.match(templateText, /Boundary discipline — attribute, don't fix/);
-    assert.doesNotMatch(templateText, /Existing files allowed to edit:/);
-    assert.doesNotMatch(templateText, /Plan Amendment Protocol/);
-    assert.doesNotMatch(templateText, /Escalation triggers:/);
-    assert.doesNotMatch(templateText, /ESCALATION_REQUEST/);
-    assert.doesNotMatch(templateText, /Approved change envelope:/);
-    assert.doesNotMatch(templateText, /file targets exceed the approved envelope/);
+    assert.equal(sharedContractText(contracts["AGENTS.md"]), sharedContractText(contracts["CLAUDE.md"]), `${profileName}: shared laws agree`);
   }
-  assert.doesNotMatch(exampleAgentsText, /Which exact files and systems will be touched/);
-  assert.doesNotMatch(exampleAgentsText, /Do not edit outside the declared lane/);
-  assert.doesNotMatch(exampleAgentsText, /approved change boundary/);
 });
 
-test("AGENTS taxonomy separates generated roots from folder steering maps", () => {
-  const agentsTemplateText = fs.readFileSync(path.join(REPO_ROOT, "templates", "agents", "AGENTS.md"), "utf8");
-  const claudeTemplateText = fs.readFileSync(path.join(REPO_ROOT, "templates", "agents", "CLAUDE.md"), "utf8");
-  const templateReadmeText = fs.readFileSync(path.join(REPO_ROOT, "templates", "agents", "README.md"), "utf8");
-  const rootReadmeText = fs.readFileSync(path.join(REPO_ROOT, "README.md"), "utf8");
-  const cliReferenceText = fs.readFileSync(path.join(REPO_ROOT, "docs", "cli-reference.md"), "utf8");
+test("contract docs route maintainers to the shared source and distinguish folder steering maps", () => {
+  const templateReadmePath = path.join(REPO_ROOT, "templates", "agents", "README.md");
+  const examplePath = path.join(REPO_ROOT, "docs", "example-agents.md");
+  for (const documentPath of [templateReadmePath, examplePath]) {
+    const documentText = fs.readFileSync(documentPath, "utf8");
+    assert.ok(findLocalMarkdownLinks(documentPath).some((linkPath) => path.basename(linkPath) === "shared-contract.md"), `${documentPath}: link to canonical shared source`);
+    assert.match(documentText, /build-agent-templates\.js/, `${documentPath}: template regeneration command`);
+    assert.match(documentText, /Nested root|nested root/, `${documentPath}: nested app/package roots`);
+    assert.match(documentText, /Folder `AGENTS\.md`|folder steering maps/, `${documentPath}: hand-authored folder guidance`);
+  }
+
   const folderAgentsSkillText = fs.readFileSync(
-    path.join(REPO_ROOT, ".agents", "skills", "agents__creating-folder-agents", "SKILL.md"),
+    path.join(SKILLS_ROOT, "agents-creating-folder-agents", "SKILL.md"),
     "utf8"
   );
-
-  for (const documentText of [agentsTemplateText, claudeTemplateText, templateReadmeText, rootReadmeText, cliReferenceText]) {
-    assert.match(documentText, /Nested root \/ folder `AGENTS\.md`|Nested root `AGENTS\.md`|nested root `AGENTS\.md`|Nested root AGENTS|nested root AGENTS/);
-    assert.match(documentText, /Folder `AGENTS\.md`|Folder AGENTS|folder AGENTS/);
-  }
-
-  assert.match(agentsTemplateText, /Folder `AGENTS\.md` files are hand-authored steering maps/);
-  assert.match(claudeTemplateText, /Folder `AGENTS\.md` files are hand-authored steering maps/);
-  assert.match(rootReadmeText, /Do not use `vasir agents sync --scope` for ordinary folder steering maps/);
-  assert.match(cliReferenceText, /Folder `AGENTS\.md` files are different/);
-  assert.match(folderAgentsSkillText, /Folder AGENTS are local steering maps/);
-  assert.match(folderAgentsSkillText, /No sidecar\. No root template\. No `vasir agents sync --scope`/);
-  assert.match(folderAgentsSkillText, /Do not use `AGENTS__non-obvious\.md` for folder steering maps/);
-  assert.doesNotMatch(folderAgentsSkillText, /local contract/i);
-  assert.doesNotMatch(folderAgentsSkillText, /folder-scoped/i);
+  assert.match(folderAgentsSkillText, /folder `AGENTS\.md` files as local steering maps/);
+  assert.match(folderAgentsSkillText, /Folder `AGENTS\.md`: hand-authored steering map for one subtree/);
+  assert.match(folderAgentsSkillText, /Verify the repository's supported filename, sidecar, template, and generation conventions/);
+  assert.match(folderAgentsSkillText, /Do not apply a root template or generator to a hand-authored folder map/);
 });
 
-test("root AGENTS and handoff gate block proof exhaust and script bloat", () => {
-  const agentsTemplateText = fs.readFileSync(path.join(REPO_ROOT, "templates", "agents", "AGENTS.md"), "utf8");
-  const claudeTemplateText = fs.readFileSync(path.join(REPO_ROOT, "templates", "agents", "CLAUDE.md"), "utf8");
+test("handoff skill separates durable commands and scoped closure from temporary proof", () => {
   const handoffSkillText = fs.readFileSync(
-    path.join(REPO_ROOT, ".agents", "skills", "handoff__final-quality-gate", "SKILL.md"),
+    path.join(SKILLS_ROOT, "handoff-final-quality-gate", "SKILL.md"),
     "utf8"
   );
-
-  for (const templateText of [agentsTemplateText, claudeTemplateText]) {
-    assert.match(templateText, /Raw proof: `tmp\/<datetime>__<semantic-description>\/` — current-run evidence only/);
-    assert.match(templateText, /Durable logic, reusable harnesses, and canonical docs never live in `tmp\/`/);
-    assert.match(templateText, /the spec keeps the numbers/);
-    assert.match(templateText, /`package\.json` scripts are a six-month developer interface, not a proof log/);
-  }
-
-  assert.match(handoffSkillText, /Repo shape & command surface/);
-  assert.match(handoffSkillText, /Temporary proof lives under `tmp\/\*\*` only/);
-  assert.match(handoffSkillText, /Added or changed package scripts name a six-month developer or CI command/);
-  assert.match(handoffSkillText, /never a bug, task, date, or proof rung/);
-  assert.match(handoffSkillText, /This table \*is\* the audit/);
+  assert.match(handoffSkillText, /Repo shape & commands/);
+  assert.match(handoffSkillText, /temporary proof follows the project's artifact convention/);
+  assert.match(handoffSkillText, /Package scripts remain useful developer\/CI interfaces/);
+  assert.match(handoffSkillText, /Remaining work/);
+  assert.match(handoffSkillText, /each item precisely scoped with a closure gate and recorded human acceptance of deferral/);
+  assert.match(handoffSkillText, /Subjective acceptance requires a recorded human decision, never an automated PASS/);
 });
 
-test("root AGENTS ties commits to objectively green Work Spec rungs", () => {
-  const agentsTemplateText = fs.readFileSync(path.join(REPO_ROOT, "templates", "agents", "AGENTS.md"), "utf8");
-  const claudeTemplateText = fs.readFileSync(path.join(REPO_ROOT, "templates", "agents", "CLAUDE.md"), "utf8");
-
-  for (const templateText of [agentsTemplateText, claudeTemplateText]) {
-    assert.match(templateText, /Objectively Green/);
-    assert.match(templateText, /`Complete` — objective gates green, subjective gates accepted, docs synced, audit run/);
-    assert.match(templateText, /Git — commit forward, commit often/);
-    assert.match(templateText, /The orchestrator commits: at every Objectively Green rung, at lane close, and at coherent stopping points/);
-    assert.match(templateText, /No stopgaps — build vFinal/);
-    assert.match(templateText, /reduce capability, not correctness/);
-    assert.match(templateText, /compatibility shims only for migration\/rollback\/protocol\/persistence\/client-version safety/);
-    assert.match(templateText, /A failure state is the user having to run `git commit` himself/);
-    assert.doesNotMatch(templateText, /`git add -A` and `git commit` are allowed when committing current workspace progress/);
-    assert.doesNotMatch(templateText, /Commit messages should be generated 1-2 line summaries/);
-    assert.doesNotMatch(templateText, /When a verified Work Spec milestone is complete/);
-    assert.doesNotMatch(templateText, /declared scope/);
-    assert.doesNotMatch(templateText, /approved scope/);
-    assert.doesNotMatch(templateText, /active scope/);
-  }
-});
-
-test("root AGENTS keeps generic JS and game test doctrine profile-aware", () => {
-  const agentsTemplateText = fs.readFileSync(path.join(REPO_ROOT, "templates", "agents", "AGENTS.md"), "utf8");
-  const claudeTemplateText = fs.readFileSync(path.join(REPO_ROOT, "templates", "agents", "CLAUDE.md"), "utf8");
-  const backendSnippetText = fs.readFileSync(
-    path.join(REPO_ROOT, "templates", "agents", "snippets", "backend-inserts.md"),
-    "utf8"
-  );
-
-  for (const templateText of [agentsTemplateText, claudeTemplateText]) {
-    assert.match(templateText, /Plain ESM JavaScript in `\.js` files absent a stronger local convention/);
-    assert.match(templateText, /Env reads and logging only through the repo's config\/logger boundaries/);
-    assert.match(templateText, /games use `games\/<gameId>\/tests\/` absent a local convention/);
-    assert.doesNotMatch(templateText, /For Javascript, write plain JavaScript with ESM in `\.js` files only: No `\.mjs`/);
-    assert.doesNotMatch(templateText, /For individual games, tests MUST live under `games\/<gameId>\/tests\/`/);
-    assert.doesNotMatch(templateText, /Game-Specific:\n  - Individual game tests live under `games\/<gameId>\/tests\/`/);
-  }
-  assert.match(backendSnippetText, /Backend profile default: ESM in `\.js` files\. Follow stronger repo-local module or file-extension conventions when present/);
-  assert.match(backendSnippetText, /Backend profile default: Mocha for backend tests\. Follow stronger repo-local test-runner conventions when present/);
-  assert.match(backendSnippetText, /Do not read `process\.env` outside the repo-owned config boundary; backend profile default is `src\/env\.js`/);
-  assert.doesNotMatch(backendSnippetText, /Modules: ESM with `\.js` files only\. Do not create `\.mjs`/);
-  assert.doesNotMatch(backendSnippetText, /Use Mocha for backend tests/);
-  assert.doesNotMatch(backendSnippetText, /approved scope/);
-});
-
-test("testing doctrine forbids tombstone absence tests", () => {
-  const agentsTemplateText = fs.readFileSync(path.join(REPO_ROOT, "templates", "agents", "AGENTS.md"), "utf8");
-  const claudeTemplateText = fs.readFileSync(path.join(REPO_ROOT, "templates", "agents", "CLAUDE.md"), "utf8");
+test("testing skill ties absence assertions to positive observable guarantees", () => {
   const testingSkillText = fs.readFileSync(
-    path.join(REPO_ROOT, ".agents", "skills", "testing__enforcing-mandate", "SKILL.md"),
+    path.join(SKILLS_ROOT, "testing-enforcing-mandate", "SKILL.md"),
     "utf8"
   );
-
-  for (const templateText of [agentsTemplateText, claudeTemplateText]) {
-    assert.match(templateText, /No tombstone tests:/);
-    assert.match(templateText, /Absence assertions only guard a named contract/);
-  }
-  assert.match(testingSkillText, /No tombstone tests/);
-  assert.match(testingSkillText, /private locals, variable names, function names/);
-  assert.match(testingSkillText, /Writing tombstone tests that only prove removed UI\/API\/backend\/data\/implementation artifacts stayed absent/);
+  assert.match(testingSkillText, /Do not write tombstone tests/);
+  assert.match(testingSkillText, /Assert observable output, public reads, persisted effects/);
+  assert.match(testingSkillText, /Absence assertions remain useful when they protect an approved positive contract/);
+  assert.match(testingSkillText, /Name the guarantee and harm prevented by a negative assertion/);
 });
-
 test("local markdown links resolve", () => {
   const documentPathsToCheck = [
     "README.md",
@@ -376,11 +311,13 @@ test("local markdown links resolve", () => {
     "docs/troubleshooting.md",
     "work/WORK.md",
     "docs/writing-skills.md",
-    "templates/agents/README.md",
-    "templates/agents/AGENTS.md",
-    "templates/agents/CLAUDE.md",
     "templates/SKILL.md"
   ];
+  documentPathsToCheck.push(
+    ...walkFiles(path.join(REPO_ROOT, "templates", "agents"))
+      .filter((filePath) => filePath.endsWith(".md"))
+      .map((filePath) => path.relative(REPO_ROOT, filePath))
+  );
 
   for (const relativeDocumentPath of documentPathsToCheck) {
     const absoluteDocumentPath = path.join(REPO_ROOT, relativeDocumentPath);

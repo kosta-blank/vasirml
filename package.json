@@ -1,19 +1,44 @@
 {
-  "name": "vasir",
-  "version": "0.1.0",
-  "description": "A collection of skill files for conditioning LLMs away from the mode",
-  "license": "MIT",
-  "type": "module",
   "bin": {
     "vasir": "./bin/vasir.js"
   },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/erikhazzard/vasir.git"
+  "bundledDependencies": [
+    "cli-spinners"
+  ],
+  "dependencies": {
+    "cli-spinners": "3.4.0"
   },
-  "publishConfig": {
-    "access": "public"
+  "description": "Local Vasir CLI with 38 reviewed canonical skills",
+  "engines": {
+    "node": "^18.20.0 || >=20.10.0"
   },
+  "files": [
+    "bin/",
+    "cli/",
+    "templates/",
+    "scripts/build-agent-templates.js",
+    "registry.json",
+    ".vasir-catalog-manifest.json",
+    "skill-groups.json",
+    ".agents/skills/",
+    ".agents/vasir.json",
+    "AGENTS.md",
+    "CLAUDE.md",
+    "AGENTS__non-obvious.md",
+    "LICENSE",
+    "README.md",
+    "PROVENANCE.md",
+    "registry/build.js",
+    "docs/*.md",
+    "registry/review-metadata.json",
+    "scripts/build-review-catalog.js",
+    "docs/review/",
+    "docs/work/agents/",
+    ".agents/README.md",
+    "MANIFESTO.md",
+    "keys.json.example",
+    "work/WORK.md"
+  ],
   "keywords": [
     "llm",
     "skills",
@@ -23,24 +48,24 @@
     "prompt-engineering",
     "game-dev"
   ],
-  "files": [
-    "bin/",
-    "cli/",
-    "registry.json",
-    ".vasir-catalog-manifest.json",
-    ".agents/skills/",
-    "templates/"
-  ],
-  "engines": {
-    "node": ">=18.17"
-  },
+  "license": "MIT",
+  "name": "vasir-slim",
+  "private": true,
   "scripts": {
+    "build:agents": "node scripts/build-agent-templates.js --write",
     "build:registry": "node registry/build.js --write",
+    "check:agents": "node scripts/build-agent-templates.js --check",
     "check:registry": "node registry/build.js --check",
-    "eval": "node ./cli/eval.js",
-    "test": "node --test test/*.test.js"
+    "eval": "node cli/eval.js",
+    "test": "node scripts/run-tests.js",
+    "build:review": "node scripts/build-review-catalog.js --write",
+    "check:review": "node scripts/build-review-catalog.js --check",
+    "check:package": "node scripts/verify-package.js"
   },
-  "dependencies": {
-    "cli-spinners": "^3.4.0"
+  "type": "module",
+  "version": "0.1.0-slim.2",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kosta-blank/vasirml.git"
   }
 }

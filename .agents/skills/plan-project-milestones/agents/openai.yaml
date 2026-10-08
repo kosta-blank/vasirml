@@ -1,0 +1,4 @@
+interface:
+  display_name: "Project Milestone Planner"
+  short_description: "Plan ownership, effort, and milestones for ML systems"
+  default_prompt: "Use $plan-project-milestones to turn this idea and team context into workstreams, owner milestones, effort ranges, and an integrated delivery plan."
