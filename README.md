@@ -11,10 +11,10 @@ Vasir gives each project generated root contracts, an authored source for local 
 
 ## Build from this repository
 
-Requires Node 18.20 or later within 18.x, or Node 20.10 or newer, and npm installed separately. Clone the [repository](https://github.com/kosta-blank/vasirml). Before the reviewed changes merge into the default branch, use `reviewed-skills-and-groups`:
+Requires Node 18.20 or later within 18.x, or Node 20.10 or newer, and npm installed separately. Clone the [repository](https://github.com/kosta-blank/vasirml) to build from `main`:
 
 ```sh
-git clone --branch reviewed-skills-and-groups https://github.com/kosta-blank/vasirml.git
+git clone https://github.com/kosta-blank/vasirml.git
 cd vasirml
 npm ci
 npm test
@@ -46,10 +46,10 @@ npm install -g --offline --no-audit --no-fund ./vasir-slim-0.1.0-slim.2.tgz
 vasir --version
 ```
 
-Installing the global CLI does not automatically install skills or contracts into any project. Run `vasir init` or `vasir add` in each target project. A direct Git installation requires dependency resolution and currently selects the review branch:
+Installing the global CLI does not automatically install skills or contracts into any project. Run `vasir init` or `vasir add` in each target project. A direct Git installation requires dependency resolution and uses `main`:
 
 ```sh
-npm install -g "git+https://github.com/kosta-blank/vasirml.git#reviewed-skills-and-groups"
+npm install -g "git+https://github.com/kosta-blank/vasirml.git#main"
 ```
 
 ## Use
