@@ -1,6 +1,6 @@
 # Reviewed skills and CLI groups
 
-**State:** In Progress
+**State:** Complete
 
 **Outcome:** Integrate the completed local Vasir Slim release into `kosta-blank/vasirml` and open a reviewable pull request so the owner can install the maintained CLI and reviewed collection from Git.
 
@@ -42,4 +42,4 @@ The reviewed-only catalog and canonical IDs are an intentional compatibility cha
 - Git blob verification preserves all 81 accepted skill files and all 90 catalog/template files. Four previous local archives remain unchanged.
 - Resolved review finding: preserve accepted CRLF snapshots through Git rather than normalizing their bytes. Resolved runtime regression: avoid experimental JSON-module warnings contaminating error JSON on supported Node lower bounds; two real-process regression tests reproduce the prior failure and pass after repair.
 - Independent review is clear with no remaining actionable findings. See [verification.json](verification.json) for the durable evidence summary.
-- Branch publication and PR creation pending; no merge or npm publication is requested.
+- Branch published and [PR #1](https://github.com/kosta-blank/vasirml/pull/1) opened against `main` and attached to the requesting chat. No merge or npm publication occurred. Linux/macOS CI is recorded separately from the completed local checks.
