@@ -17,6 +17,37 @@
       "entry": "SKILL.md"
     },
     {
+      "name": "art-direction-defining-game-art",
+      "description": "Routes and directs game-art work across reusable art-direction references, especially premium 2D RPG pixel art and stylized 3D hero-action art. Use when creating, critiquing, or specifying game characters, environments, weapons, VFX, animation, maps, asset pipelines, or art quality bars; load the matching subfolder reference for Sea-of-Stars-adjacent 2D pixel RPG work or Overwatch-adjacent 3D hero-action work.",
+      "category": "uncategorized",
+      "tags": [],
+      "version": "0.1.0",
+      "recommends": [],
+      "files": [
+        "2d__sea-of-stars/README.md",
+        "2d__sea-of-stars/references/08-prompt-template-and-concrete-examples.md",
+        "2d__sea-of-stars/references/animation-motion-quality-bar.md",
+        "2d__sea-of-stars/references/character-sprite-quality-bar.md",
+        "2d__sea-of-stars/references/lighting-fx-scene-integration.md",
+        "2d__sea-of-stars/references/pipeline-authoring-and-automation.md",
+        "2d__sea-of-stars/references/style-language-examples-and-source-positioning.md",
+        "2d__sea-of-stars/references/validation-rubrics-and-review-protocols.md",
+        "2d__sea-of-stars/references/world-tilemap-map-quality-bar.md",
+        "3d__overwatch/README.md",
+        "3d__overwatch/references/01-research-and-source-positioning.md",
+        "3d__overwatch/references/02-hero-character-quality-bar.md",
+        "3d__overwatch/references/03-weapons-abilities-vfx-quality-bar.md",
+        "3d__overwatch/references/04-skins-cosmetics-live-service-quality-bar.md",
+        "3d__overwatch/references/05-maps-environments-modes-quality-bar.md",
+        "3d__overwatch/references/06-animation-camera-presentation-quality-bar.md",
+        "3d__overwatch/references/07-pipeline-validation-review-protocols.md",
+        "3d__overwatch/references/08-manual-prompt-probes.md",
+        "SKILL.md"
+      ],
+      "path": ".agents/skills/art-direction-defining-game-art",
+      "entry": "SKILL.md"
+    },
+    {
       "name": "audit-optimizing-node-backend",
       "description": "Audits backend services in any language for latency, throughput, scalability, resource cost, and concurrency or overload risks. Use for performance reviews, bottleneck analysis, capacity assessment, and optimization decisions grounded in code, workload, or runtime evidence.",
       "category": "uncategorized",
@@ -88,6 +119,19 @@
       "entry": "SKILL.md"
     },
     {
+      "name": "code-threejs-rapier-performance",
+      "description": "Enforces deterministic, measurement-driven mobile-web performance architecture for Three.js + Rapier before code or asset changes, covering render and physics budgets, frame stability, loading/streaming, memory, quality tiers, off-main-thread decisions, and proof via observability. Use for any change touching Three.js, Rapier, WebXR/WebGL/WebGPU rendering, shaders, scene graph, cameras, controls, physics, colliders/controllers, glTF/KTX2/meshopt assets, or fps, jank, stutter, and load-time issues.",
+      "category": "uncategorized",
+      "tags": [],
+      "version": "0.1.0",
+      "recommends": [],
+      "files": [
+        "SKILL.md"
+      ],
+      "path": ".agents/skills/code-threejs-rapier-performance",
+      "entry": "SKILL.md"
+    },
+    {
       "name": "design-animating-interfaces",
       "description": "Design, implement, review, and debug DOM interface motion for web products and internal tools. Use for component transitions, loading and action feedback, easing and duration choices, animation performance, or motion tokens. Excludes SVG path morphing, canvas/WebGL, React Native, and Lottie implementations.",
       "category": "uncategorized",
@@ -133,6 +177,32 @@
         "SKILL.md"
       ],
       "path": ".agents/skills/design-designing-cli",
+      "entry": "SKILL.md"
+    },
+    {
+      "name": "design-designing-end-screen",
+      "description": "Designs post-match, victory, game-over, results, reward, and share screens for mobile games. Use when creating end-of-round summaries, score screens, share cards, restart flows, or any screen shown after a session ends.",
+      "category": "uncategorized",
+      "tags": [],
+      "version": "0.1.0",
+      "recommends": [],
+      "files": [
+        "SKILL.md"
+      ],
+      "path": ".agents/skills/design-designing-end-screen",
+      "entry": "SKILL.md"
+    },
+    {
+      "name": "design-designing-game-ui-for-idavoll",
+      "description": "Designs mobile-native portrait game HUDs, menus, overlays, controls, and results screens for Idavoll. Use for touch targets, safe areas, HUD hierarchy, controls, and result flows.",
+      "category": "uncategorized",
+      "tags": [],
+      "version": "0.1.0",
+      "recommends": [],
+      "files": [
+        "SKILL.md"
+      ],
+      "path": ".agents/skills/design-designing-game-ui-for-idavoll",
       "entry": "SKILL.md"
     },
     {
@@ -258,6 +328,350 @@
       "entry": "SKILL.md"
     },
     {
+      "name": "game-adding-juice",
+      "description": "Adds responsive game feel and high-payoff polish to JavaScript 2D games. Use when tuning hits, screen shake, hit-stop, particles, camera motion, animation timing, UI motion, or interaction satisfaction.",
+      "category": "uncategorized",
+      "tags": [],
+      "version": "0.1.0",
+      "recommends": [],
+      "files": [
+        "SKILL.md",
+        "references/character-movement.md"
+      ],
+      "path": ".agents/skills/game-adding-juice",
+      "entry": "SKILL.md"
+    },
+    {
+      "name": "game-ai-architecting-ai",
+      "description": "Game-AI architecture for agents, bots, NPCs, directors, companions, enemy behavior, autoplay, and testing AI. Use for deterministic behavior design, fairness, tactics, perception, tuning, or debug specs.",
+      "category": "uncategorized",
+      "tags": [],
+      "version": "0.1.0",
+      "recommends": [],
+      "files": [
+        "MANIFEST.md",
+        "README.md",
+        "SKILL.md",
+        "checklists/architecture_questionnaire.md",
+        "checklists/final_review.md",
+        "checklists/runtime_llm_gate.md",
+        "examples/ai_spec_template.md",
+        "examples/bad_vs_good.md",
+        "examples/territory_bot_spec.md",
+        "modules/README.md",
+        "modules/autoplay_testing.md",
+        "modules/combat_shooter.md",
+        "modules/companion_social.md",
+        "modules/racing_chase.md",
+        "modules/simulation_economy.md",
+        "modules/sports_vr.md",
+        "modules/strategy_tactics.md",
+        "modules/territory_arena.md",
+        "references/ai_design_contract.md",
+        "references/architecture_selection.md",
+        "references/director_layer.md",
+        "references/player_perception_fairness.md",
+        "references/primitive_discovery.md",
+        "references/pseudocode_patterns.md",
+        "references/source_inspiration.md",
+        "references/testing_observability.md"
+      ],
+      "path": ".agents/skills/game-ai-architecting-ai",
+      "entry": "SKILL.md"
+    },
+    {
+      "name": "game-art-directing",
+      "description": "Art-directs games into implementation-ready visual systems for gameplay readability and identity. Use when defining visual identity, palettes, shape language, animation grammar, spatial pacing, UI hierarchy, or art specs.",
+      "category": "uncategorized",
+      "tags": [],
+      "version": "0.1.0",
+      "recommends": [],
+      "files": [
+        "SKILL.md",
+        "references/active-play-visual-quality-gate.md"
+      ],
+      "path": ".agents/skills/game-art-directing",
+      "entry": "SKILL.md"
+    },
+    {
+      "name": "game-assets-generating-images",
+      "description": "Generates, saves, and wires bitmap assets for Idavoll and Studio games. Use when a creator or implementation needs raster backgrounds, sprites, icons, portraits, items, cards, UI textures, cutouts, or reference art.",
+      "category": "uncategorized",
+      "tags": [],
+      "version": "0.1.0",
+      "recommends": [],
+      "files": [
+        "SKILL.md"
+      ],
+      "path": ".agents/skills/game-assets-generating-images",
+      "entry": "SKILL.md"
+    },
+    {
+      "name": "game-building-combat-damage",
+      "description": "Architects and implements JavaScript 2D combat, damage, hitbox, and health systems. Use when adding melee, ranged, projectiles, attack timing, combos, cooldowns, damage formulas, defenses, or hit feedback.",
+      "category": "uncategorized",
+      "tags": [],
+      "version": "0.1.0",
+      "recommends": [],
+      "files": [
+        "SKILL.md"
+      ],
+      "path": ".agents/skills/game-building-combat-damage",
+      "entry": "SKILL.md"
+    },
+    {
+      "name": "game-building-core-loop",
+      "description": "Designs, implements, diagnoses, and tunes the moment-to-moment and session loop for JavaScript mobile games. Use when starting a new game loop, diagnosing pacing, wiring input-to-feedback timing, or tuning session flow.",
+      "category": "uncategorized",
+      "tags": [],
+      "version": "0.1.0",
+      "recommends": [],
+      "files": [
+        "SKILL.md"
+      ],
+      "path": ".agents/skills/game-building-core-loop",
+      "entry": "SKILL.md"
+    },
+    {
+      "name": "game-building-inventory-system",
+      "description": "Designs and implements JavaScript item, inventory, equipment, crafting, and serialization systems. Use when building inventory UIs, item schemas, equipment slots, tooltips, stack/split behavior, or drag-and-drop.",
+      "category": "uncategorized",
+      "tags": [],
+      "version": "0.1.0",
+      "recommends": [],
+      "files": [
+        "SKILL.md"
+      ],
+      "path": ".agents/skills/game-building-inventory-system",
+      "entry": "SKILL.md"
+    },
+    {
+      "name": "game-building-loot-systems",
+      "description": "Designs and implements loot, drops, rarity, pickup, and reward-fanfare systems for JavaScript games. Use when creating drop tables, rarity tiers, item rolls, pity mechanics, pickups, chests, or reward presentation.",
+      "category": "uncategorized",
+      "tags": [],
+      "version": "0.1.0",
+      "recommends": [],
+      "files": [
+        "SKILL.md"
+      ],
+      "path": ".agents/skills/game-building-loot-systems",
+      "entry": "SKILL.md"
+    },
+    {
+      "name": "game-creation-selecting-initial-template",
+      "description": "Selects the initial Idavoll game creation template and orchestrates the autonomous first-playable proof/repair loop for new games. Use during create-game initialization, first-playable scaffolding, local starter-template selection, or \"make/build/create this game\" requests after a spec exists.",
+      "category": "uncategorized",
+      "tags": [],
+      "version": "0.1.0",
+      "recommends": [],
+      "files": [
+        "SKILL.md"
+      ],
+      "path": ".agents/skills/game-creation-selecting-initial-template",
+      "entry": "SKILL.md"
+    },
+    {
+      "name": "game-creation-writing-game-spec",
+      "description": "Writes and revises the canonical README__game-spec.md for Studio game creation. Use when a Studio game has no README__game-spec.md, the creator asks to make a new game, or an existing game spec is too vague to support template selection and first-playable implementation.",
+      "category": "uncategorized",
+      "tags": [],
+      "version": "0.1.0",
+      "recommends": [],
+      "files": [
+        "SKILL.md"
+      ],
+      "path": ".agents/skills/game-creation-writing-game-spec",
+      "entry": "SKILL.md"
+    },
+    {
+      "name": "game-design-ensuring-design-coherence",
+      "description": "Pressure-tests a game's real fantasy, core loop, incentives, design pillars, and meaning bugs. Use when designing gameplay, improving feel, or diagnosing why a game feels incoherent.",
+      "category": "uncategorized",
+      "tags": [],
+      "version": "0.1.0",
+      "recommends": [],
+      "files": [
+        "SKILL.md"
+      ],
+      "path": ".agents/skills/game-design-ensuring-design-coherence",
+      "entry": "SKILL.md"
+    },
+    {
+      "name": "game-designing-systems",
+      "description": "Systems design director — models game systems formally (stocks/flows, FSMs, RNG policy, arbitration), validates with deterministic simulation and invariants, then ships data-driven systems with matching parameter names and tuning knobs. Triggers on economies, progression, crafting, combat loops, loot/RNG, difficulty, unlock trees, AI arbitration, systemic events — designing, simulating, or tuning them.",
+      "category": "uncategorized",
+      "tags": [],
+      "version": "0.1.0",
+      "recommends": [],
+      "files": [
+        "SKILL.md"
+      ],
+      "path": ".agents/skills/game-designing-systems",
+      "entry": "SKILL.md"
+    },
+    {
+      "name": "game-directing",
+      "description": "Game director - turns a game idea into a coherent Design Brief. Triggers on starting a game, any game design related work, defining core mechanics, tweaking game mechanics, aligning creative direction, checking generated game code against design intent.",
+      "category": "uncategorized",
+      "tags": [],
+      "version": "0.1.0",
+      "recommends": [],
+      "files": [
+        "SKILL.md"
+      ],
+      "path": ".agents/skills/game-directing",
+      "entry": "SKILL.md"
+    },
+    {
+      "name": "game-generating-procedural-content",
+      "description": "Designs and implements seed-deterministic procedural content systems for JavaScript games. Use when creating level, terrain, dungeon, cave, placement, loot, wave, name, or infinite-world generators.",
+      "category": "uncategorized",
+      "tags": [],
+      "version": "0.1.0",
+      "recommends": [],
+      "files": [
+        "SKILL.md"
+      ],
+      "path": ".agents/skills/game-generating-procedural-content",
+      "entry": "SKILL.md"
+    },
+    {
+      "name": "game-genre-routing",
+      "description": "Routes genre-specific game design / game development / building / tweaking work to the right genre playbook. Use when designing, creating, tuning platformers, runners, puzzles, roguelikes, idle/incremental games, tower defense, autobattler/tactics, or MMO systems.",
+      "category": "uncategorized",
+      "tags": [],
+      "version": "0.1.0",
+      "recommends": [],
+      "files": [
+        "SKILL.md",
+        "references/auto-battler-tactics.md",
+        "references/endless-runner.md",
+        "references/grid-puzzle.md",
+        "references/idle-incremental.md",
+        "references/mmo/adaptive-mastery-and-scaffolding.md",
+        "references/mmo/ai-native-mmo-worlds.md",
+        "references/mmo/algorithmic-culture-and-social-routing.md",
+        "references/mmo/apprenticeship-and-mastery-ladders.md",
+        "references/mmo/cartography-rendezvous-and-intel.md",
+        "references/mmo/classic-everquest-lessons.md",
+        "references/mmo/classic-everquest-source-spine.md",
+        "references/mmo/commons-governance-and-player-law.md",
+        "references/mmo/creator-ecology-and-ugc-compounding.md",
+        "references/mmo/eval-cases.md",
+        "references/mmo/eve-online-lessons.md",
+        "references/mmo/evidence-based-social-design.md",
+        "references/mmo/experience-memory-and-meaning.md",
+        "references/mmo/final-fantasy-xiv-lessons.md",
+        "references/mmo/healthy-retention-and-passion.md",
+        "references/mmo/institution-lifecycle.md",
+        "references/mmo/massive-world-fabric.md",
+        "references/mmo/mmo-calibration.md",
+        "references/mmo/mmo-feature-review.md",
+        "references/mmo/mmo-metrics-and-telemetry.md",
+        "references/mmo/mmo-pattern-library.md",
+        "references/mmo/mmo-production-reality.md",
+        "references/mmo/mmo-system-playbooks.md",
+        "references/mmo/motivation-and-need-satisfaction.md",
+        "references/mmo/network-topology-and-social-capital.md",
+        "references/mmo/overview.md",
+        "references/mmo/player-authored-history.md",
+        "references/mmo/psychological-ownership-and-avatar-identity.md",
+        "references/mmo/reputation-markets-and-trust.md",
+        "references/mmo/research-map.md",
+        "references/mmo/ritual-calendar.md",
+        "references/mmo/runescape-classic-lessons.md",
+        "references/mmo/social-graph-retention.md",
+        "references/mmo/team-cognition-and-transactive-memory.md",
+        "references/mmo/world-of-warcraft-lessons.md",
+        "references/platformer.md",
+        "references/roguelike.md",
+        "references/tower-defense.md",
+        "references/whitepaper-analyze-mmo-whitepaper/SKILL.md"
+      ],
+      "path": ".agents/skills/game-genre-routing",
+      "entry": "SKILL.md"
+    },
+    {
+      "name": "game-onboarding-designing-game-onboarding",
+      "description": "Designs and audits platformer onboarding by turning player learning into playable first-level situations. Use when creating or critiquing first levels, tutorial-free introductions, movement/combat teaching, boss-select setup, or player-learning beat maps.",
+      "category": "uncategorized",
+      "tags": [],
+      "version": "0.1.0",
+      "recommends": [],
+      "files": [
+        "SKILL.md",
+        "references/eval-cases.md",
+        "references/hades-first-run-gold-star.md",
+        "references/megaman-x-highway-gold-star.md",
+        "references/onboarding-beat-canvas.md",
+        "references/plants-vs-zombies-day-world-gold-star.md",
+        "references/review-rubric.md"
+      ],
+      "path": ".agents/skills/game-onboarding-designing-game-onboarding",
+      "entry": "SKILL.md"
+    },
+    {
+      "name": "game-orchestrating-playable-build",
+      "description": "Build director for game work — drives one coherent playable slice into the player's hand, applies the human Slap Test, names the single biggest feel blocker, and repairs it; coordinates specialist game skills as tools.  Triggers when we're building a game - \"build a game\", \"make it playable\", \"finish/ship the first playable\"; broad vertical slices, prototype rescue, polish passes, release-ready game handoffs.",
+      "category": "uncategorized",
+      "tags": [],
+      "version": "0.1.0",
+      "recommends": [],
+      "files": [
+        "SKILL.md"
+      ],
+      "path": ".agents/skills/game-orchestrating-playable-build",
+      "entry": "SKILL.md"
+    },
+    {
+      "name": "game-proof-auditing-first-playable-comprehension",
+      "description": "Audits first-playable comprehension and mobile-native portrait quality. Use after a runnable game exists and before initialization, vertical-slice, publish-readiness, or final handoff claims.",
+      "category": "uncategorized",
+      "tags": [],
+      "version": "0.1.0",
+      "recommends": [],
+      "files": [
+        "SKILL.md",
+        "scripts/inspect-game-canvas.mjs"
+      ],
+      "path": ".agents/skills/game-proof-auditing-first-playable-comprehension",
+      "entry": "SKILL.md"
+    },
+    {
+      "name": "game-qa",
+      "description": "Runs browser-game feature QA end to end — owner brief, test-plan enumeration and sign-off, orchestrated parallel execution, evidence and playtest review, one verdict — via role contracts in references/; also bootstraps a project's qa rig once. Triggers on \"request QA\", \"verify X\", \"QA this\", \"make sure it works\" on game feature work. Not for tooling, build scripts, infra, or non-game code.",
+      "category": "uncategorized",
+      "tags": [],
+      "version": "0.1.0",
+      "recommends": [],
+      "files": [
+        "SKILL.md",
+        "references/bootstrap.md",
+        "references/role-engineer.md",
+        "references/role-enumerator.md",
+        "references/role-lead.md",
+        "references/role-owner.md",
+        "references/role-playtest.md",
+        "references/role-reviewer.md"
+      ],
+      "path": ".agents/skills/game-qa",
+      "entry": "SKILL.md"
+    },
+    {
+      "name": "game-tuning-economy-progression",
+      "description": "Designs, implements, tunes, and debugs JavaScript game economy and progression systems. Use when balancing difficulty, XP, unlock trees, currencies, loot rarity, reward schedules, prestige, or progression pacing.",
+      "category": "uncategorized",
+      "tags": [],
+      "version": "0.1.0",
+      "recommends": [],
+      "files": [
+        "SKILL.md"
+      ],
+      "path": ".agents/skills/game-tuning-economy-progression",
+      "entry": "SKILL.md"
+    },
+    {
       "name": "handoff-final-quality-gate",
       "description": "Independent evidence audit before substantial engineering work is declared complete, a milestone closes, or a release is handed off. Checks outcome proof, required reviews, documentation, acceptance, and remaining work; consumes existing evaluation results rather than designing or running evaluations.",
       "category": "uncategorized",
@@ -295,6 +709,22 @@
         "references/gaming-personas.md"
       ],
       "path": ".agents/skills/persona-selecting",
+      "entry": "SKILL.md"
+    },
+    {
+      "name": "physics-creating-interaction-system",
+      "description": "Designs deterministic, weighty object-interaction systems in Three.js/WebXR with Rapier under browser/XR and engine constraints, covering grab, hold, manipulate, throw, one- and two-hand interaction, telekinesis, collision response, impact payoff, sticking/penetration, and momentum-based damage. Use when creating or tuning physical interaction feel in stack-native Three.js/WebXR/Rapier code; not for generic non-interaction physics or undocumented behavior copied from reference games.",
+      "category": "uncategorized",
+      "tags": [],
+      "version": "0.1.0",
+      "recommends": [],
+      "files": [
+        "SKILL.md",
+        "references/interaction-patterns.md",
+        "references/runtime-contract.md",
+        "references/tuning-and-tests.md"
+      ],
+      "path": ".agents/skills/physics-creating-interaction-system",
       "entry": "SKILL.md"
     },
     {
@@ -389,6 +819,25 @@
         "SKILL.md"
       ],
       "path": ".agents/skills/plan-question-spec-infra",
+      "entry": "SKILL.md"
+    },
+    {
+      "name": "product-designing-viral-social-loops",
+      "description": "Designs/audits self-reinforcing social, creator-supply, and playable loops. Use for invite/share/challenge/co-play/UGC/social-proof mechanics, graph density, creator upside, leakage, or non-defensible growth.",
+      "category": "uncategorized",
+      "tags": [],
+      "version": "0.1.0",
+      "recommends": [],
+      "files": [
+        "SKILL.md",
+        "references/plausible-deniability-social-cover.md",
+        "references/roblox-s-tier-playable-social-loop.md",
+        "references/tbh-gas-s-tier-loop.md",
+        "references/tiktok-s-tier-loop.md",
+        "references/viral-loop-eval-cases.md",
+        "references/virality-network-effects-density-and-expertise.md"
+      ],
+      "path": ".agents/skills/product-designing-viral-social-loops",
       "entry": "SKILL.md"
     },
     {
@@ -524,6 +973,49 @@
         "SKILL.md"
       ],
       "path": ".agents/skills/testing-enforcing-mandate",
+      "entry": "SKILL.md"
+    },
+    {
+      "name": "threejs-improve-performance",
+      "description": "Profiles and improves Three.js + Rapier runtime performance while preserving determinism and gameplay semantics. Use for low FPS, stutter, load-time, GPU, CPU, GC, scene graph, shader, asset, physics, collider, or memory issues in Three.js/Rapier apps.",
+      "category": "uncategorized",
+      "tags": [],
+      "version": "0.1.0",
+      "recommends": [],
+      "files": [
+        "SKILL.md",
+        "references/observability-and-instrumentation.md",
+        "references/perf-regression-and-acceptance-tests.md",
+        "references/rapier-optimization-playbook.md",
+        "references/rendering-optimization-playbook.md"
+      ],
+      "path": ".agents/skills/threejs-improve-performance",
+      "entry": "SKILL.md"
+    },
+    {
+      "name": "ui-revamping-game-shell-ui",
+      "description": "Revamps Idavoll game HUDs, menus, overlays, and results screens while preserving deterministic kernel and replay boundaries. Use when redesigning shell UI, migrating to @idavoll/game-ui-kit, fixing UI breakage, or changing HUD/menu/results layout without altering gameplay simulation.",
+      "category": "uncategorized",
+      "tags": [],
+      "version": "0.1.0",
+      "recommends": [],
+      "files": [
+        "SKILL.md"
+      ],
+      "path": ".agents/skills/ui-revamping-game-shell-ui",
+      "entry": "SKILL.md"
+    },
+    {
+      "name": "whitepaper-analyze-mmo-whitepaper",
+      "description": "Analyzes MMO whitepapers for design, systems, economy, world, and retention insights. Use only when manually reviewing an MMO whitepaper or extracting product/design implications from one.",
+      "category": "uncategorized",
+      "tags": [],
+      "version": "0.1.0",
+      "recommends": [],
+      "files": [
+        "SKILL.md"
+      ],
+      "path": ".agents/skills/whitepaper-analyze-mmo-whitepaper",
       "entry": "SKILL.md"
     },
     {

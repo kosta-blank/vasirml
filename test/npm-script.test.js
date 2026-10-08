@@ -52,14 +52,14 @@ test("npm run eval infers the skill from INIT_CWD and accepts a positional model
   assert.match(commandResult.stdout, /Summary/i);
 });
 
-test("repo eval wrapper reports that all reviewed slim skills lack built-in suites", (testContext) => {
+test("repo eval wrapper reports that all catalog skills lack built-in suites", (testContext) => {
   const homeDirectory = createTemporaryDirectory(testContext, "vasir-eval-home-");
   const commandResult = runCommand(process.execPath, ["./cli/eval.js"], REPO_ROOT, {
     HOME: homeDirectory, USERPROFILE: homeDirectory, INIT_CWD: REPO_ROOT, NO_COLOR: "1"
   });
   assert.equal(commandResult.status, 1);
-  assert.match(commandResult.stderr, /Eval-Ready Skills \(0\/38\)/i);
-  assert.match(commandResult.stderr, /Missing Built-In Evals \(38\/38\)/i);
+  assert.match(commandResult.stderr, /Eval-Ready Skills \(0\/67\)/i);
+  assert.match(commandResult.stderr, /Missing Built-In Evals \(67\/67\)/i);
   assert.match(commandResult.stderr, /agents-creating-folder-agents/i);
   assert.match(commandResult.stderr, /code-fixing-bugs/i);
 });

@@ -4,12 +4,14 @@
   "tierPolicy": "Core, Optional and Outside pack describe selection recommendations. Explicit selections are recorded separately from shortlist and coordinator recommendations. These tiers do not install skills or select AGENTS profiles.",
   "sourceReviewsCompleted": 39,
   "counts": {
-    "all": 38,
+    "all": 67,
     "core": 13,
-    "optional": 10,
+    "optional": 39,
     "outside": 15,
     "explicitSelections": 7,
-    "files": 81
+    "files": 225,
+    "reviewed": 38,
+    "pendingReview": 29
   },
   "groups": [
     {
@@ -84,6 +86,41 @@
         "persona-selecting",
         "prompt-reverse-engineering",
         "agents-creating-folder-agents"
+      ]
+    },
+    {
+      "id": "gamedev",
+      "name": "Game development",
+      "skills": [
+        "game-directing",
+        "game-genre-routing",
+        "game-orchestrating-playable-build",
+        "game-creation-writing-game-spec",
+        "game-creation-selecting-initial-template",
+        "game-design-ensuring-design-coherence",
+        "whitepaper-analyze-mmo-whitepaper",
+        "game-building-core-loop",
+        "game-designing-systems",
+        "game-building-combat-damage",
+        "game-building-inventory-system",
+        "game-building-loot-systems",
+        "game-generating-procedural-content",
+        "game-tuning-economy-progression",
+        "game-ai-architecting-ai",
+        "physics-creating-interaction-system",
+        "art-direction-defining-game-art",
+        "game-art-directing",
+        "game-assets-generating-images",
+        "game-adding-juice",
+        "design-designing-game-ui-for-idavoll",
+        "ui-revamping-game-shell-ui",
+        "design-designing-end-screen",
+        "game-onboarding-designing-game-onboarding",
+        "game-proof-auditing-first-playable-comprehension",
+        "game-qa",
+        "code-threejs-rapier-performance",
+        "threejs-improve-performance",
+        "product-designing-viral-social-loops"
       ]
     }
   ],
@@ -256,6 +293,122 @@
       ]
     },
     {
+      "id": "art-direction-defining-game-art",
+      "sourceId": "art-direction__defining-game-art",
+      "label": "Art direction defining game art",
+      "tier": "Optional",
+      "tierBasis": "coordinator-recommendation",
+      "group": "gamedev",
+      "reviewStatus": "pending",
+      "origin": "restored source import",
+      "changeStatus": "imported",
+      "summary": "Restored from the original source with canonical skill identifiers and portable metadata. Content review is pending.",
+      "historicalBaselineBundleSha256": "9d6ab01a0d63938f13ee60fb624c290f8754024b6e91d4a50e96a09193940895",
+      "consolidatedFrom": [],
+      "canonicalId": "art-direction-defining-game-art",
+      "description": "Routes and directs game-art work across reusable art-direction references, especially premium 2D RPG pixel art and stylized 3D hero-action art. Use when creating, critiquing, or specifying game characters, environments, weapons, VFX, animation, maps, asset pipelines, or art quality bars; load the matching subfolder reference for Sea-of-Stars-adjacent 2D pixel RPG work or Overwatch-adjacent 3D hero-action work.",
+      "skillPath": "../../.agents/skills/art-direction-defining-game-art/SKILL.md",
+      "mainWords": 254,
+      "bundleSha256": "04efcf722b81f1efb6b4018446b5c859ceb1e39f774f0805d9be787393d1d311",
+      "files": [
+        {
+          "path": "2d__sea-of-stars/README.md",
+          "bytes": 17911,
+          "sha256": "0fbb0eac83c621b7d7f8e88ba5243173b8392b0acb2638891fb8bb8ff61271fc"
+        },
+        {
+          "path": "2d__sea-of-stars/references/08-prompt-template-and-concrete-examples.md",
+          "bytes": 29120,
+          "sha256": "36a12827a2243afcb471afddd50ade2cc857a1b1aaaea8186a4e95c7acb88b9a"
+        },
+        {
+          "path": "2d__sea-of-stars/references/animation-motion-quality-bar.md",
+          "bytes": 14395,
+          "sha256": "1573bed4fc38955c3c7272de523616f1b8285f69f93446252d43b5ee7c700f63"
+        },
+        {
+          "path": "2d__sea-of-stars/references/character-sprite-quality-bar.md",
+          "bytes": 18842,
+          "sha256": "4be2dbd19ba2e2e2c2bdc27b85d1485c3e0b847e0e835e22aa5bc9a635f560a8"
+        },
+        {
+          "path": "2d__sea-of-stars/references/lighting-fx-scene-integration.md",
+          "bytes": 13790,
+          "sha256": "ee7a976dd782fb88c37cc8955c6ff50266d552e865c9d889691ca9c845246a27"
+        },
+        {
+          "path": "2d__sea-of-stars/references/pipeline-authoring-and-automation.md",
+          "bytes": 17351,
+          "sha256": "35bcc96b6f8c1c0b07c4c20464caafbc134fd0bbe0eb92236d1dbdcb8b660d1f"
+        },
+        {
+          "path": "2d__sea-of-stars/references/style-language-examples-and-source-positioning.md",
+          "bytes": 15924,
+          "sha256": "6e3e5b35531c3887c3816a4a9da6fec9c57858a3cefdbe441dafa42a40aaeef3"
+        },
+        {
+          "path": "2d__sea-of-stars/references/validation-rubrics-and-review-protocols.md",
+          "bytes": 13785,
+          "sha256": "2b1abaad56e2b8584ca6b33c9cb037b7fd095e4c6894fbdcd94be5ccb6619cd0"
+        },
+        {
+          "path": "2d__sea-of-stars/references/world-tilemap-map-quality-bar.md",
+          "bytes": 17643,
+          "sha256": "830b05a892e269a8d419922afa666e41df20a5aa50b30b84cfe89d4c7d4ed052"
+        },
+        {
+          "path": "3d__overwatch/README.md",
+          "bytes": 17049,
+          "sha256": "c65026cb83eacec8a62beb1148b3090bf3699936a1a0671c6b4a9445c87606e9"
+        },
+        {
+          "path": "3d__overwatch/references/01-research-and-source-positioning.md",
+          "bytes": 15375,
+          "sha256": "391314af809b132fa1e325508947c9031a592fb2645f9edd0f546c733ff6f8fd"
+        },
+        {
+          "path": "3d__overwatch/references/02-hero-character-quality-bar.md",
+          "bytes": 16744,
+          "sha256": "2c034c09b4ad83f08d4760c24224809563403438f2984fccc6771ceebd677b28"
+        },
+        {
+          "path": "3d__overwatch/references/03-weapons-abilities-vfx-quality-bar.md",
+          "bytes": 15270,
+          "sha256": "1d65b7db13c91a0c8a9366a0a4a0fb5d5db46befec842ffea6cfe036f3b7e0d4"
+        },
+        {
+          "path": "3d__overwatch/references/04-skins-cosmetics-live-service-quality-bar.md",
+          "bytes": 14897,
+          "sha256": "1736edd10b22612478a98ecd3ca36567d68b0391f722a7c1025a9620dcdb99c0"
+        },
+        {
+          "path": "3d__overwatch/references/05-maps-environments-modes-quality-bar.md",
+          "bytes": 17164,
+          "sha256": "eb5df7b8baf56201df8c507f790ff1209c74d784006f5c36c0d8ccf6e7f9f9e9"
+        },
+        {
+          "path": "3d__overwatch/references/06-animation-camera-presentation-quality-bar.md",
+          "bytes": 11981,
+          "sha256": "e8594fde304ccd9f25c792612c8f89dd61843f83408eba5ae34d986d3a15cb50"
+        },
+        {
+          "path": "3d__overwatch/references/07-pipeline-validation-review-protocols.md",
+          "bytes": 14533,
+          "sha256": "259df5aef17a80bfbd2daf0df380e737795baaf0262da2ec5fd1c37c979afee1"
+        },
+        {
+          "path": "3d__overwatch/references/08-manual-prompt-probes.md",
+          "bytes": 17950,
+          "sha256": "34b3cc4c7e8cab6641bb02a29c415b9805a28c6c15eaad8d3873ba885ee24ad4"
+        },
+        {
+          "path": "SKILL.md",
+          "bytes": 1963,
+          "sha256": "684a214dcf957a0e3f8f7c5599c2a5191fad7dbe2f2812c21610df33da82fcbb"
+        }
+      ]
+    },
+    {
       "id": "audit-optimizing-node-backend",
       "sourceId": "audit__optimizing-node-backend",
       "label": "Backend optimization",
@@ -421,6 +574,32 @@
       ]
     },
     {
+      "id": "code-threejs-rapier-performance",
+      "sourceId": "code__threejs-rapier-performance",
+      "label": "Code threejs rapier performance",
+      "tier": "Optional",
+      "tierBasis": "coordinator-recommendation",
+      "group": "gamedev",
+      "reviewStatus": "pending",
+      "origin": "restored source import",
+      "changeStatus": "imported",
+      "summary": "Restored from the original source with canonical skill identifiers and portable metadata. Content review is pending.",
+      "historicalBaselineBundleSha256": "2416765b468a82f5122a80456a320b136d9d040e295207306ae11566bbedebc8",
+      "consolidatedFrom": [],
+      "canonicalId": "code-threejs-rapier-performance",
+      "description": "Enforces deterministic, measurement-driven mobile-web performance architecture for Three.js + Rapier before code or asset changes, covering render and physics budgets, frame stability, loading/streaming, memory, quality tiers, off-main-thread decisions, and proof via observability. Use for any change touching Three.js, Rapier, WebXR/WebGL/WebGPU rendering, shaders, scene graph, cameras, controls, physics, colliders/controllers, glTF/KTX2/meshopt assets, or fps, jank, stutter, and load-time issues.",
+      "skillPath": "../../.agents/skills/code-threejs-rapier-performance/SKILL.md",
+      "mainWords": 4176,
+      "bundleSha256": "a2697812ed60bf3d5a7aebd17122f2ff503500e84f1c956a286a4f5b654ae9ea",
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 29199,
+          "sha256": "3ec536f7556a42d5aa189c388f1ea03a11a64f965b3b9ae79b677cbfef310903"
+        }
+      ]
+    },
+    {
       "id": "design-animating-interfaces",
       "sourceId": "design__animating-interfaces",
       "label": "Interface motion",
@@ -543,6 +722,58 @@
           "path": "SKILL.md",
           "bytes": 9074,
           "sha256": "7f75f84c741cc7c165ee3d9f418ace13d6719d984898f780dc068d266cf4bf89"
+        }
+      ]
+    },
+    {
+      "id": "design-designing-end-screen",
+      "sourceId": "design__designing-end-screen",
+      "label": "Design designing end screen",
+      "tier": "Optional",
+      "tierBasis": "coordinator-recommendation",
+      "group": "gamedev",
+      "reviewStatus": "pending",
+      "origin": "restored source import",
+      "changeStatus": "imported",
+      "summary": "Restored from the original source with canonical skill identifiers and portable metadata. Content review is pending.",
+      "historicalBaselineBundleSha256": "8913ef82fffb6f53d89ae1e81ffd492db371f9e27ecededfa0be84dfc9fbab91",
+      "consolidatedFrom": [],
+      "canonicalId": "design-designing-end-screen",
+      "description": "Designs post-match, victory, game-over, results, reward, and share screens for mobile games. Use when creating end-of-round summaries, score screens, share cards, restart flows, or any screen shown after a session ends.",
+      "skillPath": "../../.agents/skills/design-designing-end-screen/SKILL.md",
+      "mainWords": 3133,
+      "bundleSha256": "306905f0ad5e1388830e87193c68dd70c63d601f6cc2e134dc9d264d94c632cf",
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 20315,
+          "sha256": "b669e0e7b1335dbbc24a9b6f63411de9e15f68b66bab6c4f22b276ff3e508a49"
+        }
+      ]
+    },
+    {
+      "id": "design-designing-game-ui-for-idavoll",
+      "sourceId": "design__designing-game-ui-for-idavoll",
+      "label": "Design designing game ui for idavoll",
+      "tier": "Optional",
+      "tierBasis": "coordinator-recommendation",
+      "group": "gamedev",
+      "reviewStatus": "pending",
+      "origin": "restored source import",
+      "changeStatus": "imported",
+      "summary": "Restored from the original source with canonical skill identifiers and portable metadata. Content review is pending.",
+      "historicalBaselineBundleSha256": "f3120eb628487076cad5e4c1ffc49ff4293469c6a69941472b38eb9e1428bec8",
+      "consolidatedFrom": [],
+      "canonicalId": "design-designing-game-ui-for-idavoll",
+      "description": "Designs mobile-native portrait game HUDs, menus, overlays, controls, and results screens for Idavoll. Use for touch targets, safe areas, HUD hierarchy, controls, and result flows.",
+      "skillPath": "../../.agents/skills/design-designing-game-ui-for-idavoll/SKILL.md",
+      "mainWords": 839,
+      "bundleSha256": "c67a2c4576723b5d6abbda459b836ce21050a14e0e19c7d4d380419b88dbb235",
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 6270,
+          "sha256": "c09cd995002676a51e7f0e22c3014b57934ab6a478dda93af93c9cb4d14f2c98"
         }
       ]
     },
@@ -856,6 +1087,946 @@
       ]
     },
     {
+      "id": "game-adding-juice",
+      "sourceId": "game__adding-juice",
+      "label": "Game adding juice",
+      "tier": "Optional",
+      "tierBasis": "coordinator-recommendation",
+      "group": "gamedev",
+      "reviewStatus": "pending",
+      "origin": "restored source import",
+      "changeStatus": "imported",
+      "summary": "Restored from the original source with canonical skill identifiers and portable metadata. Content review is pending. Corrected references to existing bundled filenames.",
+      "historicalBaselineBundleSha256": "b3a593d67a52f00ee341eff792aa98478c9e4e57d2ebc945f9494e056d2e9ba7",
+      "consolidatedFrom": [],
+      "canonicalId": "game-adding-juice",
+      "description": "Adds responsive game feel and high-payoff polish to JavaScript 2D games. Use when tuning hits, screen shake, hit-stop, particles, camera motion, animation timing, UI motion, or interaction satisfaction.",
+      "skillPath": "../../.agents/skills/game-adding-juice/SKILL.md",
+      "mainWords": 2563,
+      "bundleSha256": "2d4cb796550327c31b1c0e0366e1743a39cf354f5aaccc58c3601bed9ed2563d",
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 16939,
+          "sha256": "de399db46b0ca0b220ca6f60504b8f40068a22db68f246b2770d7e33490e408b"
+        },
+        {
+          "path": "references/character-movement.md",
+          "bytes": 4905,
+          "sha256": "9833dcb7c7acd1758e0cb4db3d134ee6ab5dd12c379955937229f3cb4dcf2ea3"
+        }
+      ]
+    },
+    {
+      "id": "game-ai-architecting-ai",
+      "sourceId": "game-ai__architecting-ai",
+      "label": "Game ai architecting ai",
+      "tier": "Optional",
+      "tierBasis": "coordinator-recommendation",
+      "group": "gamedev",
+      "reviewStatus": "pending",
+      "origin": "restored source import",
+      "changeStatus": "imported",
+      "summary": "Restored from the original source with canonical skill identifiers and portable metadata. Content review is pending.",
+      "historicalBaselineBundleSha256": "e5ee36be1f5fb8747f71e178af87b7e60b588da99e7c205ad072e410ee51370f",
+      "consolidatedFrom": [],
+      "canonicalId": "game-ai-architecting-ai",
+      "description": "Game-AI architecture for agents, bots, NPCs, directors, companions, enemy behavior, autoplay, and testing AI. Use for deterministic behavior design, fairness, tactics, perception, tuning, or debug specs.",
+      "skillPath": "../../.agents/skills/game-ai-architecting-ai/SKILL.md",
+      "mainWords": 1830,
+      "bundleSha256": "37320403b34cdd529c192280ef4434fb9b36ca20a44663fb2377d96496a3dcaf",
+      "files": [
+        {
+          "path": "MANIFEST.md",
+          "bytes": 699,
+          "sha256": "635ad97309b86429e345de3b6cba0676627fa675c6d62a057823094f0fcd7b86"
+        },
+        {
+          "path": "README.md",
+          "bytes": 875,
+          "sha256": "0a63fe41bc8e66f90a74224fd94951a8c5b2d11f41286f635aab63243c35641d"
+        },
+        {
+          "path": "SKILL.md",
+          "bytes": 13178,
+          "sha256": "4e62b57b0908baddeb9738ba093cac1fbf0800a4e8a3e9a6a0d3bed8f7f64bf3"
+        },
+        {
+          "path": "checklists/architecture_questionnaire.md",
+          "bytes": 1685,
+          "sha256": "5154b514fa7cba2158b640024c5b0b1a66dc6b1fd0d625a8c51902a6a2408ddd"
+        },
+        {
+          "path": "checklists/final_review.md",
+          "bytes": 2476,
+          "sha256": "2df9656ff1aed31de7c8bd760612915745e1dbaede3603cade048b6e89c45b8c"
+        },
+        {
+          "path": "checklists/runtime_llm_gate.md",
+          "bytes": 1688,
+          "sha256": "818d880abaf18c28a787fa7d1eb4ef788bc84d83e05a86c51c6cde50ddba9384"
+        },
+        {
+          "path": "examples/ai_spec_template.md",
+          "bytes": 2361,
+          "sha256": "351fd3d9ffda7b2359b9aa2713e5d7b4db6395a9e92cf3ae13ed10fd0065279f"
+        },
+        {
+          "path": "examples/bad_vs_good.md",
+          "bytes": 2689,
+          "sha256": "8f455a82022dde373afcec7207aed2f5f2b14460b7731e709f6dc744625c6f92"
+        },
+        {
+          "path": "examples/territory_bot_spec.md",
+          "bytes": 8000,
+          "sha256": "453fdc3a17f7d015e76146db0624e527a8a1b89a293172927fccc1ff4f810881"
+        },
+        {
+          "path": "modules/README.md",
+          "bytes": 957,
+          "sha256": "24ffd10d49550d11de1a95243469a5399512280f5662127feb6307bd8889195e"
+        },
+        {
+          "path": "modules/autoplay_testing.md",
+          "bytes": 3181,
+          "sha256": "657ef7b51d2c3177461dfd2efbab43ca2ec0feff189cd0828736e6e7d49c2d84"
+        },
+        {
+          "path": "modules/combat_shooter.md",
+          "bytes": 4698,
+          "sha256": "53ade3485684cbb93eca2294d1d79cd3037a3d2f74b70c8820a9ddb85e12321f"
+        },
+        {
+          "path": "modules/companion_social.md",
+          "bytes": 3900,
+          "sha256": "182b2a819f3fbecb88d5101a28525fe6850b76817f65dde516f7ed2f0dec20bd"
+        },
+        {
+          "path": "modules/racing_chase.md",
+          "bytes": 3574,
+          "sha256": "127fed40c38c3634682a8a20359b0dccabbdce24965792937ec75a9d7f73c7af"
+        },
+        {
+          "path": "modules/simulation_economy.md",
+          "bytes": 3650,
+          "sha256": "cb92cd9b7f888225498e824b2d7148a1d7259788cfec83868bb6d6b94448ea50"
+        },
+        {
+          "path": "modules/sports_vr.md",
+          "bytes": 4594,
+          "sha256": "cb2857b0293d1a81ea6b29455429d279a89f878caf21e8285085fc8d991fa783"
+        },
+        {
+          "path": "modules/strategy_tactics.md",
+          "bytes": 3656,
+          "sha256": "70e9603c99f201e4558d55c27b23a496d7656a0919054c554f49f755e7b8145e"
+        },
+        {
+          "path": "modules/territory_arena.md",
+          "bytes": 4965,
+          "sha256": "b94c83093e9c5d04b1636629e690dc39c76e0ddd0ae6ff33b3b26cec48e834da"
+        },
+        {
+          "path": "references/ai_design_contract.md",
+          "bytes": 5518,
+          "sha256": "0b1e423ea81af3b77218852b7868ef1838df3a21ee0642a25147049fef8dda5c"
+        },
+        {
+          "path": "references/architecture_selection.md",
+          "bytes": 5938,
+          "sha256": "abf4cf05298ed7fe1722170cb6682912bca070781f8467886a0d185551d1aaad"
+        },
+        {
+          "path": "references/director_layer.md",
+          "bytes": 4573,
+          "sha256": "a21d17678793086f82ff0e95085f8d5e60b55199400adca3f60403c6b1402e47"
+        },
+        {
+          "path": "references/player_perception_fairness.md",
+          "bytes": 4355,
+          "sha256": "cca5f9287ff7f80aa4681e343f639f272c50c6ba62c1ccac6666d6cfdf50b83a"
+        },
+        {
+          "path": "references/primitive_discovery.md",
+          "bytes": 4820,
+          "sha256": "6041c755f04ffab96953705de9eadb3f22f26a433a8fa091a58a01bac7b1e1dc"
+        },
+        {
+          "path": "references/pseudocode_patterns.md",
+          "bytes": 5065,
+          "sha256": "8924428903b1fd3132a9e30b2452b1b95b51a65697f3f76083e779fe40185b1f"
+        },
+        {
+          "path": "references/source_inspiration.md",
+          "bytes": 1886,
+          "sha256": "3c3afe295e2cdf95d52743682b2e1db3f6918632c9f897df7b5773889c54a6b9"
+        },
+        {
+          "path": "references/testing_observability.md",
+          "bytes": 3524,
+          "sha256": "d994ef432c9fde4c931712d670b8e4b8ba0aa015d724156a9b8b79a3ee28462a"
+        }
+      ]
+    },
+    {
+      "id": "game-art-directing",
+      "sourceId": "game__art-directing",
+      "label": "Game art directing",
+      "tier": "Optional",
+      "tierBasis": "coordinator-recommendation",
+      "group": "gamedev",
+      "reviewStatus": "pending",
+      "origin": "restored source import",
+      "changeStatus": "imported",
+      "summary": "Restored from the original source with canonical skill identifiers and portable metadata. Content review is pending.",
+      "historicalBaselineBundleSha256": "fa0fd5f062b9b0ac476cd48e68f98f1e95c57bff99ea0f6f845b30ade36b030e",
+      "consolidatedFrom": [],
+      "canonicalId": "game-art-directing",
+      "description": "Art-directs games into implementation-ready visual systems for gameplay readability and identity. Use when defining visual identity, palettes, shape language, animation grammar, spatial pacing, UI hierarchy, or art specs.",
+      "skillPath": "../../.agents/skills/game-art-directing/SKILL.md",
+      "mainWords": 7725,
+      "bundleSha256": "7e38dd61a7d62bf0d555c1274ed730bd4d80618a083654a4bab8525408a18058",
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 56365,
+          "sha256": "5c39164b1b38d3c176e5f9677c1e74b74c22cfe229118b28aee053cd74a46523"
+        },
+        {
+          "path": "references/active-play-visual-quality-gate.md",
+          "bytes": 7291,
+          "sha256": "ab99520af92c72cd54e954e6addf6bfe24bc93733f9427d09ca2bf1480f3d078"
+        }
+      ]
+    },
+    {
+      "id": "game-assets-generating-images",
+      "sourceId": "game-assets__generating-images",
+      "label": "Game assets generating images",
+      "tier": "Optional",
+      "tierBasis": "coordinator-recommendation",
+      "group": "gamedev",
+      "reviewStatus": "pending",
+      "origin": "restored source import",
+      "changeStatus": "imported",
+      "summary": "Restored from the original source with canonical skill identifiers and portable metadata. Content review is pending.",
+      "historicalBaselineBundleSha256": "e67d972ff05a9a730a9e3c53e4cdf8f229042b48c9775f83ebed7aed462c030e",
+      "consolidatedFrom": [],
+      "canonicalId": "game-assets-generating-images",
+      "description": "Generates, saves, and wires bitmap assets for Idavoll and Studio games. Use when a creator or implementation needs raster backgrounds, sprites, icons, portraits, items, cards, UI textures, cutouts, or reference art.",
+      "skillPath": "../../.agents/skills/game-assets-generating-images/SKILL.md",
+      "mainWords": 2471,
+      "bundleSha256": "1adf4a7222c26ee20f30185c37182ea78f13c464be8909b2f72a153dfc9062af",
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 17232,
+          "sha256": "262d49fa7b53c4ae08d7dfcfb3f88c90f88dd2a5a970eccfbf9959b658a5ba7e"
+        }
+      ]
+    },
+    {
+      "id": "game-building-combat-damage",
+      "sourceId": "game__building-combat-damage",
+      "label": "Game building combat damage",
+      "tier": "Optional",
+      "tierBasis": "coordinator-recommendation",
+      "group": "gamedev",
+      "reviewStatus": "pending",
+      "origin": "restored source import",
+      "changeStatus": "imported",
+      "summary": "Restored from the original source with canonical skill identifiers and portable metadata. Content review is pending.",
+      "historicalBaselineBundleSha256": "9f63def0885a8f6503fc87fb42f51b5861678dc471798b5a7cc61dd4cd5b7204",
+      "consolidatedFrom": [],
+      "canonicalId": "game-building-combat-damage",
+      "description": "Architects and implements JavaScript 2D combat, damage, hitbox, and health systems. Use when adding melee, ranged, projectiles, attack timing, combos, cooldowns, damage formulas, defenses, or hit feedback.",
+      "skillPath": "../../.agents/skills/game-building-combat-damage/SKILL.md",
+      "mainWords": 4948,
+      "bundleSha256": "66bd2f40a2079bdf9cd6ad76de2700c5bf916c96124a66552d83763f5a421865",
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 35062,
+          "sha256": "d2993be524d1a3e83e8dd1eb84eb93df38a7c6e88a2d3795fbf91b9ec33c2048"
+        }
+      ]
+    },
+    {
+      "id": "game-building-core-loop",
+      "sourceId": "game__building-core-loop",
+      "label": "Game building core loop",
+      "tier": "Optional",
+      "tierBasis": "coordinator-recommendation",
+      "group": "gamedev",
+      "reviewStatus": "pending",
+      "origin": "restored source import",
+      "changeStatus": "imported",
+      "summary": "Restored from the original source with canonical skill identifiers and portable metadata. Content review is pending.",
+      "historicalBaselineBundleSha256": "b266b913cbd552edea77fc0c497f742772fc2a3103c79d6669a855dc05ddd777",
+      "consolidatedFrom": [],
+      "canonicalId": "game-building-core-loop",
+      "description": "Designs, implements, diagnoses, and tunes the moment-to-moment and session loop for JavaScript mobile games. Use when starting a new game loop, diagnosing pacing, wiring input-to-feedback timing, or tuning session flow.",
+      "skillPath": "../../.agents/skills/game-building-core-loop/SKILL.md",
+      "mainWords": 7792,
+      "bundleSha256": "892c06e6a61bd92d8a974e1408df849324874e7997c98867e337a25c817e6c73",
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 59518,
+          "sha256": "da5d363e46fc46b120e8736a854d166197e7aa25e9e9dcc6c44e6b94143d0e1b"
+        }
+      ]
+    },
+    {
+      "id": "game-building-inventory-system",
+      "sourceId": "game__building-inventory-system",
+      "label": "Game building inventory system",
+      "tier": "Optional",
+      "tierBasis": "coordinator-recommendation",
+      "group": "gamedev",
+      "reviewStatus": "pending",
+      "origin": "restored source import",
+      "changeStatus": "imported",
+      "summary": "Restored from the original source with canonical skill identifiers and portable metadata. Content review is pending.",
+      "historicalBaselineBundleSha256": "39a06936c095ac8b42ebbd7af9e65020bceca17918675e9414a75da44bec7a08",
+      "consolidatedFrom": [],
+      "canonicalId": "game-building-inventory-system",
+      "description": "Designs and implements JavaScript item, inventory, equipment, crafting, and serialization systems. Use when building inventory UIs, item schemas, equipment slots, tooltips, stack/split behavior, or drag-and-drop.",
+      "skillPath": "../../.agents/skills/game-building-inventory-system/SKILL.md",
+      "mainWords": 4725,
+      "bundleSha256": "d5be97bf8fdc13fad2d1ce81d1892902d4588ff5258fa01abb38f062cc57fa0a",
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 35558,
+          "sha256": "50c45fa8aeb825f196473562bd0dc452830fc4c947a42abd412fb2e88853ebc9"
+        }
+      ]
+    },
+    {
+      "id": "game-building-loot-systems",
+      "sourceId": "game__building-loot-systems",
+      "label": "Game building loot systems",
+      "tier": "Optional",
+      "tierBasis": "coordinator-recommendation",
+      "group": "gamedev",
+      "reviewStatus": "pending",
+      "origin": "restored source import",
+      "changeStatus": "imported",
+      "summary": "Restored from the original source with canonical skill identifiers and portable metadata. Content review is pending.",
+      "historicalBaselineBundleSha256": "0f7bb43499b1748717e5977178d7ff62a40f3db3a6600f876e3bcb9a68bfcdc6",
+      "consolidatedFrom": [],
+      "canonicalId": "game-building-loot-systems",
+      "description": "Designs and implements loot, drops, rarity, pickup, and reward-fanfare systems for JavaScript games. Use when creating drop tables, rarity tiers, item rolls, pity mechanics, pickups, chests, or reward presentation.",
+      "skillPath": "../../.agents/skills/game-building-loot-systems/SKILL.md",
+      "mainWords": 5732,
+      "bundleSha256": "d5bac6c9f407f58f8a6e20dc44378a442eb11b71649fcc43919b84658555849c",
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 37902,
+          "sha256": "7e46d49efb658d6979815abd64e863f4cb15c0eca37a76c5b7d6f56429aa2ef6"
+        }
+      ]
+    },
+    {
+      "id": "game-creation-selecting-initial-template",
+      "sourceId": "game-creation__selecting-initial-template",
+      "label": "Game creation selecting initial template",
+      "tier": "Optional",
+      "tierBasis": "coordinator-recommendation",
+      "group": "gamedev",
+      "reviewStatus": "pending",
+      "origin": "restored source import",
+      "changeStatus": "imported",
+      "summary": "Restored from the original source with canonical skill identifiers and portable metadata. Content review is pending.",
+      "historicalBaselineBundleSha256": "cc01820a6402774ed5d50c35b0e8743548f14e09359da9debf1da66a4a7e18fa",
+      "consolidatedFrom": [],
+      "canonicalId": "game-creation-selecting-initial-template",
+      "description": "Selects the initial Idavoll game creation template and orchestrates the autonomous first-playable proof/repair loop for new games. Use during create-game initialization, first-playable scaffolding, local starter-template selection, or \"make/build/create this game\" requests after a spec exists.",
+      "skillPath": "../../.agents/skills/game-creation-selecting-initial-template/SKILL.md",
+      "mainWords": 2409,
+      "bundleSha256": "f839acec8c0b9d7e55c9050a038a515368cc13c214dd7ced7a3ab3d668e45eac",
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 17260,
+          "sha256": "280082c8b02ea2419112bd0d4ac66dae55071aff055a0c6fd6068a6d7ae0c669"
+        }
+      ]
+    },
+    {
+      "id": "game-creation-writing-game-spec",
+      "sourceId": "game-creation__writing-game-spec",
+      "label": "Game creation writing game spec",
+      "tier": "Optional",
+      "tierBasis": "coordinator-recommendation",
+      "group": "gamedev",
+      "reviewStatus": "pending",
+      "origin": "restored source import",
+      "changeStatus": "imported",
+      "summary": "Restored from the original source with canonical skill identifiers and portable metadata. Content review is pending.",
+      "historicalBaselineBundleSha256": "34a1634a76992a213fc154b3c6269bdb7d554abfb8ea881a5e20cfb0c0aee104",
+      "consolidatedFrom": [],
+      "canonicalId": "game-creation-writing-game-spec",
+      "description": "Writes and revises the canonical README__game-spec.md for Studio game creation. Use when a Studio game has no README__game-spec.md, the creator asks to make a new game, or an existing game spec is too vague to support template selection and first-playable implementation.",
+      "skillPath": "../../.agents/skills/game-creation-writing-game-spec/SKILL.md",
+      "mainWords": 1346,
+      "bundleSha256": "15fbdfa5bb02ca4b05ffe2ffb8396c6f252ca9119522db5cf92e163be2bb67dc",
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 9583,
+          "sha256": "9d7769350fcd590ecf91f44dcaf308fd46326cba182b0626e8ebce33560cb59f"
+        }
+      ]
+    },
+    {
+      "id": "game-design-ensuring-design-coherence",
+      "sourceId": "game-design__ensuring-design-coherence",
+      "label": "Game design ensuring design coherence",
+      "tier": "Optional",
+      "tierBasis": "coordinator-recommendation",
+      "group": "gamedev",
+      "reviewStatus": "pending",
+      "origin": "restored source import",
+      "changeStatus": "imported",
+      "summary": "Restored from the original source with canonical skill identifiers and portable metadata. Content review is pending.",
+      "historicalBaselineBundleSha256": "3cd6ab107c68201284f05dd45fadb82b269831e9c46c570181161df336a5c3fa",
+      "consolidatedFrom": [],
+      "canonicalId": "game-design-ensuring-design-coherence",
+      "description": "Pressure-tests a game's real fantasy, core loop, incentives, design pillars, and meaning bugs. Use when designing gameplay, improving feel, or diagnosing why a game feels incoherent.",
+      "skillPath": "../../.agents/skills/game-design-ensuring-design-coherence/SKILL.md",
+      "mainWords": 1291,
+      "bundleSha256": "a93a102ed2200a7dc91637f2d1789b78d1aa3b05e9f81909fd2c0c5d186bc89c",
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 8211,
+          "sha256": "6d6768f24cf6c6c3837c3b8663f3b673f19bdefb294194db367d5bd07feac16e"
+        }
+      ]
+    },
+    {
+      "id": "game-designing-systems",
+      "sourceId": "game__designing-systems",
+      "label": "Game designing systems",
+      "tier": "Optional",
+      "tierBasis": "coordinator-recommendation",
+      "group": "gamedev",
+      "reviewStatus": "pending",
+      "origin": "restored source import",
+      "changeStatus": "imported",
+      "summary": "Restored from the original source with canonical skill identifiers and portable metadata. Content review is pending.",
+      "historicalBaselineBundleSha256": "c4aea9171c585f3f9c31308860ad64cc1cb9e37056ebe245a0e61aeca9de6837",
+      "consolidatedFrom": [],
+      "canonicalId": "game-designing-systems",
+      "description": "Systems design director — models game systems formally (stocks/flows, FSMs, RNG policy, arbitration), validates with deterministic simulation and invariants, then ships data-driven systems with matching parameter names and tuning knobs. Triggers on economies, progression, crafting, combat loops, loot/RNG, difficulty, unlock trees, AI arbitration, systemic events — designing, simulating, or tuning them.",
+      "skillPath": "../../.agents/skills/game-designing-systems/SKILL.md",
+      "mainWords": 2096,
+      "bundleSha256": "a5a4fba55229a25aed7e73fa6ce64b70deaf691ffec2d04e19eadcf159621501",
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 15480,
+          "sha256": "b9d5bc07f91ace07e1fc2dcce80a8888cb92d7884bd16ac5dc25a7c5df3e3c93"
+        }
+      ]
+    },
+    {
+      "id": "game-directing",
+      "sourceId": "game__directing",
+      "label": "Game directing",
+      "tier": "Optional",
+      "tierBasis": "coordinator-recommendation",
+      "group": "gamedev",
+      "reviewStatus": "pending",
+      "origin": "restored source import",
+      "changeStatus": "imported",
+      "summary": "Restored from the original source with canonical skill identifiers and portable metadata. Content review is pending.",
+      "historicalBaselineBundleSha256": "48ffd339d973e509244242117defda55a635bfd3f4e9986e25596d80b8a65503",
+      "consolidatedFrom": [],
+      "canonicalId": "game-directing",
+      "description": "Game director - turns a game idea into a coherent Design Brief. Triggers on starting a game, any game design related work, defining core mechanics, tweaking game mechanics, aligning creative direction, checking generated game code against design intent.",
+      "skillPath": "../../.agents/skills/game-directing/SKILL.md",
+      "mainWords": 4149,
+      "bundleSha256": "fd40b372bcbdf098a077fae75263e945a9d9598001ba256b7d29194584a76f2b",
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 28472,
+          "sha256": "577f5fb59bb4599d2fecb32cc00ff5c0b81c0827dacd5a79a768e86f92413ec9"
+        }
+      ]
+    },
+    {
+      "id": "game-generating-procedural-content",
+      "sourceId": "game__generating-procedural-content",
+      "label": "Game generating procedural content",
+      "tier": "Optional",
+      "tierBasis": "coordinator-recommendation",
+      "group": "gamedev",
+      "reviewStatus": "pending",
+      "origin": "restored source import",
+      "changeStatus": "imported",
+      "summary": "Restored from the original source with canonical skill identifiers and portable metadata. Content review is pending.",
+      "historicalBaselineBundleSha256": "dc3577617704327455d89cb743522385d296ce413fd157fb3f866e13de7b60aa",
+      "consolidatedFrom": [],
+      "canonicalId": "game-generating-procedural-content",
+      "description": "Designs and implements seed-deterministic procedural content systems for JavaScript games. Use when creating level, terrain, dungeon, cave, placement, loot, wave, name, or infinite-world generators.",
+      "skillPath": "../../.agents/skills/game-generating-procedural-content/SKILL.md",
+      "mainWords": 5777,
+      "bundleSha256": "18708db083fecda931669f3955c3f8ac06cb50487ab6f7f8523133d459582e14",
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 37944,
+          "sha256": "5ef6255607b64198f8f767c2380579bcfcbdca67d7ebd13d86da271ceb110b72"
+        }
+      ]
+    },
+    {
+      "id": "game-genre-routing",
+      "sourceId": "game__genre-routing",
+      "label": "Game genre routing",
+      "tier": "Optional",
+      "tierBasis": "coordinator-recommendation",
+      "group": "gamedev",
+      "reviewStatus": "pending",
+      "origin": "restored source import",
+      "changeStatus": "imported",
+      "summary": "Restored from the original source with canonical skill identifiers and portable metadata. Content review is pending.",
+      "historicalBaselineBundleSha256": "8d9b442893f38e5cd74c06d7a7849f98d27c60db525551d93dd686fdef4e2774",
+      "consolidatedFrom": [],
+      "canonicalId": "game-genre-routing",
+      "description": "Routes genre-specific game design / game development / building / tweaking work to the right genre playbook. Use when designing, creating, tuning platformers, runners, puzzles, roguelikes, idle/incremental games, tower defense, autobattler/tactics, or MMO systems.",
+      "skillPath": "../../.agents/skills/game-genre-routing/SKILL.md",
+      "mainWords": 367,
+      "bundleSha256": "50405e4b5e8c6ecdc82ee11e316b65c2dbccad1ecf753ef5a59f5dd8041711d6",
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 2774,
+          "sha256": "31d687d53f80a8c8d219c53b71121acbc60fc005e9a42b1308d8b977130dd380"
+        },
+        {
+          "path": "references/auto-battler-tactics.md",
+          "bytes": 13697,
+          "sha256": "4b34cbf668ddf1b5b7ddcbb0b648ca1a164c8bfc8d9cee60e77a2d74a1ea0d64"
+        },
+        {
+          "path": "references/endless-runner.md",
+          "bytes": 40385,
+          "sha256": "552ffe93f14d8186b9c83ac067c4b2d044267a863570bef81ae30ac6263e367d"
+        },
+        {
+          "path": "references/grid-puzzle.md",
+          "bytes": 34946,
+          "sha256": "363760176c34c45215dffeb088de89a17ac1f8915cfbc7516bcbef8cefa64022"
+        },
+        {
+          "path": "references/idle-incremental.md",
+          "bytes": 27556,
+          "sha256": "7d7f9ee693dcc145ba34e760d79fe8642e577a9be319885f6d34557af94a50e9"
+        },
+        {
+          "path": "references/mmo/adaptive-mastery-and-scaffolding.md",
+          "bytes": 2206,
+          "sha256": "62266fed5ea7f861347b98eae8692d89274784003c8aff23ed75a1633ee9ffec"
+        },
+        {
+          "path": "references/mmo/ai-native-mmo-worlds.md",
+          "bytes": 8632,
+          "sha256": "fc52935011598777f817227e0802743a23b4fab88a77e1854c7fdc6dd0ea599f"
+        },
+        {
+          "path": "references/mmo/algorithmic-culture-and-social-routing.md",
+          "bytes": 1951,
+          "sha256": "cd45fec68ce186345fd98a6ee8361503ad3ea2735c465dbde7fafbfa29b6854b"
+        },
+        {
+          "path": "references/mmo/apprenticeship-and-mastery-ladders.md",
+          "bytes": 2287,
+          "sha256": "56fd7db66952f2abc832efb3a4f8bd9652e3311d7829238e28f7078d7b4756ed"
+        },
+        {
+          "path": "references/mmo/cartography-rendezvous-and-intel.md",
+          "bytes": 2603,
+          "sha256": "0a5572133a5b3db4c50df8f30dbb1163a6d6db270b75d1704a0b67bb0100bbdc"
+        },
+        {
+          "path": "references/mmo/classic-everquest-lessons.md",
+          "bytes": 11230,
+          "sha256": "9d882645d7f571e4a003c9bd060cde1edbddd851cb7a5f7549f11b0ac11b4aad"
+        },
+        {
+          "path": "references/mmo/classic-everquest-source-spine.md",
+          "bytes": 2970,
+          "sha256": "bd9b01ca5c53051f4749461c8f3568d524687bbb1b7b7a8b4122c8b4f9675314"
+        },
+        {
+          "path": "references/mmo/commons-governance-and-player-law.md",
+          "bytes": 1782,
+          "sha256": "d4666db550b86fcae248669a9cc8fd3b38f9e7d67e6fedf619a345a2723f75b0"
+        },
+        {
+          "path": "references/mmo/creator-ecology-and-ugc-compounding.md",
+          "bytes": 1811,
+          "sha256": "bb640b9b63f3f261e89fdba7e9880f44c8327e11311a261d4cb53f9d18f45bb4"
+        },
+        {
+          "path": "references/mmo/eval-cases.md",
+          "bytes": 20429,
+          "sha256": "3d77da667c95956e1b785dd878a9c432c2b78b2b4a763771c8e0b2c7733ed660"
+        },
+        {
+          "path": "references/mmo/eve-online-lessons.md",
+          "bytes": 4625,
+          "sha256": "8ddfef3360c554e5ff3888bc4e521b03546b6dea15b78ac9da72071f4f54a5f3"
+        },
+        {
+          "path": "references/mmo/evidence-based-social-design.md",
+          "bytes": 2994,
+          "sha256": "dcdac2957368774ba311e97c0af817d135b00b2223e9254e7405e8f2bb0635cb"
+        },
+        {
+          "path": "references/mmo/experience-memory-and-meaning.md",
+          "bytes": 1699,
+          "sha256": "436d67410a4281ca46219ebcdd8e487749ca98e649c935d465b3e562aaaaf995"
+        },
+        {
+          "path": "references/mmo/final-fantasy-xiv-lessons.md",
+          "bytes": 26569,
+          "sha256": "0216be6f0354fbbc4bcaa317e090b19f47c21a8c39937fc97e2701d055714dc8"
+        },
+        {
+          "path": "references/mmo/healthy-retention-and-passion.md",
+          "bytes": 1797,
+          "sha256": "54ef6d8eda1d1f7e71a31ac4785a4788138894223f343b78c59e34bd7946aeaf"
+        },
+        {
+          "path": "references/mmo/institution-lifecycle.md",
+          "bytes": 2940,
+          "sha256": "70834a1d34b134cbf363e3eaed9e7e4569a03365e36b18755dc9ebd3e1911264"
+        },
+        {
+          "path": "references/mmo/massive-world-fabric.md",
+          "bytes": 12200,
+          "sha256": "3722a5964de38da8fa939f340658630291ef49305cb2248d05a1e0c9dd2d7c4c"
+        },
+        {
+          "path": "references/mmo/mmo-calibration.md",
+          "bytes": 18440,
+          "sha256": "9c84c50e78cca18eb88beb255ed4303e9e3a98ba8abb625c372aa3f488b6afc8"
+        },
+        {
+          "path": "references/mmo/mmo-feature-review.md",
+          "bytes": 14253,
+          "sha256": "7d44f299115a7af7c6c027a45da13720f6f7c6f952f97cf2e28d68b2bf062580"
+        },
+        {
+          "path": "references/mmo/mmo-metrics-and-telemetry.md",
+          "bytes": 20260,
+          "sha256": "eae16dca910e0dba8eef2a2d1ed86c54bf7fdc184dc131b5b5049c78054a4f08"
+        },
+        {
+          "path": "references/mmo/mmo-pattern-library.md",
+          "bytes": 26127,
+          "sha256": "b5d08bf3c1344824fb70e78c6d465918e2b62467bca3f0015064d3925039a4ca"
+        },
+        {
+          "path": "references/mmo/mmo-production-reality.md",
+          "bytes": 18253,
+          "sha256": "5e3cb783faf4b7fc800270adf9cb24a1973d29aba065c8ac11deb1971f284587"
+        },
+        {
+          "path": "references/mmo/mmo-system-playbooks.md",
+          "bytes": 26815,
+          "sha256": "f911b9d53d653ff99f12ef6dc5684414358fa6a38a4dc384f0e89a1855e28afc"
+        },
+        {
+          "path": "references/mmo/motivation-and-need-satisfaction.md",
+          "bytes": 3132,
+          "sha256": "da1eb9462f750da100738b495b5e85f86502b7e7247f93656447d736b8c14628"
+        },
+        {
+          "path": "references/mmo/network-topology-and-social-capital.md",
+          "bytes": 3750,
+          "sha256": "0bc41fff5136aed0b6995009ac9bb5d9cf1bb63291071357d84781ae925360af"
+        },
+        {
+          "path": "references/mmo/overview.md",
+          "bytes": 30766,
+          "sha256": "8a28f06f6b56aae95ae416276d8f1559cbe2c0c8d3b594d4585dd92af4fdea47"
+        },
+        {
+          "path": "references/mmo/player-authored-history.md",
+          "bytes": 3016,
+          "sha256": "5e3401c96e1598d5c8836d5514da996857ccb2ab1d837a5ebe78808a4c43fa0c"
+        },
+        {
+          "path": "references/mmo/psychological-ownership-and-avatar-identity.md",
+          "bytes": 1803,
+          "sha256": "04ebcecd0357501676241a1d8ae718c1258c81e5628d81555585e0618458f974"
+        },
+        {
+          "path": "references/mmo/reputation-markets-and-trust.md",
+          "bytes": 1915,
+          "sha256": "160e35133cbccc00470b2cf8c98aea39bcbcf3e1cc174e6fe5dafb82dd04579d"
+        },
+        {
+          "path": "references/mmo/research-map.md",
+          "bytes": 9656,
+          "sha256": "0108727d3d6ef01b4ba58ca3b34fd8968381f7e42e94c8f739b291b87b0c8e3d"
+        },
+        {
+          "path": "references/mmo/ritual-calendar.md",
+          "bytes": 2305,
+          "sha256": "73304902243ce0ad42399d0e5f75a699813f38cf49b3149e75c2227a0ad4e7d2"
+        },
+        {
+          "path": "references/mmo/runescape-classic-lessons.md",
+          "bytes": 10051,
+          "sha256": "234f07005f1ea56ee722e5dc36db0215dd73f689edd95649326e47bd29d90a29"
+        },
+        {
+          "path": "references/mmo/social-graph-retention.md",
+          "bytes": 2525,
+          "sha256": "3b15a7a0dd1e6b0d3c1bd1f07a7015cb870be6fac945824918fa1079279f21cb"
+        },
+        {
+          "path": "references/mmo/team-cognition-and-transactive-memory.md",
+          "bytes": 1713,
+          "sha256": "fc58e3fc3105b001f99dabf426269c46ca7e4774442dfaeac52acba032da1fef"
+        },
+        {
+          "path": "references/mmo/world-of-warcraft-lessons.md",
+          "bytes": 19489,
+          "sha256": "23c36e3a3eba80c719f281f43760fc5f3f7887d98c825ef480c3a4756bc0f152"
+        },
+        {
+          "path": "references/platformer.md",
+          "bytes": 53318,
+          "sha256": "a40281c2418115a665e8bde0beb7830ee6b2fb4c56c252842f94c92b92683d1f"
+        },
+        {
+          "path": "references/roguelike.md",
+          "bytes": 30033,
+          "sha256": "18e0db0a0c0ee9652b8eaad3b360f654b03bf08da405c8486eaf770dbadedaef"
+        },
+        {
+          "path": "references/tower-defense.md",
+          "bytes": 30870,
+          "sha256": "c3a8e32268b36b7a8369ae8976d44046a4a77dd615f30b7bd7a51b9d10403f20"
+        },
+        {
+          "path": "references/whitepaper-analyze-mmo-whitepaper/SKILL.md",
+          "bytes": 24339,
+          "sha256": "2c2d5e6f65df35d4e18b0b8ac5027b9fcd51bb105b4d2a5bab1c3552f6c6ee68"
+        }
+      ]
+    },
+    {
+      "id": "game-onboarding-designing-game-onboarding",
+      "sourceId": "game-onboarding__designing-game-onboarding",
+      "label": "Game onboarding designing game onboarding",
+      "tier": "Optional",
+      "tierBasis": "coordinator-recommendation",
+      "group": "gamedev",
+      "reviewStatus": "pending",
+      "origin": "restored source import",
+      "changeStatus": "imported",
+      "summary": "Restored from the original source with canonical skill identifiers and portable metadata. Content review is pending. Corrected references to existing bundled filenames.",
+      "historicalBaselineBundleSha256": "fc14ed9e398e0301688676efbea0bb965f9078e065c6c4dd3b6bdf73c0eb9da7",
+      "consolidatedFrom": [],
+      "canonicalId": "game-onboarding-designing-game-onboarding",
+      "description": "Designs and audits platformer onboarding by turning player learning into playable first-level situations. Use when creating or critiquing first levels, tutorial-free introductions, movement/combat teaching, boss-select setup, or player-learning beat maps.",
+      "skillPath": "../../.agents/skills/game-onboarding-designing-game-onboarding/SKILL.md",
+      "mainWords": 2339,
+      "bundleSha256": "12983f21d756b01914bd4e97328bc6fce9efb1f36343aad0dcdea4c82568f0a7",
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 14940,
+          "sha256": "ff0ab1ddb4fdcbbd71110975766b0038f74a28e0c9eb5598c915d7b203a5369f"
+        },
+        {
+          "path": "references/eval-cases.md",
+          "bytes": 7240,
+          "sha256": "c814dd330d16e238e9c97ed8d6e264837c268a52b5b95785a2b0e9be54691c55"
+        },
+        {
+          "path": "references/hades-first-run-gold-star.md",
+          "bytes": 45620,
+          "sha256": "568a52bed81ddf3fa845366b36094209a8fb4314682a08c9b27c200d3999d7c9"
+        },
+        {
+          "path": "references/megaman-x-highway-gold-star.md",
+          "bytes": 40640,
+          "sha256": "43c95553d7cc12e042d5df6f2465328cd83c52000ee89e53af6d8de803bf2fdf"
+        },
+        {
+          "path": "references/onboarding-beat-canvas.md",
+          "bytes": 7282,
+          "sha256": "7b3a98fba71d47a0e255417a2bb628d554ab045f2ea84298e2b3f16da3599b87"
+        },
+        {
+          "path": "references/plants-vs-zombies-day-world-gold-star.md",
+          "bytes": 67171,
+          "sha256": "aef15ae7f8b288c933ce78499fb3b18a81a7103c09e2c80be1e7a50755e038be"
+        },
+        {
+          "path": "references/review-rubric.md",
+          "bytes": 7561,
+          "sha256": "08761046ee36f9d37a64c880efe9afabb3670bc85ab40c4263f9206b4587fdf4"
+        }
+      ]
+    },
+    {
+      "id": "game-orchestrating-playable-build",
+      "sourceId": "game__orchestrating-playable-build",
+      "label": "Game orchestrating playable build",
+      "tier": "Optional",
+      "tierBasis": "coordinator-recommendation",
+      "group": "gamedev",
+      "reviewStatus": "pending",
+      "origin": "restored source import",
+      "changeStatus": "imported",
+      "summary": "Restored from the original source with canonical skill identifiers and portable metadata. Content review is pending.",
+      "historicalBaselineBundleSha256": "60936e090a0e53f54f79eeb5093e47a21a1177665716ec4e43798083033b684e",
+      "consolidatedFrom": [],
+      "canonicalId": "game-orchestrating-playable-build",
+      "description": "Build director for game work — drives one coherent playable slice into the player's hand, applies the human Slap Test, names the single biggest feel blocker, and repairs it; coordinates specialist game skills as tools.  Triggers when we're building a game - \"build a game\", \"make it playable\", \"finish/ship the first playable\"; broad vertical slices, prototype rescue, polish passes, release-ready game handoffs.",
+      "skillPath": "../../.agents/skills/game-orchestrating-playable-build/SKILL.md",
+      "mainWords": 1917,
+      "bundleSha256": "28b7c9d74bb9bf28510bfbbd8246cc7a4ff76febdd20faec46d39d1a9a92f28e",
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 11949,
+          "sha256": "9ccf0c31b41d461012e9e90d7c2af7a40dd1c81d0aade043c388399ae885d7d0"
+        }
+      ]
+    },
+    {
+      "id": "game-proof-auditing-first-playable-comprehension",
+      "sourceId": "game-proof__auditing-first-playable-comprehension",
+      "label": "Game proof auditing first playable comprehension",
+      "tier": "Optional",
+      "tierBasis": "coordinator-recommendation",
+      "group": "gamedev",
+      "reviewStatus": "pending",
+      "origin": "restored source import",
+      "changeStatus": "imported",
+      "summary": "Restored from the original source with canonical skill identifiers and portable metadata. Content review is pending.",
+      "historicalBaselineBundleSha256": "464207b70c6a3f75fff3b2a0d66f11b3abf22685000f73fcb7ad9800fc6278fc",
+      "consolidatedFrom": [],
+      "canonicalId": "game-proof-auditing-first-playable-comprehension",
+      "description": "Audits first-playable comprehension and mobile-native portrait quality. Use after a runnable game exists and before initialization, vertical-slice, publish-readiness, or final handoff claims.",
+      "skillPath": "../../.agents/skills/game-proof-auditing-first-playable-comprehension/SKILL.md",
+      "mainWords": 2880,
+      "bundleSha256": "653241470896a5e1fd04936a7e2852b235a86de73b17e7fb5061b0c2d98cc2ee",
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 18273,
+          "sha256": "d676355ab27a16a52a7baba8df724ae3f503235e9426a3e233d4fd05b3db8606"
+        },
+        {
+          "path": "scripts/inspect-game-canvas.mjs",
+          "bytes": 10578,
+          "sha256": "4b4706575624d9baa1222873f8eee6553f4803f7aa42b46f0a09d3ce486c26ef"
+        }
+      ]
+    },
+    {
+      "id": "game-qa",
+      "sourceId": "game__qa",
+      "label": "Game qa",
+      "tier": "Optional",
+      "tierBasis": "coordinator-recommendation",
+      "group": "gamedev",
+      "reviewStatus": "pending",
+      "origin": "restored source import",
+      "changeStatus": "imported",
+      "summary": "Restored from the original source with canonical skill identifiers and portable metadata. Content review is pending. Six source reference documents are absent; see the import provenance limitations.",
+      "historicalBaselineBundleSha256": "13692666da0047ae2e11d797258cdeb7e65440beae0cb56d377704013255cc22",
+      "consolidatedFrom": [],
+      "canonicalId": "game-qa",
+      "description": "Runs browser-game feature QA end to end — owner brief, test-plan enumeration and sign-off, orchestrated parallel execution, evidence and playtest review, one verdict — via role contracts in references/; also bootstraps a project's qa rig once. Triggers on \"request QA\", \"verify X\", \"QA this\", \"make sure it works\" on game feature work. Not for tooling, build scripts, infra, or non-game code.",
+      "skillPath": "../../.agents/skills/game-qa/SKILL.md",
+      "mainWords": 857,
+      "bundleSha256": "13692666da0047ae2e11d797258cdeb7e65440beae0cb56d377704013255cc22",
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 5828,
+          "sha256": "60fc4c3a4da8dc4380b31aed84494c6bc1aca362cc1ea605a8a9bebe362953b8"
+        },
+        {
+          "path": "references/bootstrap.md",
+          "bytes": 7229,
+          "sha256": "441f2e9c3355339eb7d1f6317512d5818d2f495536469df37ee5467b6da5cc38"
+        },
+        {
+          "path": "references/role-engineer.md",
+          "bytes": 4022,
+          "sha256": "922fa8b3ba6fbe0b9c23d2d4b618573ae1b5a9438c72f62f3b0d6f59944c1ef1"
+        },
+        {
+          "path": "references/role-enumerator.md",
+          "bytes": 5503,
+          "sha256": "d7494a023cdf0f33a8e365bd9e932af8d6b4369b05458e32c4a78285483bc652"
+        },
+        {
+          "path": "references/role-lead.md",
+          "bytes": 4191,
+          "sha256": "5348a61e9f04e922600d50b7bc265d3f3541bae786bc8ab1c99899a93e3a4847"
+        },
+        {
+          "path": "references/role-owner.md",
+          "bytes": 5044,
+          "sha256": "d86d1b82493e57eedb2046568e365ac673e494fd49bfb98404f6f4fe9b5f57c2"
+        },
+        {
+          "path": "references/role-playtest.md",
+          "bytes": 5074,
+          "sha256": "7727d34c668d0bcda19b9e5771b26009267dd26b23d4a15edf17271a3ab08490"
+        },
+        {
+          "path": "references/role-reviewer.md",
+          "bytes": 4938,
+          "sha256": "afe2bb6e11187e74751f358d889bcc36e89d5ca8ee4b866acc259c1f78017c69"
+        }
+      ]
+    },
+    {
+      "id": "game-tuning-economy-progression",
+      "sourceId": "game__tuning-economy-progression",
+      "label": "Game tuning economy progression",
+      "tier": "Optional",
+      "tierBasis": "coordinator-recommendation",
+      "group": "gamedev",
+      "reviewStatus": "pending",
+      "origin": "restored source import",
+      "changeStatus": "imported",
+      "summary": "Restored from the original source with canonical skill identifiers and portable metadata. Content review is pending.",
+      "historicalBaselineBundleSha256": "cf7e80cab933add712c4b70bf898b45ad4d3fc6bc2b9aff7d77bd9ed7c9c70bb",
+      "consolidatedFrom": [],
+      "canonicalId": "game-tuning-economy-progression",
+      "description": "Designs, implements, tunes, and debugs JavaScript game economy and progression systems. Use when balancing difficulty, XP, unlock trees, currencies, loot rarity, reward schedules, prestige, or progression pacing.",
+      "skillPath": "../../.agents/skills/game-tuning-economy-progression/SKILL.md",
+      "mainWords": 5530,
+      "bundleSha256": "7da18f946e68de5087c29b871fb8f5f547853c719c68307de791502567d2f767",
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 38110,
+          "sha256": "8716fad5c29ea9d5753b795b535dd00f0cb5d5ecd92fd9badfcede1fd81a8531"
+        }
+      ]
+    },
+    {
       "id": "handoff-final-quality-gate",
       "sourceId": "handoff__final-quality-gate",
       "label": "Final handoff",
@@ -938,6 +2109,47 @@
           "path": "references/gaming-personas.md",
           "bytes": 2104,
           "sha256": "a5c7204a1b731ac332b97384617ffc263124ab4991e8c12b7c34f49c383a889f"
+        }
+      ]
+    },
+    {
+      "id": "physics-creating-interaction-system",
+      "sourceId": "physics__creating-interaction-system",
+      "label": "Physics creating interaction system",
+      "tier": "Optional",
+      "tierBasis": "coordinator-recommendation",
+      "group": "gamedev",
+      "reviewStatus": "pending",
+      "origin": "restored source import",
+      "changeStatus": "imported",
+      "summary": "Restored from the original source with canonical skill identifiers and portable metadata. Content review is pending.",
+      "historicalBaselineBundleSha256": "e9c969fa1deb4d4d59ff87bc4f0f6af39ff30bdecbdc0cf04f12baa401decbd3",
+      "consolidatedFrom": [],
+      "canonicalId": "physics-creating-interaction-system",
+      "description": "Designs deterministic, weighty object-interaction systems in Three.js/WebXR with Rapier under browser/XR and engine constraints, covering grab, hold, manipulate, throw, one- and two-hand interaction, telekinesis, collision response, impact payoff, sticking/penetration, and momentum-based damage. Use when creating or tuning physical interaction feel in stack-native Three.js/WebXR/Rapier code; not for generic non-interaction physics or undocumented behavior copied from reference games.",
+      "skillPath": "../../.agents/skills/physics-creating-interaction-system/SKILL.md",
+      "mainWords": 4728,
+      "bundleSha256": "ea12a3aa3877db607c14fd4e549e78934da308afdee673484cb4cdb13861479c",
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 33181,
+          "sha256": "832b98f3f6f7cb7e2810a870632814bcc62796e30c838a5c32f08d0bb34833b5"
+        },
+        {
+          "path": "references/interaction-patterns.md",
+          "bytes": 2044,
+          "sha256": "ba1b8cfc91863fb514c8473899f1770f3315b777c1e83119928bddc68353eaa2"
+        },
+        {
+          "path": "references/runtime-contract.md",
+          "bytes": 2238,
+          "sha256": "25d024a8678fe02d5aa98c8d9188e743671c5a856a3458a9ac4c47b38586e530"
+        },
+        {
+          "path": "references/tuning-and-tests.md",
+          "bytes": 1937,
+          "sha256": "dbf9ea9505a61d1dcc4d92fd76a47f25e358b655cd42daef82fc20f5c2cd9967"
         }
       ]
     },
@@ -1142,6 +2354,62 @@
           "path": "SKILL.md",
           "bytes": 8794,
           "sha256": "698cb8fbe005395e7bcbaefa9bc35537b1e19d75f00864e1dc9887c7fc379f40"
+        }
+      ]
+    },
+    {
+      "id": "product-designing-viral-social-loops",
+      "sourceId": "product__designing-viral-social-loops",
+      "label": "Product designing viral social loops",
+      "tier": "Optional",
+      "tierBasis": "coordinator-recommendation",
+      "group": "gamedev",
+      "reviewStatus": "pending",
+      "origin": "restored source import",
+      "changeStatus": "imported",
+      "summary": "Restored from the original source with canonical skill identifiers and portable metadata. Content review is pending. Corrected references to existing bundled filenames.",
+      "historicalBaselineBundleSha256": "7b273edaddffe8a1e3ec3391220921d480c7edb9feb3eccd4be81ec7e72ca967",
+      "consolidatedFrom": [],
+      "canonicalId": "product-designing-viral-social-loops",
+      "description": "Designs/audits self-reinforcing social, creator-supply, and playable loops. Use for invite/share/challenge/co-play/UGC/social-proof mechanics, graph density, creator upside, leakage, or non-defensible growth.",
+      "skillPath": "../../.agents/skills/product-designing-viral-social-loops/SKILL.md",
+      "mainWords": 4173,
+      "bundleSha256": "8141f83bc969f65989c959798246b6239bc5b71bb1cd56e1f2d16bdade82b020",
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 27338,
+          "sha256": "2acae1389b0cd32dd6ee427ce188e8bb920afbecc744bdc892bd54c31f2c08d5"
+        },
+        {
+          "path": "references/plausible-deniability-social-cover.md",
+          "bytes": 11399,
+          "sha256": "7be33736e8025310b10ad5d438e211d111ca0b7ce48cec52fa0030f0356b3353"
+        },
+        {
+          "path": "references/roblox-s-tier-playable-social-loop.md",
+          "bytes": 6115,
+          "sha256": "5247e18ed80c0ae783c6888e84f93e9f6b36f36b6d9e91be127e8e6ad9efc61f"
+        },
+        {
+          "path": "references/tbh-gas-s-tier-loop.md",
+          "bytes": 21187,
+          "sha256": "fc2facef9143cf7fe6df418f9285573390cf3f474ffea558ac397e9a4d916f45"
+        },
+        {
+          "path": "references/tiktok-s-tier-loop.md",
+          "bytes": 5928,
+          "sha256": "b6e07d5983e7dc386608692987b0b1d2e221462bbbe8bd30788b671177a93234"
+        },
+        {
+          "path": "references/viral-loop-eval-cases.md",
+          "bytes": 9923,
+          "sha256": "d0f9968aff0514992200827ce6bc54a1e919cb3444c980bd9d049ffa74918a36"
+        },
+        {
+          "path": "references/virality-network-effects-density-and-expertise.md",
+          "bytes": 12176,
+          "sha256": "dfc97025e0a239e9d763c0642c6da5310e07e5dc59d8e0adeca7f0e024938a9d"
         }
       ]
     },
@@ -1437,6 +2705,104 @@
           "path": "SKILL.md",
           "bytes": 13054,
           "sha256": "0b96918bc7fe318c521fd9eebeb43eb4aebdae0952641e4d1685cad1bdc5bfba"
+        }
+      ]
+    },
+    {
+      "id": "threejs-improve-performance",
+      "sourceId": "threejs__improve-performance",
+      "label": "Threejs improve performance",
+      "tier": "Optional",
+      "tierBasis": "coordinator-recommendation",
+      "group": "gamedev",
+      "reviewStatus": "pending",
+      "origin": "restored source import",
+      "changeStatus": "imported",
+      "summary": "Restored from the original source with canonical skill identifiers and portable metadata. Content review is pending.",
+      "historicalBaselineBundleSha256": "30d68ab4e979c06625e531e0e9da24836d8058574e413437df273f7aa09c6e56",
+      "consolidatedFrom": [],
+      "canonicalId": "threejs-improve-performance",
+      "description": "Profiles and improves Three.js + Rapier runtime performance while preserving determinism and gameplay semantics. Use for low FPS, stutter, load-time, GPU, CPU, GC, scene graph, shader, asset, physics, collider, or memory issues in Three.js/Rapier apps.",
+      "skillPath": "../../.agents/skills/threejs-improve-performance/SKILL.md",
+      "mainWords": 3548,
+      "bundleSha256": "24f6d372f8147b7ba26fb7e2ff173707e7fd6c96a68d14edaaca039a4df9b2cf",
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 24561,
+          "sha256": "c719f11eeb4c95a71412950c5ab2fd3d92f085a4cefabe91677cc83dd7660b73"
+        },
+        {
+          "path": "references/observability-and-instrumentation.md",
+          "bytes": 3828,
+          "sha256": "23bd9fe85bc2a971717eed9f469967b5085737175a0bb05e9e97e8ebe340a251"
+        },
+        {
+          "path": "references/perf-regression-and-acceptance-tests.md",
+          "bytes": 2282,
+          "sha256": "a3d3ce92867da15e45d33b286b0381cd9b4cc60c3b153c96a110c192da1c0c74"
+        },
+        {
+          "path": "references/rapier-optimization-playbook.md",
+          "bytes": 2545,
+          "sha256": "cea8e1f6b91326d3c9bf9f65fc8646d64e72da853b139f11df5a3169d8caf47a"
+        },
+        {
+          "path": "references/rendering-optimization-playbook.md",
+          "bytes": 3540,
+          "sha256": "3ad78fd84e11c605d934d265fad3572880bafac518b45918fac752e28d03fc60"
+        }
+      ]
+    },
+    {
+      "id": "ui-revamping-game-shell-ui",
+      "sourceId": "ui__revamping-game-shell-ui",
+      "label": "Ui revamping game shell ui",
+      "tier": "Optional",
+      "tierBasis": "coordinator-recommendation",
+      "group": "gamedev",
+      "reviewStatus": "pending",
+      "origin": "restored source import",
+      "changeStatus": "imported",
+      "summary": "Restored from the original source with canonical skill identifiers and portable metadata. Content review is pending.",
+      "historicalBaselineBundleSha256": "ed0f4aaa025eec39ab8fe0d13655093f80c8d7d5c5541c69a5777696a94c4b91",
+      "consolidatedFrom": [],
+      "canonicalId": "ui-revamping-game-shell-ui",
+      "description": "Revamps Idavoll game HUDs, menus, overlays, and results screens while preserving deterministic kernel and replay boundaries. Use when redesigning shell UI, migrating to @idavoll/game-ui-kit, fixing UI breakage, or changing HUD/menu/results layout without altering gameplay simulation.",
+      "skillPath": "../../.agents/skills/ui-revamping-game-shell-ui/SKILL.md",
+      "mainWords": 1456,
+      "bundleSha256": "58d683045f9cbfd9e0aa1e6f8e49ac800a352319d7b7afdc263b87bff24ff08b",
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 10503,
+          "sha256": "e289eb1acac85d033b7b0f400ab6f7bab8a2b25a69019a96f65063909b30469d"
+        }
+      ]
+    },
+    {
+      "id": "whitepaper-analyze-mmo-whitepaper",
+      "sourceId": "whitepaper__analyze-mmo-whitepaper",
+      "label": "Whitepaper analyze mmo whitepaper",
+      "tier": "Optional",
+      "tierBasis": "coordinator-recommendation",
+      "group": "gamedev",
+      "reviewStatus": "pending",
+      "origin": "restored source import",
+      "changeStatus": "imported",
+      "summary": "Restored from the original source with canonical skill identifiers and portable metadata. Content review is pending.",
+      "historicalBaselineBundleSha256": "e89a641a594637a1af3adc273801300fc435be0259cf7fd5d2dc9a5a458ef658",
+      "consolidatedFrom": [],
+      "canonicalId": "whitepaper-analyze-mmo-whitepaper",
+      "description": "Analyzes MMO whitepapers for design, systems, economy, world, and retention insights. Use only when manually reviewing an MMO whitepaper or extracting product/design implications from one.",
+      "skillPath": "../../.agents/skills/whitepaper-analyze-mmo-whitepaper/SKILL.md",
+      "mainWords": 3396,
+      "bundleSha256": "cd2e50cb670fc16b8faa9849037085583b0965fd78a67c5da46aaa479cb65684",
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 24339,
+          "sha256": "2c2d5e6f65df35d4e18b0b8ac5027b9fcd51bb105b4d2a5bab1c3552f6c6ee68"
         }
       ]
     },

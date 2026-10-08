@@ -71,10 +71,15 @@ function findLocalMarkdownLinks(filePath) {
 }
 
 test("skills use a flat .agents/skills/<name> directory layout", () => {
-  const skillManifestPaths = walkFiles(SKILLS_ROOT).filter((filePath) => path.basename(filePath) === "SKILL.md");
+  // Nested SKILL.md reference documents belong to their containing bundle;
+  // only direct skill directories define independently installable entries.
+  const skillManifestPaths = fs.readdirSync(SKILLS_ROOT, { withFileTypes: true })
+    .filter((entry) => entry.isDirectory())
+    .map((entry) => path.join(SKILLS_ROOT, entry.name, "SKILL.md"));
   assert.ok(skillManifestPaths.length > 0, "expected at least one skill");
 
   for (const manifestPath of skillManifestPaths) {
+    assert.ok(fs.existsSync(manifestPath), `${manifestPath}: installable manifest`);
     const relativeManifestPath = path.relative(REPO_ROOT, manifestPath).replace(/\\/g, "/");
     assert.match(
       relativeManifestPath,
@@ -115,16 +120,25 @@ test("built registry file inventories match checked-in skill files", () => {
   }
 });
 
-test("reviewed slim catalog inventories all 38 canonical skills and their 81 release files", () => {
+test("catalog inventories 67 canonical skills with complete and pending reviews", () => {
   const registry = buildRegistry();
-  assert.equal(registry.skills.length, 38);
-  assert.equal(new Set(registry.skills.map((skill) => skill.name)).size, 38);
-  assert.equal(registry.skills.reduce((count, skill) => count + skill.files.length, 0), 81);
+  const metadata = JSON.parse(fs.readFileSync(path.join(REPO_ROOT, "registry", "review-metadata.json"), "utf8"));
+  assert.equal(registry.skills.length, 67);
+  assert.equal(new Set(registry.skills.map((skill) => skill.name)).size, 67);
+  assert.equal(registry.skills.reduce((count, skill) => count + skill.files.length, 0), 225);
+  assert.equal(metadata.sourceReviewsCompleted, 39);
+  assert.equal(metadata.skills.filter((skill) => skill.reviewStatus === "complete").length, 38);
+  assert.equal(metadata.skills.filter((skill) => skill.reviewStatus === "pending").length, 29);
+  assert.deepEqual(metadata.skills.map((skill) => skill.canonicalId).sort(), registry.skills.map((skill) => skill.name).sort());
+  for (const [status, expectedFiles] of [["complete", 81], ["pending", 144]]) {
+    const names = new Set(metadata.skills.filter((skill) => skill.reviewStatus === status).map((skill) => skill.canonicalId));
+    assert.equal(registry.skills.filter((skill) => names.has(skill.name)).reduce((count, skill) => count + skill.files.length, 0), expectedFiles);
+  }
   for (const skill of registry.skills) {
     assert.match(skill.name, /^[a-z0-9]+(?:-[a-z0-9]+)+$/);
     assert.ok(skill.files.includes("SKILL.md"), `${skill.name}: installable manifest`);
     assert.equal(skill.path, `.agents/skills/${skill.name}`);
-    assert.ok(!skill.files.includes("evals/suite.json"), `${skill.name}: reviewed-only release scope`);
+    assert.ok(!skill.files.includes("evals/suite.json"), `${skill.name}: no bundled behavioral suite`);
   }
 });
 
