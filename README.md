@@ -1,6 +1,6 @@
-# Vasir — reviewed skills and project contracts
+# Vasir — skills and project contracts
 
-This repository combines Vasir's CLI and generated AGENTS/CLAUDE workflow with exactly 38 reviewed skills. Skill folders and CLI requests use canonical hyphenated identifiers; old collection IDs are provenance only and are not CLI aliases. The package is `vasir-slim` version `0.1.0-slim.2`, marked `private: true`, and distributed as a packed archive rather than published to npm.
+This repository combines Vasir's CLI and generated AGENTS/CLAUDE workflow with 67 active skills: 38 reviewed skills and 29 source imports pending review. Skill folders and CLI requests use canonical hyphenated identifiers; old collection IDs are provenance only and are not CLI aliases. The package is `vasir-slim` version `0.1.0-slim.2`, marked `private: true`, and distributed as a packed archive rather than published to npm.
 
 Vasir gives each project generated root contracts, an authored source for local constraints, and a managed skill tree:
 
@@ -117,15 +117,18 @@ Named groups are a shortcut for selecting skills. Repeated `--group` flags combi
 
 ```sh
 npm exec -- vasir groups
+npm exec -- vasir groups gamedev
 npm exec -- vasir groups --json
 npm exec -- vasir add --group base --group frontend --repo-root /path/to/project
+npm exec -- vasir add --group gamedev --repo-root /path/to/project
+npm exec -- vasir add --group base --group frontend --group gamedev --repo-root /path/to/project
 npm exec -- vasir add code-auditing --group frontend --repo-root /path/to/project
 npm exec -- vasir add --group frontend --agents-profile frontend --repo-root /path/to/project
 ```
 
 Groups expand to tracked individual skill snapshots when you run `add`. Later `update` refreshes the tracked skills; editing a group definition does not automatically install new group members. To select current members when some are already installed, run `npm exec -- vasir add --group <name> --replace --repo-root /path/to/project`. Replacement succeeds for unchanged tracked files; local edits still block replacement. Use `update` for routine refreshes. `remove` remains per-skill. `all` cannot be combined with groups or individual skills.
 
-For a globally installed CLI, use the same commands directly: `vasir groups` and `vasir add --group base --group frontend --repo-root /path/to/project`.
+For a globally installed CLI, use the same commands directly: `vasir groups gamedev` and `vasir add --group gamedev --repo-root /path/to/project`.
 
 Group definitions live in the repository's root `skill-groups.json`. To add a named group, add a key under `groups` with a `description` and a `skills` array of canonical IDs from the catalog; to edit a group, change those fields. Keep `schemaVersion: 1`, use lowercase hyphenated group names, and list each member once. The CLI validates definitions against the bundled registry before installing. This changes selection metadata without editing any skill content. Install dependencies with `npm ci` first. After editing definitions, update the documented memberships below and in `docs/catalog.md`, rebuild the registry, run `node bin/vasir.js groups` to inspect the result, and use `npm pack` to create an archive with your definitions.
 
@@ -156,9 +159,47 @@ Frontend foundations, interface implementation, data visualization, typography, 
 - `design-designing-typography`
 - `design-animating-interfaces`
 
+### gamedev (29 skills)
+
+Game design, implementation, art, onboarding, playable QA, performance, and product growth skills. This group contains source imports pending review.
+
+The [import provenance](registry/gamedev-imports.json) records source hashes, metadata normalization, and corrected reference filenames. The original `game-qa` bundle refers to six documents absent from the supplied source; those references remain recorded for repair.
+
+- `art-direction-defining-game-art`
+- `code-threejs-rapier-performance`
+- `design-designing-end-screen`
+- `design-designing-game-ui-for-idavoll`
+- `game-adding-juice`
+- `game-ai-architecting-ai`
+- `game-art-directing`
+- `game-assets-generating-images`
+- `game-building-combat-damage`
+- `game-building-core-loop`
+- `game-building-inventory-system`
+- `game-building-loot-systems`
+- `game-creation-selecting-initial-template`
+- `game-creation-writing-game-spec`
+- `game-design-ensuring-design-coherence`
+- `game-designing-systems`
+- `game-directing`
+- `game-generating-procedural-content`
+- `game-genre-routing`
+- `game-onboarding-designing-game-onboarding`
+- `game-orchestrating-playable-build`
+- `game-proof-auditing-first-playable-comprehension`
+- `game-qa`
+- `game-tuning-economy-progression`
+- `physics-creating-interaction-system`
+- `threejs-improve-performance`
+- `ui-revamping-game-shell-ui`
+- `whitepaper-analyze-mmo-whitepaper`
+- `product-designing-viral-social-loops`
+
+`base`, `frontend`, and `gamedev` contain 11, 5, and 29 skills. Their combined selection contains 45 unique skills. Group selection does not automatically choose an AGENTS profile.
+
 ## Source and checks
 
-The source repository includes CLI, templates, reviewed skills, documentation, regression tests, group definitions, generators, and a Git ignore file. Install dependencies with `npm ci` before running the CLI or tests. Run `npm test` (or `node scripts/run-tests.js`) for the complete suite; use `node --test test/project-install-state.test.js test/skill-groups.test.js` for focused Windows nested-file safety and named-group checks.
+The source repository includes the CLI, templates, reviewed skills and source imports pending review, documentation, regression tests, group definitions, generators, and a Git ignore file. Install dependencies with `npm ci` before running the CLI or tests. Run `npm test` (or `node scripts/run-tests.js`) for the complete suite; use `node --test test/project-install-state.test.js test/skill-groups.test.js` for focused Windows nested-file safety and named-group checks.
 
 After changing templates, skills, packaged docs, groups, or package metadata, regenerate agent templates before the registry:
 
@@ -178,9 +219,9 @@ npm run check:package -- ./vasir-slim-0.1.0-slim.2.tgz
 
 ## Migrating the older catalog
 
-The original 66-skill catalog was narrowed to 38 active reviewed skills. The selected sources and imports received 39 completed reviews, including the custom project planner; consolidating two frontend skills into one produced the final 38. Old underscore-style IDs such as `code__fixing-bugs` are not CLI aliases; use `code-fixing-bugs` and the [reviewed catalog](docs/catalog.md). Removed or merged skills do not imply a one-to-one automatic rename.
+The original inventory contains 66 top-level skills and one nested whitepaper skill. The existing reviewed set remains 38 skills; 39 completed reviews of selected sources and imports, including the custom project planner, supported that set after two frontend skills were consolidated into one. The 29 restored source imports are active and pending review. Old underscore-style IDs such as `code__fixing-bugs` are not CLI aliases; use canonical hyphenated IDs from the [skill catalog](docs/catalog.md). Removed or merged skills do not imply a one-to-one automatic rename.
 
-The [review evidence guide](docs/review/README.md), [interactive skill map](docs/review/skill-map.html), and [change tracker](docs/review/change-tracker.json) document the review history and final skill hashes. Recommendation tiers in the map and tracker are review metadata; the CLI's actual named installation groups are `base` and `frontend`, defined in root `skill-groups.json`.
+The [review evidence guide](docs/review/README.md), [interactive skill map](docs/review/skill-map.html), and [change tracker](docs/review/change-tracker.json) document the review history and reviewed skill hashes. Recommendation tiers in the map and tracker are review metadata; the CLI's actual named installation groups are `base`, `frontend`, and `gamedev`, defined in root `skill-groups.json`.
 
 Before migrating an existing project, back up edited skills, config, install state, and authored or generated contracts. The safest path is to initialize a separate fresh project tree with this release, select the desired groups or canonical skills, and reconcile local customizations there. For an in-place migration, inspect `vasir status`, `vasir diff`, and `vasir update --dry-run`; explicitly remove obsolete tracked skills using the release that recognizes their old IDs, then select canonical skills with the new CLI. Use `vasir adopt` only when deliberately adopting an existing tree of current-catalog canonical IDs; it records matching files and reports unknown directories as unmanaged.
 
@@ -198,7 +239,7 @@ npm run eval -- rescore testing-enforcing-mandate
 
 Provider credentials can live in repository-root `keys.json`; start from [keys.json.example](keys.json.example). Mock evaluation needs no provider credentials. Saved runs live in the target project's `.agents/vasir-evals/` tree.
 
-See [CLI reference](docs/cli-reference.md), [troubleshooting](docs/troubleshooting.md), [AGENTS examples](docs/example-agents.md), and [reviewed catalog/profiles](docs/catalog.md). Runtime error documentation links resolve to the installed local documentation. Historical external build manifests remain outside the runtime package; public review evidence lives in `docs/review/`.
+See [CLI reference](docs/cli-reference.md), [troubleshooting](docs/troubleshooting.md), [AGENTS examples](docs/example-agents.md), and [skill catalog](docs/catalog.md). Runtime error documentation links resolve to the installed local documentation. Historical external build manifests remain outside the runtime package; public review evidence lives in `docs/review/`.
 
 See also the [template guide](templates/agents/README.md), [create a skill](docs/create-your-first-skill.md), [skill layout reference](docs/skill-reference.md), and [manifesto](MANIFESTO.md).
 

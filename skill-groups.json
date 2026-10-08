@@ -26,6 +26,40 @@
         "design-designing-typography",
         "design-animating-interfaces"
       ]
+    },
+    "gamedev": {
+      "description": "Game design, playable builds, systems, AI, art, onboarding, QA, performance, MMO analysis, and social loops.",
+      "skills": [
+        "game-directing",
+        "game-genre-routing",
+        "game-orchestrating-playable-build",
+        "game-creation-writing-game-spec",
+        "game-creation-selecting-initial-template",
+        "game-design-ensuring-design-coherence",
+        "whitepaper-analyze-mmo-whitepaper",
+        "game-building-core-loop",
+        "game-designing-systems",
+        "game-building-combat-damage",
+        "game-building-inventory-system",
+        "game-building-loot-systems",
+        "game-generating-procedural-content",
+        "game-tuning-economy-progression",
+        "game-ai-architecting-ai",
+        "physics-creating-interaction-system",
+        "art-direction-defining-game-art",
+        "game-art-directing",
+        "game-assets-generating-images",
+        "game-adding-juice",
+        "design-designing-game-ui-for-idavoll",
+        "ui-revamping-game-shell-ui",
+        "design-designing-end-screen",
+        "game-onboarding-designing-game-onboarding",
+        "game-proof-auditing-first-playable-comprehension",
+        "game-qa",
+        "code-threejs-rapier-performance",
+        "threejs-improve-performance",
+        "product-designing-viral-social-loops"
+      ]
     }
   }
 }

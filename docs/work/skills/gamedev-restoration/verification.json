@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "verifiedOn": "2026-10-08",
+  "baseRevision": "5123572ca0f6ea7316217a9e3fdb6efa40b240c9",
+  "catalog": {
+    "skills": 67,
+    "files": 225,
+    "reviewedSkills": 38,
+    "completedSourceReviews": 39,
+    "importedSkillsPendingReview": 29,
+    "reviewedFilesUnchanged": 81,
+    "importedFilesVerified": 144,
+    "groups": { "base": 11, "frontend": 5, "gamedev": 29 },
+    "groupUnion": 45
+  },
+  "regression": [
+    { "node": "18.20.0", "platform": "win32", "passed": 210, "failed": 0 },
+    { "node": "24.19.0", "platform": "win32", "passed": 210, "failed": 0 }
+  ],
+  "finalReferenceFixes": { "focusedTestsPassed": 16, "failed": 0 },
+  "installedArchive": { "node": "24.19.0", "platform": "win32", "checksPassed": 20, "commandsRun": 38, "offline": true },
+  "generatedChecks": ["check:agents", "check:registry", "check:review"],
+  "independentReview": {
+    "reviewedFilesByteIdentical": 81,
+    "importedHashesMatched": 144,
+    "legacyReferenceFindings": "Repaired and recorded in registry/gamedev-imports.json",
+    "unresolvedBlockers": 0
+  },
+  "limitations": [
+    "Six game-QA reference documents are absent from the original source and remain recorded for repair.",
+    "Restored source skills await content review and may retain source-specific Studio assumptions.",
+    "No behavioral skill trials or live provider calls ran.",
+    "Linux and macOS verification is delegated to CI."
+  ]
+}

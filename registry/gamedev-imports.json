@@ -1,0 +1,1480 @@
+{
+  "schemaVersion": 1,
+  "importedOn": "2026-10-08",
+  "skillCount": 29,
+  "policy": "User-authorized source restoration. No completed content review or behavioral evaluation is implied. Existing reviewed bundles are unchanged.",
+  "source": "Original downloaded Vasir source snapshot",
+  "limitations": [
+    {
+      "skill": "game-qa",
+      "missingSourceReferences": [
+        "arrange-vs-shortcut.md",
+        "case-schema.md",
+        "journey-schema.md",
+        "brief-schema.md",
+        "ticket-schema.md",
+        "adapter-contract.md"
+      ],
+      "disposition": "Absent from supplied source. References retained for future repair; no substitute guidance invented."
+    }
+  ],
+  "skills": [
+    {
+      "id": "game-directing",
+      "sourceId": "game__directing",
+      "sourceDirectory": ".agents/skills/game__directing",
+      "reviewStatus": "pending",
+      "legacyFrontmatter": {
+        "tools": "Read, Grep, Glob, Edit, Write"
+      },
+      "files": [
+        {
+          "sourcePath": ".agents/skills/game__directing/SKILL.md",
+          "path": "SKILL.md",
+          "sourceSha256": "cc2ddba829e22109c3c51e8abab340f17cabd673e58017980b6a626ac6b1a1c0",
+          "sha256": "577f5fb59bb4599d2fecb32cc00ff5c0b81c0827dacd5a79a768e86f92413ec9",
+          "transformations": [
+            "canonical-skill-identifiers",
+            "portable-frontmatter"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "game-genre-routing",
+      "sourceId": "game__genre-routing",
+      "sourceDirectory": ".agents/skills/game__genre-routing",
+      "reviewStatus": "pending",
+      "legacyFrontmatter": {
+        "tools": [
+          "Read",
+          "Grep",
+          "Glob",
+          "Edit",
+          "Write"
+        ]
+      },
+      "files": [
+        {
+          "sourcePath": ".agents/skills/game__genre-routing/SKILL.md",
+          "path": "SKILL.md",
+          "sourceSha256": "7988d16f66f101b610f3987469e03f926cbf3062a42ce6a3a1f231b78082c6c0",
+          "sha256": "31d687d53f80a8c8d219c53b71121acbc60fc005e9a42b1308d8b977130dd380",
+          "transformations": [
+            "canonical-skill-identifiers",
+            "portable-frontmatter"
+          ]
+        },
+        {
+          "sourcePath": ".agents/skills/game__genre-routing/references/auto-battler-tactics.md",
+          "path": "references/auto-battler-tactics.md",
+          "sourceSha256": "a0cfe6c19764f97ca33be806669ee6ff6921c7194e14a36b9c75e093cb01c0dc",
+          "sha256": "4b34cbf668ddf1b5b7ddcbb0b648ca1a164c8bfc8d9cee60e77a2d74a1ea0d64",
+          "transformations": [
+            "canonical-skill-identifiers",
+            "legacy-skill-alias:game-ai__architect->game-ai-architecting-ai"
+          ]
+        },
+        {
+          "sourcePath": ".agents/skills/game__genre-routing/references/endless-runner.md",
+          "path": "references/endless-runner.md",
+          "sourceSha256": "00d008dad86020ca4b806868105e76d87d19abd30489f0deaa662549b4ddf86a",
+          "sha256": "552ffe93f14d8186b9c83ac067c4b2d044267a863570bef81ae30ac6263e367d",
+          "transformations": [
+            "legacy-skill-alias:game-juice->game-adding-juice"
+          ]
+        },
+        {
+          "sourcePath": ".agents/skills/game__genre-routing/references/grid-puzzle.md",
+          "path": "references/grid-puzzle.md",
+          "sourceSha256": "d817921c94b69be7f790e7521272352d1a1b1d3413458cd10ae9c7611c74b6ce",
+          "sha256": "363760176c34c45215dffeb088de89a17ac1f8915cfbc7516bcbef8cefa64022",
+          "transformations": [
+            "legacy-skill-alias:game-juice->game-adding-juice"
+          ]
+        },
+        {
+          "sourcePath": ".agents/skills/game__genre-routing/references/idle-incremental.md",
+          "path": "references/idle-incremental.md",
+          "sourceSha256": "7d7f9ee693dcc145ba34e760d79fe8642e577a9be319885f6d34557af94a50e9",
+          "sha256": "7d7f9ee693dcc145ba34e760d79fe8642e577a9be319885f6d34557af94a50e9",
+          "transformations": []
+        },
+        {
+          "sourcePath": ".agents/skills/game__genre-routing/references/mmo/adaptive-mastery-and-scaffolding.md",
+          "path": "references/mmo/adaptive-mastery-and-scaffolding.md",
+          "sourceSha256": "62266fed5ea7f861347b98eae8692d89274784003c8aff23ed75a1633ee9ffec",
+          "sha256": "62266fed5ea7f861347b98eae8692d89274784003c8aff23ed75a1633ee9ffec",
+          "transformations": []
+        },
+        {
+          "sourcePath": ".agents/skills/game__genre-routing/references/mmo/ai-native-mmo-worlds.md",
+          "path": "references/mmo/ai-native-mmo-worlds.md",
+          "sourceSha256": "fc52935011598777f817227e0802743a23b4fab88a77e1854c7fdc6dd0ea599f",
+          "sha256": "fc52935011598777f817227e0802743a23b4fab88a77e1854c7fdc6dd0ea599f",
+          "transformations": []
+        },
+        {
+          "sourcePath": ".agents/skills/game__genre-routing/references/mmo/algorithmic-culture-and-social-routing.md",
+          "path": "references/mmo/algorithmic-culture-and-social-routing.md",
+          "sourceSha256": "cd45fec68ce186345fd98a6ee8361503ad3ea2735c465dbde7fafbfa29b6854b",
+          "sha256": "cd45fec68ce186345fd98a6ee8361503ad3ea2735c465dbde7fafbfa29b6854b",
+          "transformations": []
+        },
+        {
+          "sourcePath": ".agents/skills/game__genre-routing/references/mmo/apprenticeship-and-mastery-ladders.md",
+          "path": "references/mmo/apprenticeship-and-mastery-ladders.md",
+          "sourceSha256": "56fd7db66952f2abc832efb3a4f8bd9652e3311d7829238e28f7078d7b4756ed",
+          "sha256": "56fd7db66952f2abc832efb3a4f8bd9652e3311d7829238e28f7078d7b4756ed",
+          "transformations": []
+        },
+        {
+          "sourcePath": ".agents/skills/game__genre-routing/references/mmo/cartography-rendezvous-and-intel.md",
+          "path": "references/mmo/cartography-rendezvous-and-intel.md",
+          "sourceSha256": "0a5572133a5b3db4c50df8f30dbb1163a6d6db270b75d1704a0b67bb0100bbdc",
+          "sha256": "0a5572133a5b3db4c50df8f30dbb1163a6d6db270b75d1704a0b67bb0100bbdc",
+          "transformations": []
+        },
+        {
+          "sourcePath": ".agents/skills/game__genre-routing/references/mmo/classic-everquest-lessons.md",
+          "path": "references/mmo/classic-everquest-lessons.md",
+          "sourceSha256": "9d882645d7f571e4a003c9bd060cde1edbddd851cb7a5f7549f11b0ac11b4aad",
+          "sha256": "9d882645d7f571e4a003c9bd060cde1edbddd851cb7a5f7549f11b0ac11b4aad",
+          "transformations": []
+        },
+        {
+          "sourcePath": ".agents/skills/game__genre-routing/references/mmo/classic-everquest-source-spine.md",
+          "path": "references/mmo/classic-everquest-source-spine.md",
+          "sourceSha256": "bd9b01ca5c53051f4749461c8f3568d524687bbb1b7b7a8b4122c8b4f9675314",
+          "sha256": "bd9b01ca5c53051f4749461c8f3568d524687bbb1b7b7a8b4122c8b4f9675314",
+          "transformations": []
+        },
+        {
+          "sourcePath": ".agents/skills/game__genre-routing/references/mmo/commons-governance-and-player-law.md",
+          "path": "references/mmo/commons-governance-and-player-law.md",
+          "sourceSha256": "d4666db550b86fcae248669a9cc8fd3b38f9e7d67e6fedf619a345a2723f75b0",
+          "sha256": "d4666db550b86fcae248669a9cc8fd3b38f9e7d67e6fedf619a345a2723f75b0",
+          "transformations": []
+        },
+        {
+          "sourcePath": ".agents/skills/game__genre-routing/references/mmo/creator-ecology-and-ugc-compounding.md",
+          "path": "references/mmo/creator-ecology-and-ugc-compounding.md",
+          "sourceSha256": "bb640b9b63f3f261e89fdba7e9880f44c8327e11311a261d4cb53f9d18f45bb4",
+          "sha256": "bb640b9b63f3f261e89fdba7e9880f44c8327e11311a261d4cb53f9d18f45bb4",
+          "transformations": []
+        },
+        {
+          "sourcePath": ".agents/skills/game__genre-routing/references/mmo/eval-cases.md",
+          "path": "references/mmo/eval-cases.md",
+          "sourceSha256": "3d77da667c95956e1b785dd878a9c432c2b78b2b4a763771c8e0b2c7733ed660",
+          "sha256": "3d77da667c95956e1b785dd878a9c432c2b78b2b4a763771c8e0b2c7733ed660",
+          "transformations": []
+        },
+        {
+          "sourcePath": ".agents/skills/game__genre-routing/references/mmo/eve-online-lessons.md",
+          "path": "references/mmo/eve-online-lessons.md",
+          "sourceSha256": "8ddfef3360c554e5ff3888bc4e521b03546b6dea15b78ac9da72071f4f54a5f3",
+          "sha256": "8ddfef3360c554e5ff3888bc4e521b03546b6dea15b78ac9da72071f4f54a5f3",
+          "transformations": []
+        },
+        {
+          "sourcePath": ".agents/skills/game__genre-routing/references/mmo/evidence-based-social-design.md",
+          "path": "references/mmo/evidence-based-social-design.md",
+          "sourceSha256": "dcdac2957368774ba311e97c0af817d135b00b2223e9254e7405e8f2bb0635cb",
+          "sha256": "dcdac2957368774ba311e97c0af817d135b00b2223e9254e7405e8f2bb0635cb",
+          "transformations": []
+        },
+        {
+          "sourcePath": ".agents/skills/game__genre-routing/references/mmo/experience-memory-and-meaning.md",
+          "path": "references/mmo/experience-memory-and-meaning.md",
+          "sourceSha256": "436d67410a4281ca46219ebcdd8e487749ca98e649c935d465b3e562aaaaf995",
+          "sha256": "436d67410a4281ca46219ebcdd8e487749ca98e649c935d465b3e562aaaaf995",
+          "transformations": []
+        },
+        {
+          "sourcePath": ".agents/skills/game__genre-routing/references/mmo/final-fantasy-xiv-lessons.md",
+          "path": "references/mmo/final-fantasy-xiv-lessons.md",
+          "sourceSha256": "0216be6f0354fbbc4bcaa317e090b19f47c21a8c39937fc97e2701d055714dc8",
+          "sha256": "0216be6f0354fbbc4bcaa317e090b19f47c21a8c39937fc97e2701d055714dc8",
+          "transformations": []
+        },
+        {
+          "sourcePath": ".agents/skills/game__genre-routing/references/mmo/healthy-retention-and-passion.md",
+          "path": "references/mmo/healthy-retention-and-passion.md",
+          "sourceSha256": "54ef6d8eda1d1f7e71a31ac4785a4788138894223f343b78c59e34bd7946aeaf",
+          "sha256": "54ef6d8eda1d1f7e71a31ac4785a4788138894223f343b78c59e34bd7946aeaf",
+          "transformations": []
+        },
+        {
+          "sourcePath": ".agents/skills/game__genre-routing/references/mmo/institution-lifecycle.md",
+          "path": "references/mmo/institution-lifecycle.md",
+          "sourceSha256": "70834a1d34b134cbf363e3eaed9e7e4569a03365e36b18755dc9ebd3e1911264",
+          "sha256": "70834a1d34b134cbf363e3eaed9e7e4569a03365e36b18755dc9ebd3e1911264",
+          "transformations": []
+        },
+        {
+          "sourcePath": ".agents/skills/game__genre-routing/references/mmo/massive-world-fabric.md",
+          "path": "references/mmo/massive-world-fabric.md",
+          "sourceSha256": "3722a5964de38da8fa939f340658630291ef49305cb2248d05a1e0c9dd2d7c4c",
+          "sha256": "3722a5964de38da8fa939f340658630291ef49305cb2248d05a1e0c9dd2d7c4c",
+          "transformations": []
+        },
+        {
+          "sourcePath": ".agents/skills/game__genre-routing/references/mmo/mmo-calibration.md",
+          "path": "references/mmo/mmo-calibration.md",
+          "sourceSha256": "9c84c50e78cca18eb88beb255ed4303e9e3a98ba8abb625c372aa3f488b6afc8",
+          "sha256": "9c84c50e78cca18eb88beb255ed4303e9e3a98ba8abb625c372aa3f488b6afc8",
+          "transformations": []
+        },
+        {
+          "sourcePath": ".agents/skills/game__genre-routing/references/mmo/mmo-feature-review.md",
+          "path": "references/mmo/mmo-feature-review.md",
+          "sourceSha256": "7d44f299115a7af7c6c027a45da13720f6f7c6f952f97cf2e28d68b2bf062580",
+          "sha256": "7d44f299115a7af7c6c027a45da13720f6f7c6f952f97cf2e28d68b2bf062580",
+          "transformations": []
+        },
+        {
+          "sourcePath": ".agents/skills/game__genre-routing/references/mmo/mmo-metrics-and-telemetry.md",
+          "path": "references/mmo/mmo-metrics-and-telemetry.md",
+          "sourceSha256": "eae16dca910e0dba8eef2a2d1ed86c54bf7fdc184dc131b5b5049c78054a4f08",
+          "sha256": "eae16dca910e0dba8eef2a2d1ed86c54bf7fdc184dc131b5b5049c78054a4f08",
+          "transformations": []
+        },
+        {
+          "sourcePath": ".agents/skills/game__genre-routing/references/mmo/mmo-pattern-library.md",
+          "path": "references/mmo/mmo-pattern-library.md",
+          "sourceSha256": "b5d08bf3c1344824fb70e78c6d465918e2b62467bca3f0015064d3925039a4ca",
+          "sha256": "b5d08bf3c1344824fb70e78c6d465918e2b62467bca3f0015064d3925039a4ca",
+          "transformations": []
+        },
+        {
+          "sourcePath": ".agents/skills/game__genre-routing/references/mmo/mmo-production-reality.md",
+          "path": "references/mmo/mmo-production-reality.md",
+          "sourceSha256": "5e3cb783faf4b7fc800270adf9cb24a1973d29aba065c8ac11deb1971f284587",
+          "sha256": "5e3cb783faf4b7fc800270adf9cb24a1973d29aba065c8ac11deb1971f284587",
+          "transformations": []
+        },
+        {
+          "sourcePath": ".agents/skills/game__genre-routing/references/mmo/mmo-system-playbooks.md",
+          "path": "references/mmo/mmo-system-playbooks.md",
+          "sourceSha256": "f911b9d53d653ff99f12ef6dc5684414358fa6a38a4dc384f0e89a1855e28afc",
+          "sha256": "f911b9d53d653ff99f12ef6dc5684414358fa6a38a4dc384f0e89a1855e28afc",
+          "transformations": []
+        },
+        {
+          "sourcePath": ".agents/skills/game__genre-routing/references/mmo/motivation-and-need-satisfaction.md",
+          "path": "references/mmo/motivation-and-need-satisfaction.md",
+          "sourceSha256": "da1eb9462f750da100738b495b5e85f86502b7e7247f93656447d736b8c14628",
+          "sha256": "da1eb9462f750da100738b495b5e85f86502b7e7247f93656447d736b8c14628",
+          "transformations": []
+        },
+        {
+          "sourcePath": ".agents/skills/game__genre-routing/references/mmo/network-topology-and-social-capital.md",
+          "path": "references/mmo/network-topology-and-social-capital.md",
+          "sourceSha256": "0bc41fff5136aed0b6995009ac9bb5d9cf1bb63291071357d84781ae925360af",
+          "sha256": "0bc41fff5136aed0b6995009ac9bb5d9cf1bb63291071357d84781ae925360af",
+          "transformations": []
+        },
+        {
+          "sourcePath": ".agents/skills/game__genre-routing/references/mmo/overview.md",
+          "path": "references/mmo/overview.md",
+          "sourceSha256": "8a28f06f6b56aae95ae416276d8f1559cbe2c0c8d3b594d4585dd92af4fdea47",
+          "sha256": "8a28f06f6b56aae95ae416276d8f1559cbe2c0c8d3b594d4585dd92af4fdea47",
+          "transformations": []
+        },
+        {
+          "sourcePath": ".agents/skills/game__genre-routing/references/mmo/player-authored-history.md",
+          "path": "references/mmo/player-authored-history.md",
+          "sourceSha256": "5e3401c96e1598d5c8836d5514da996857ccb2ab1d837a5ebe78808a4c43fa0c",
+          "sha256": "5e3401c96e1598d5c8836d5514da996857ccb2ab1d837a5ebe78808a4c43fa0c",
+          "transformations": []
+        },
+        {
+          "sourcePath": ".agents/skills/game__genre-routing/references/mmo/psychological-ownership-and-avatar-identity.md",
+          "path": "references/mmo/psychological-ownership-and-avatar-identity.md",
+          "sourceSha256": "04ebcecd0357501676241a1d8ae718c1258c81e5628d81555585e0618458f974",
+          "sha256": "04ebcecd0357501676241a1d8ae718c1258c81e5628d81555585e0618458f974",
+          "transformations": []
+        },
+        {
+          "sourcePath": ".agents/skills/game__genre-routing/references/mmo/reputation-markets-and-trust.md",
+          "path": "references/mmo/reputation-markets-and-trust.md",
+          "sourceSha256": "160e35133cbccc00470b2cf8c98aea39bcbcf3e1cc174e6fe5dafb82dd04579d",
+          "sha256": "160e35133cbccc00470b2cf8c98aea39bcbcf3e1cc174e6fe5dafb82dd04579d",
+          "transformations": []
+        },
+        {
+          "sourcePath": ".agents/skills/game__genre-routing/references/mmo/research-map.md",
+          "path": "references/mmo/research-map.md",
+          "sourceSha256": "0108727d3d6ef01b4ba58ca3b34fd8968381f7e42e94c8f739b291b87b0c8e3d",
+          "sha256": "0108727d3d6ef01b4ba58ca3b34fd8968381f7e42e94c8f739b291b87b0c8e3d",
+          "transformations": []
+        },
+        {
+          "sourcePath": ".agents/skills/game__genre-routing/references/mmo/ritual-calendar.md",
+          "path": "references/mmo/ritual-calendar.md",
+          "sourceSha256": "73304902243ce0ad42399d0e5f75a699813f38cf49b3149e75c2227a0ad4e7d2",
+          "sha256": "73304902243ce0ad42399d0e5f75a699813f38cf49b3149e75c2227a0ad4e7d2",
+          "transformations": []
+        },
+        {
+          "sourcePath": ".agents/skills/game__genre-routing/references/mmo/runescape-classic-lessons.md",
+          "path": "references/mmo/runescape-classic-lessons.md",
+          "sourceSha256": "234f07005f1ea56ee722e5dc36db0215dd73f689edd95649326e47bd29d90a29",
+          "sha256": "234f07005f1ea56ee722e5dc36db0215dd73f689edd95649326e47bd29d90a29",
+          "transformations": []
+        },
+        {
+          "sourcePath": ".agents/skills/game__genre-routing/references/mmo/social-graph-retention.md",
+          "path": "references/mmo/social-graph-retention.md",
+          "sourceSha256": "3b15a7a0dd1e6b0d3c1bd1f07a7015cb870be6fac945824918fa1079279f21cb",
+          "sha256": "3b15a7a0dd1e6b0d3c1bd1f07a7015cb870be6fac945824918fa1079279f21cb",
+          "transformations": []
+        },
+        {
+          "sourcePath": ".agents/skills/game__genre-routing/references/mmo/team-cognition-and-transactive-memory.md",
+          "path": "references/mmo/team-cognition-and-transactive-memory.md",
+          "sourceSha256": "fc58e3fc3105b001f99dabf426269c46ca7e4774442dfaeac52acba032da1fef",
+          "sha256": "fc58e3fc3105b001f99dabf426269c46ca7e4774442dfaeac52acba032da1fef",
+          "transformations": []
+        },
+        {
+          "sourcePath": ".agents/skills/game__genre-routing/references/mmo/world-of-warcraft-lessons.md",
+          "path": "references/mmo/world-of-warcraft-lessons.md",
+          "sourceSha256": "23c36e3a3eba80c719f281f43760fc5f3f7887d98c825ef480c3a4756bc0f152",
+          "sha256": "23c36e3a3eba80c719f281f43760fc5f3f7887d98c825ef480c3a4756bc0f152",
+          "transformations": []
+        },
+        {
+          "sourcePath": ".agents/skills/game__genre-routing/references/platformer.md",
+          "path": "references/platformer.md",
+          "sourceSha256": "e04ca5039488439db2229ca1f388b83771234c45233d1da3e513b3d288e25e90",
+          "sha256": "a40281c2418115a665e8bde0beb7830ee6b2fb4c56c252842f94c92b92683d1f",
+          "transformations": [
+            "legacy-skill-alias:game-juice->game-adding-juice"
+          ]
+        },
+        {
+          "sourcePath": ".agents/skills/game__genre-routing/references/roguelike.md",
+          "path": "references/roguelike.md",
+          "sourceSha256": "18e0db0a0c0ee9652b8eaad3b360f654b03bf08da405c8486eaf770dbadedaef",
+          "sha256": "18e0db0a0c0ee9652b8eaad3b360f654b03bf08da405c8486eaf770dbadedaef",
+          "transformations": []
+        },
+        {
+          "sourcePath": ".agents/skills/game__genre-routing/references/tower-defense.md",
+          "path": "references/tower-defense.md",
+          "sourceSha256": "6f45e6385131658aec79f1496b745060ab18c536e5b208889d1e9d6f3420cdf1",
+          "sha256": "c3a8e32268b36b7a8369ae8976d44046a4a77dd615f30b7bd7a51b9d10403f20",
+          "transformations": [
+            "portable-reference:/mnt/skills/user/game-juice/SKILL.md->../../game-adding-juice/SKILL.md",
+            "legacy-skill-alias:game-juice->game-adding-juice"
+          ]
+        },
+        {
+          "sourcePath": ".agents/skills/game__genre-routing/references/whitepaper__analyze-mmo-whitepaper/SKILL.md",
+          "path": "references/whitepaper-analyze-mmo-whitepaper/SKILL.md",
+          "sourceSha256": "3c8cb9a3ece5c0450c8e1fa520b3ce136f6a9c58f99c51af71ff223bb0e8474c",
+          "sha256": "2c2d5e6f65df35d4e18b0b8ac5027b9fcd51bb105b4d2a5bab1c3552f6c6ee68",
+          "transformations": [
+            "canonical-skill-identifiers"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "game-orchestrating-playable-build",
+      "sourceId": "game__orchestrating-playable-build",
+      "sourceDirectory": ".agents/skills/game__orchestrating-playable-build",
+      "reviewStatus": "pending",
+      "legacyFrontmatter": {
+        "tools": "Read, Grep, Glob, Bash, Edit, Write"
+      },
+      "files": [
+        {
+          "sourcePath": ".agents/skills/game__orchestrating-playable-build/SKILL.md",
+          "path": "SKILL.md",
+          "sourceSha256": "2052f6302d39ba2da520057be7026f2b48e53e674f5fbb950dc681b5d53a89e9",
+          "sha256": "9ccf0c31b41d461012e9e90d7c2af7a40dd1c81d0aade043c388399ae885d7d0",
+          "transformations": [
+            "canonical-skill-identifiers",
+            "portable-frontmatter"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "game-creation-writing-game-spec",
+      "sourceId": "game-creation__writing-game-spec",
+      "sourceDirectory": ".agents/skills/game-creation__writing-game-spec",
+      "reviewStatus": "pending",
+      "legacyFrontmatter": {},
+      "files": [
+        {
+          "sourcePath": ".agents/skills/game-creation__writing-game-spec/SKILL.md",
+          "path": "SKILL.md",
+          "sourceSha256": "8cb22440456a20aaccbc3c814ee5cfc33e5780350e7276318564565edb67a63a",
+          "sha256": "9d7769350fcd590ecf91f44dcaf308fd46326cba182b0626e8ebce33560cb59f",
+          "transformations": [
+            "canonical-skill-identifiers"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "game-creation-selecting-initial-template",
+      "sourceId": "game-creation__selecting-initial-template",
+      "sourceDirectory": ".agents/skills/game-creation__selecting-initial-template",
+      "reviewStatus": "pending",
+      "legacyFrontmatter": {},
+      "files": [
+        {
+          "sourcePath": ".agents/skills/game-creation__selecting-initial-template/SKILL.md",
+          "path": "SKILL.md",
+          "sourceSha256": "b5d63b928e69cbe67ad728f4e71c3421db032b57928bfa23dc7b35711a1485eb",
+          "sha256": "280082c8b02ea2419112bd0d4ac66dae55071aff055a0c6fd6068a6d7ae0c669",
+          "transformations": [
+            "canonical-skill-identifiers"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "game-design-ensuring-design-coherence",
+      "sourceId": "game-design__ensuring-design-coherence",
+      "sourceDirectory": ".agents/skills/game-design__ensuring-design-coherence",
+      "reviewStatus": "pending",
+      "legacyFrontmatter": {},
+      "files": [
+        {
+          "sourcePath": ".agents/skills/game-design__ensuring-design-coherence/SKILL.md",
+          "path": "SKILL.md",
+          "sourceSha256": "dda5cbbe52af7ef82227d056b07052f82e719e6755ee2423b3f1c5b7d43275a8",
+          "sha256": "6d6768f24cf6c6c3837c3b8663f3b673f19bdefb294194db367d5bd07feac16e",
+          "transformations": [
+            "canonical-skill-identifiers"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "whitepaper-analyze-mmo-whitepaper",
+      "sourceId": "whitepaper__analyze-mmo-whitepaper",
+      "sourceDirectory": ".agents/skills/game__genre-routing/references/whitepaper__analyze-mmo-whitepaper",
+      "reviewStatus": "pending",
+      "legacyFrontmatter": {},
+      "files": [
+        {
+          "sourcePath": ".agents/skills/game__genre-routing/references/whitepaper__analyze-mmo-whitepaper/SKILL.md",
+          "path": "SKILL.md",
+          "sourceSha256": "3c8cb9a3ece5c0450c8e1fa520b3ce136f6a9c58f99c51af71ff223bb0e8474c",
+          "sha256": "2c2d5e6f65df35d4e18b0b8ac5027b9fcd51bb105b4d2a5bab1c3552f6c6ee68",
+          "transformations": [
+            "canonical-skill-identifiers"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "game-building-core-loop",
+      "sourceId": "game__building-core-loop",
+      "sourceDirectory": ".agents/skills/game__building-core-loop",
+      "reviewStatus": "pending",
+      "legacyFrontmatter": {
+        "tools": [
+          "Read",
+          "Grep",
+          "Glob",
+          "Edit",
+          "Write"
+        ],
+        "model": "opus"
+      },
+      "files": [
+        {
+          "sourcePath": ".agents/skills/game__building-core-loop/SKILL.md",
+          "path": "SKILL.md",
+          "sourceSha256": "8f2aa4f99cb36905ddc1ddfa191f193b7b396af3d08da82e35f4be93319b63de",
+          "sha256": "da5d363e46fc46b120e8736a854d166197e7aa25e9e9dcc6c44e6b94143d0e1b",
+          "transformations": [
+            "canonical-skill-identifiers",
+            "portable-frontmatter"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "game-designing-systems",
+      "sourceId": "game__designing-systems",
+      "sourceDirectory": ".agents/skills/game__designing-systems",
+      "reviewStatus": "pending",
+      "legacyFrontmatter": {
+        "tools": "Read, Grep, Glob, Bash, Edit, Write"
+      },
+      "files": [
+        {
+          "sourcePath": ".agents/skills/game__designing-systems/SKILL.md",
+          "path": "SKILL.md",
+          "sourceSha256": "e4f5f9d58745a3f72b71e216d9f13bd9e2d61600599aa517e19f5a04a167162c",
+          "sha256": "b9d5bc07f91ace07e1fc2dcce80a8888cb92d7884bd16ac5dc25a7c5df3e3c93",
+          "transformations": [
+            "canonical-skill-identifiers",
+            "portable-frontmatter"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "game-building-combat-damage",
+      "sourceId": "game__building-combat-damage",
+      "sourceDirectory": ".agents/skills/game__building-combat-damage",
+      "reviewStatus": "pending",
+      "legacyFrontmatter": {
+        "tools": [
+          "Read",
+          "Grep",
+          "Glob",
+          "Edit",
+          "Write"
+        ],
+        "model": "opus"
+      },
+      "files": [
+        {
+          "sourcePath": ".agents/skills/game__building-combat-damage/SKILL.md",
+          "path": "SKILL.md",
+          "sourceSha256": "23ce33d3df060bf0fbb3dd846848e4757269edbca8aaa212fecbc10b22f6df79",
+          "sha256": "d2993be524d1a3e83e8dd1eb84eb93df38a7c6e88a2d3795fbf91b9ec33c2048",
+          "transformations": [
+            "canonical-skill-identifiers",
+            "portable-frontmatter",
+            "legacy-skill-alias:game-juice->game-adding-juice"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "game-building-inventory-system",
+      "sourceId": "game__building-inventory-system",
+      "sourceDirectory": ".agents/skills/game__building-inventory-system",
+      "reviewStatus": "pending",
+      "legacyFrontmatter": {
+        "tools": [
+          "Read",
+          "Grep",
+          "Glob",
+          "Edit",
+          "Write"
+        ],
+        "model": "opus"
+      },
+      "files": [
+        {
+          "sourcePath": ".agents/skills/game__building-inventory-system/SKILL.md",
+          "path": "SKILL.md",
+          "sourceSha256": "faa42584ca5295d50c2147e0e5d96c89b6695fd886e5b7927ca8b4dd6112c8bd",
+          "sha256": "50c45fa8aeb825f196473562bd0dc452830fc4c947a42abd412fb2e88853ebc9",
+          "transformations": [
+            "canonical-skill-identifiers",
+            "portable-frontmatter"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "game-building-loot-systems",
+      "sourceId": "game__building-loot-systems",
+      "sourceDirectory": ".agents/skills/game__building-loot-systems",
+      "reviewStatus": "pending",
+      "legacyFrontmatter": {
+        "tools": [
+          "Read",
+          "Grep",
+          "Glob",
+          "Edit",
+          "Write"
+        ],
+        "model": "opus"
+      },
+      "files": [
+        {
+          "sourcePath": ".agents/skills/game__building-loot-systems/SKILL.md",
+          "path": "SKILL.md",
+          "sourceSha256": "2c43ccf8606e19c795fa332db269c114bc60ec6477ac4c4ec556c5b528f1a592",
+          "sha256": "7e46d49efb658d6979815abd64e863f4cb15c0eca37a76c5b7d6f56429aa2ef6",
+          "transformations": [
+            "canonical-skill-identifiers",
+            "portable-frontmatter"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "game-generating-procedural-content",
+      "sourceId": "game__generating-procedural-content",
+      "sourceDirectory": ".agents/skills/game__generating-procedural-content",
+      "reviewStatus": "pending",
+      "legacyFrontmatter": {
+        "tools": [
+          "Read",
+          "Grep",
+          "Glob",
+          "Edit",
+          "Write"
+        ],
+        "model": "opus"
+      },
+      "files": [
+        {
+          "sourcePath": ".agents/skills/game__generating-procedural-content/SKILL.md",
+          "path": "SKILL.md",
+          "sourceSha256": "99d6ad9171db0ee983e6f2bdfb39bf7789951668a5d34fbc1b01adc531657aa4",
+          "sha256": "5ef6255607b64198f8f767c2380579bcfcbdca67d7ebd13d86da271ceb110b72",
+          "transformations": [
+            "canonical-skill-identifiers",
+            "portable-frontmatter",
+            "legacy-skill-alias:game-juice->game-adding-juice"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "game-tuning-economy-progression",
+      "sourceId": "game__tuning-economy-progression",
+      "sourceDirectory": ".agents/skills/game__tuning-economy-progression",
+      "reviewStatus": "pending",
+      "legacyFrontmatter": {
+        "tools": [
+          "Read",
+          "Grep",
+          "Glob",
+          "Edit",
+          "Write"
+        ],
+        "model": "opus"
+      },
+      "files": [
+        {
+          "sourcePath": ".agents/skills/game__tuning-economy-progression/SKILL.md",
+          "path": "SKILL.md",
+          "sourceSha256": "852317cc09932a2b192401b504868782fa5ec8ddc3f853081144e7fc5bf1ea4d",
+          "sha256": "8716fad5c29ea9d5753b795b535dd00f0cb5d5ecd92fd9badfcede1fd81a8531",
+          "transformations": [
+            "canonical-skill-identifiers",
+            "portable-frontmatter",
+            "legacy-skill-alias:game-juice->game-adding-juice"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "game-ai-architecting-ai",
+      "sourceId": "game-ai__architecting-ai",
+      "sourceDirectory": ".agents/skills/game-ai__architecting-ai",
+      "reviewStatus": "pending",
+      "legacyFrontmatter": {},
+      "files": [
+        {
+          "sourcePath": ".agents/skills/game-ai__architecting-ai/MANIFEST.md",
+          "path": "MANIFEST.md",
+          "sourceSha256": "635ad97309b86429e345de3b6cba0676627fa675c6d62a057823094f0fcd7b86",
+          "sha256": "635ad97309b86429e345de3b6cba0676627fa675c6d62a057823094f0fcd7b86",
+          "transformations": []
+        },
+        {
+          "sourcePath": ".agents/skills/game-ai__architecting-ai/README.md",
+          "path": "README.md",
+          "sourceSha256": "0a63fe41bc8e66f90a74224fd94951a8c5b2d11f41286f635aab63243c35641d",
+          "sha256": "0a63fe41bc8e66f90a74224fd94951a8c5b2d11f41286f635aab63243c35641d",
+          "transformations": []
+        },
+        {
+          "sourcePath": ".agents/skills/game-ai__architecting-ai/SKILL.md",
+          "path": "SKILL.md",
+          "sourceSha256": "3bbe27aaa1edc2622f5fe38f52488eb8b77f9fbca15014b3e8921a25369519f5",
+          "sha256": "4e62b57b0908baddeb9738ba093cac1fbf0800a4e8a3e9a6a0d3bed8f7f64bf3",
+          "transformations": [
+            "canonical-skill-identifiers"
+          ]
+        },
+        {
+          "sourcePath": ".agents/skills/game-ai__architecting-ai/checklists/architecture_questionnaire.md",
+          "path": "checklists/architecture_questionnaire.md",
+          "sourceSha256": "5154b514fa7cba2158b640024c5b0b1a66dc6b1fd0d625a8c51902a6a2408ddd",
+          "sha256": "5154b514fa7cba2158b640024c5b0b1a66dc6b1fd0d625a8c51902a6a2408ddd",
+          "transformations": []
+        },
+        {
+          "sourcePath": ".agents/skills/game-ai__architecting-ai/checklists/final_review.md",
+          "path": "checklists/final_review.md",
+          "sourceSha256": "2df9656ff1aed31de7c8bd760612915745e1dbaede3603cade048b6e89c45b8c",
+          "sha256": "2df9656ff1aed31de7c8bd760612915745e1dbaede3603cade048b6e89c45b8c",
+          "transformations": []
+        },
+        {
+          "sourcePath": ".agents/skills/game-ai__architecting-ai/checklists/runtime_llm_gate.md",
+          "path": "checklists/runtime_llm_gate.md",
+          "sourceSha256": "818d880abaf18c28a787fa7d1eb4ef788bc84d83e05a86c51c6cde50ddba9384",
+          "sha256": "818d880abaf18c28a787fa7d1eb4ef788bc84d83e05a86c51c6cde50ddba9384",
+          "transformations": []
+        },
+        {
+          "sourcePath": ".agents/skills/game-ai__architecting-ai/examples/ai_spec_template.md",
+          "path": "examples/ai_spec_template.md",
+          "sourceSha256": "351fd3d9ffda7b2359b9aa2713e5d7b4db6395a9e92cf3ae13ed10fd0065279f",
+          "sha256": "351fd3d9ffda7b2359b9aa2713e5d7b4db6395a9e92cf3ae13ed10fd0065279f",
+          "transformations": []
+        },
+        {
+          "sourcePath": ".agents/skills/game-ai__architecting-ai/examples/bad_vs_good.md",
+          "path": "examples/bad_vs_good.md",
+          "sourceSha256": "8f455a82022dde373afcec7207aed2f5f2b14460b7731e709f6dc744625c6f92",
+          "sha256": "8f455a82022dde373afcec7207aed2f5f2b14460b7731e709f6dc744625c6f92",
+          "transformations": []
+        },
+        {
+          "sourcePath": ".agents/skills/game-ai__architecting-ai/examples/territory_bot_spec.md",
+          "path": "examples/territory_bot_spec.md",
+          "sourceSha256": "453fdc3a17f7d015e76146db0624e527a8a1b89a293172927fccc1ff4f810881",
+          "sha256": "453fdc3a17f7d015e76146db0624e527a8a1b89a293172927fccc1ff4f810881",
+          "transformations": []
+        },
+        {
+          "sourcePath": ".agents/skills/game-ai__architecting-ai/modules/README.md",
+          "path": "modules/README.md",
+          "sourceSha256": "24ffd10d49550d11de1a95243469a5399512280f5662127feb6307bd8889195e",
+          "sha256": "24ffd10d49550d11de1a95243469a5399512280f5662127feb6307bd8889195e",
+          "transformations": []
+        },
+        {
+          "sourcePath": ".agents/skills/game-ai__architecting-ai/modules/autoplay_testing.md",
+          "path": "modules/autoplay_testing.md",
+          "sourceSha256": "657ef7b51d2c3177461dfd2efbab43ca2ec0feff189cd0828736e6e7d49c2d84",
+          "sha256": "657ef7b51d2c3177461dfd2efbab43ca2ec0feff189cd0828736e6e7d49c2d84",
+          "transformations": []
+        },
+        {
+          "sourcePath": ".agents/skills/game-ai__architecting-ai/modules/combat_shooter.md",
+          "path": "modules/combat_shooter.md",
+          "sourceSha256": "53ade3485684cbb93eca2294d1d79cd3037a3d2f74b70c8820a9ddb85e12321f",
+          "sha256": "53ade3485684cbb93eca2294d1d79cd3037a3d2f74b70c8820a9ddb85e12321f",
+          "transformations": []
+        },
+        {
+          "sourcePath": ".agents/skills/game-ai__architecting-ai/modules/companion_social.md",
+          "path": "modules/companion_social.md",
+          "sourceSha256": "182b2a819f3fbecb88d5101a28525fe6850b76817f65dde516f7ed2f0dec20bd",
+          "sha256": "182b2a819f3fbecb88d5101a28525fe6850b76817f65dde516f7ed2f0dec20bd",
+          "transformations": []
+        },
+        {
+          "sourcePath": ".agents/skills/game-ai__architecting-ai/modules/racing_chase.md",
+          "path": "modules/racing_chase.md",
+          "sourceSha256": "127fed40c38c3634682a8a20359b0dccabbdce24965792937ec75a9d7f73c7af",
+          "sha256": "127fed40c38c3634682a8a20359b0dccabbdce24965792937ec75a9d7f73c7af",
+          "transformations": []
+        },
+        {
+          "sourcePath": ".agents/skills/game-ai__architecting-ai/modules/simulation_economy.md",
+          "path": "modules/simulation_economy.md",
+          "sourceSha256": "cb92cd9b7f888225498e824b2d7148a1d7259788cfec83868bb6d6b94448ea50",
+          "sha256": "cb92cd9b7f888225498e824b2d7148a1d7259788cfec83868bb6d6b94448ea50",
+          "transformations": []
+        },
+        {
+          "sourcePath": ".agents/skills/game-ai__architecting-ai/modules/sports_vr.md",
+          "path": "modules/sports_vr.md",
+          "sourceSha256": "cb2857b0293d1a81ea6b29455429d279a89f878caf21e8285085fc8d991fa783",
+          "sha256": "cb2857b0293d1a81ea6b29455429d279a89f878caf21e8285085fc8d991fa783",
+          "transformations": []
+        },
+        {
+          "sourcePath": ".agents/skills/game-ai__architecting-ai/modules/strategy_tactics.md",
+          "path": "modules/strategy_tactics.md",
+          "sourceSha256": "70e9603c99f201e4558d55c27b23a496d7656a0919054c554f49f755e7b8145e",
+          "sha256": "70e9603c99f201e4558d55c27b23a496d7656a0919054c554f49f755e7b8145e",
+          "transformations": []
+        },
+        {
+          "sourcePath": ".agents/skills/game-ai__architecting-ai/modules/territory_arena.md",
+          "path": "modules/territory_arena.md",
+          "sourceSha256": "b94c83093e9c5d04b1636629e690dc39c76e0ddd0ae6ff33b3b26cec48e834da",
+          "sha256": "b94c83093e9c5d04b1636629e690dc39c76e0ddd0ae6ff33b3b26cec48e834da",
+          "transformations": []
+        },
+        {
+          "sourcePath": ".agents/skills/game-ai__architecting-ai/references/ai_design_contract.md",
+          "path": "references/ai_design_contract.md",
+          "sourceSha256": "0b1e423ea81af3b77218852b7868ef1838df3a21ee0642a25147049fef8dda5c",
+          "sha256": "0b1e423ea81af3b77218852b7868ef1838df3a21ee0642a25147049fef8dda5c",
+          "transformations": []
+        },
+        {
+          "sourcePath": ".agents/skills/game-ai__architecting-ai/references/architecture_selection.md",
+          "path": "references/architecture_selection.md",
+          "sourceSha256": "abf4cf05298ed7fe1722170cb6682912bca070781f8467886a0d185551d1aaad",
+          "sha256": "abf4cf05298ed7fe1722170cb6682912bca070781f8467886a0d185551d1aaad",
+          "transformations": []
+        },
+        {
+          "sourcePath": ".agents/skills/game-ai__architecting-ai/references/director_layer.md",
+          "path": "references/director_layer.md",
+          "sourceSha256": "a21d17678793086f82ff0e95085f8d5e60b55199400adca3f60403c6b1402e47",
+          "sha256": "a21d17678793086f82ff0e95085f8d5e60b55199400adca3f60403c6b1402e47",
+          "transformations": []
+        },
+        {
+          "sourcePath": ".agents/skills/game-ai__architecting-ai/references/player_perception_fairness.md",
+          "path": "references/player_perception_fairness.md",
+          "sourceSha256": "cca5f9287ff7f80aa4681e343f639f272c50c6ba62c1ccac6666d6cfdf50b83a",
+          "sha256": "cca5f9287ff7f80aa4681e343f639f272c50c6ba62c1ccac6666d6cfdf50b83a",
+          "transformations": []
+        },
+        {
+          "sourcePath": ".agents/skills/game-ai__architecting-ai/references/primitive_discovery.md",
+          "path": "references/primitive_discovery.md",
+          "sourceSha256": "6041c755f04ffab96953705de9eadb3f22f26a433a8fa091a58a01bac7b1e1dc",
+          "sha256": "6041c755f04ffab96953705de9eadb3f22f26a433a8fa091a58a01bac7b1e1dc",
+          "transformations": []
+        },
+        {
+          "sourcePath": ".agents/skills/game-ai__architecting-ai/references/pseudocode_patterns.md",
+          "path": "references/pseudocode_patterns.md",
+          "sourceSha256": "8924428903b1fd3132a9e30b2452b1b95b51a65697f3f76083e779fe40185b1f",
+          "sha256": "8924428903b1fd3132a9e30b2452b1b95b51a65697f3f76083e779fe40185b1f",
+          "transformations": []
+        },
+        {
+          "sourcePath": ".agents/skills/game-ai__architecting-ai/references/source_inspiration.md",
+          "path": "references/source_inspiration.md",
+          "sourceSha256": "3c3afe295e2cdf95d52743682b2e1db3f6918632c9f897df7b5773889c54a6b9",
+          "sha256": "3c3afe295e2cdf95d52743682b2e1db3f6918632c9f897df7b5773889c54a6b9",
+          "transformations": []
+        },
+        {
+          "sourcePath": ".agents/skills/game-ai__architecting-ai/references/testing_observability.md",
+          "path": "references/testing_observability.md",
+          "sourceSha256": "d994ef432c9fde4c931712d670b8e4b8ba0aa015d724156a9b8b79a3ee28462a",
+          "sha256": "d994ef432c9fde4c931712d670b8e4b8ba0aa015d724156a9b8b79a3ee28462a",
+          "transformations": []
+        }
+      ]
+    },
+    {
+      "id": "physics-creating-interaction-system",
+      "sourceId": "physics__creating-interaction-system",
+      "sourceDirectory": ".agents/skills/physics__creating-interaction-system",
+      "reviewStatus": "pending",
+      "legacyFrontmatter": {},
+      "files": [
+        {
+          "sourcePath": ".agents/skills/physics__creating-interaction-system/SKILL.md",
+          "path": "SKILL.md",
+          "sourceSha256": "38d2ab00a7cd7f513ab6ccd59c096aaff46d83f5550ab5cf30451e138713fa11",
+          "sha256": "832b98f3f6f7cb7e2810a870632814bcc62796e30c838a5c32f08d0bb34833b5",
+          "transformations": [
+            "canonical-skill-identifiers"
+          ]
+        },
+        {
+          "sourcePath": ".agents/skills/physics__creating-interaction-system/references/interaction-patterns.md",
+          "path": "references/interaction-patterns.md",
+          "sourceSha256": "ba1b8cfc91863fb514c8473899f1770f3315b777c1e83119928bddc68353eaa2",
+          "sha256": "ba1b8cfc91863fb514c8473899f1770f3315b777c1e83119928bddc68353eaa2",
+          "transformations": []
+        },
+        {
+          "sourcePath": ".agents/skills/physics__creating-interaction-system/references/runtime-contract.md",
+          "path": "references/runtime-contract.md",
+          "sourceSha256": "25d024a8678fe02d5aa98c8d9188e743671c5a856a3458a9ac4c47b38586e530",
+          "sha256": "25d024a8678fe02d5aa98c8d9188e743671c5a856a3458a9ac4c47b38586e530",
+          "transformations": []
+        },
+        {
+          "sourcePath": ".agents/skills/physics__creating-interaction-system/references/tuning-and-tests.md",
+          "path": "references/tuning-and-tests.md",
+          "sourceSha256": "dbf9ea9505a61d1dcc4d92fd76a47f25e358b655cd42daef82fc20f5c2cd9967",
+          "sha256": "dbf9ea9505a61d1dcc4d92fd76a47f25e358b655cd42daef82fc20f5c2cd9967",
+          "transformations": []
+        }
+      ]
+    },
+    {
+      "id": "art-direction-defining-game-art",
+      "sourceId": "art-direction__defining-game-art",
+      "sourceDirectory": ".agents/skills/art-direction__defining-game-art",
+      "reviewStatus": "pending",
+      "legacyFrontmatter": {},
+      "files": [
+        {
+          "sourcePath": ".agents/skills/art-direction__defining-game-art/2d__sea-of-stars/README.md",
+          "path": "2d__sea-of-stars/README.md",
+          "sourceSha256": "0fbb0eac83c621b7d7f8e88ba5243173b8392b0acb2638891fb8bb8ff61271fc",
+          "sha256": "0fbb0eac83c621b7d7f8e88ba5243173b8392b0acb2638891fb8bb8ff61271fc",
+          "transformations": []
+        },
+        {
+          "sourcePath": ".agents/skills/art-direction__defining-game-art/2d__sea-of-stars/references/08-prompt-template-and-concrete-examples.md",
+          "path": "2d__sea-of-stars/references/08-prompt-template-and-concrete-examples.md",
+          "sourceSha256": "36a12827a2243afcb471afddd50ade2cc857a1b1aaaea8186a4e95c7acb88b9a",
+          "sha256": "36a12827a2243afcb471afddd50ade2cc857a1b1aaaea8186a4e95c7acb88b9a",
+          "transformations": []
+        },
+        {
+          "sourcePath": ".agents/skills/art-direction__defining-game-art/2d__sea-of-stars/references/animation-motion-quality-bar.md",
+          "path": "2d__sea-of-stars/references/animation-motion-quality-bar.md",
+          "sourceSha256": "1573bed4fc38955c3c7272de523616f1b8285f69f93446252d43b5ee7c700f63",
+          "sha256": "1573bed4fc38955c3c7272de523616f1b8285f69f93446252d43b5ee7c700f63",
+          "transformations": []
+        },
+        {
+          "sourcePath": ".agents/skills/art-direction__defining-game-art/2d__sea-of-stars/references/character-sprite-quality-bar.md",
+          "path": "2d__sea-of-stars/references/character-sprite-quality-bar.md",
+          "sourceSha256": "4be2dbd19ba2e2e2c2bdc27b85d1485c3e0b847e0e835e22aa5bc9a635f560a8",
+          "sha256": "4be2dbd19ba2e2e2c2bdc27b85d1485c3e0b847e0e835e22aa5bc9a635f560a8",
+          "transformations": []
+        },
+        {
+          "sourcePath": ".agents/skills/art-direction__defining-game-art/2d__sea-of-stars/references/lighting-fx-scene-integration.md",
+          "path": "2d__sea-of-stars/references/lighting-fx-scene-integration.md",
+          "sourceSha256": "ee7a976dd782fb88c37cc8955c6ff50266d552e865c9d889691ca9c845246a27",
+          "sha256": "ee7a976dd782fb88c37cc8955c6ff50266d552e865c9d889691ca9c845246a27",
+          "transformations": []
+        },
+        {
+          "sourcePath": ".agents/skills/art-direction__defining-game-art/2d__sea-of-stars/references/pipeline-authoring-and-automation.md",
+          "path": "2d__sea-of-stars/references/pipeline-authoring-and-automation.md",
+          "sourceSha256": "35bcc96b6f8c1c0b07c4c20464caafbc134fd0bbe0eb92236d1dbdcb8b660d1f",
+          "sha256": "35bcc96b6f8c1c0b07c4c20464caafbc134fd0bbe0eb92236d1dbdcb8b660d1f",
+          "transformations": []
+        },
+        {
+          "sourcePath": ".agents/skills/art-direction__defining-game-art/2d__sea-of-stars/references/style-language-examples-and-source-positioning.md",
+          "path": "2d__sea-of-stars/references/style-language-examples-and-source-positioning.md",
+          "sourceSha256": "6e3e5b35531c3887c3816a4a9da6fec9c57858a3cefdbe441dafa42a40aaeef3",
+          "sha256": "6e3e5b35531c3887c3816a4a9da6fec9c57858a3cefdbe441dafa42a40aaeef3",
+          "transformations": []
+        },
+        {
+          "sourcePath": ".agents/skills/art-direction__defining-game-art/2d__sea-of-stars/references/validation-rubrics-and-review-protocols.md",
+          "path": "2d__sea-of-stars/references/validation-rubrics-and-review-protocols.md",
+          "sourceSha256": "2b1abaad56e2b8584ca6b33c9cb037b7fd095e4c6894fbdcd94be5ccb6619cd0",
+          "sha256": "2b1abaad56e2b8584ca6b33c9cb037b7fd095e4c6894fbdcd94be5ccb6619cd0",
+          "transformations": []
+        },
+        {
+          "sourcePath": ".agents/skills/art-direction__defining-game-art/2d__sea-of-stars/references/world-tilemap-map-quality-bar.md",
+          "path": "2d__sea-of-stars/references/world-tilemap-map-quality-bar.md",
+          "sourceSha256": "830b05a892e269a8d419922afa666e41df20a5aa50b30b84cfe89d4c7d4ed052",
+          "sha256": "830b05a892e269a8d419922afa666e41df20a5aa50b30b84cfe89d4c7d4ed052",
+          "transformations": []
+        },
+        {
+          "sourcePath": ".agents/skills/art-direction__defining-game-art/3d__overwatch/README.md",
+          "path": "3d__overwatch/README.md",
+          "sourceSha256": "c65026cb83eacec8a62beb1148b3090bf3699936a1a0671c6b4a9445c87606e9",
+          "sha256": "c65026cb83eacec8a62beb1148b3090bf3699936a1a0671c6b4a9445c87606e9",
+          "transformations": []
+        },
+        {
+          "sourcePath": ".agents/skills/art-direction__defining-game-art/3d__overwatch/references/01-research-and-source-positioning.md",
+          "path": "3d__overwatch/references/01-research-and-source-positioning.md",
+          "sourceSha256": "391314af809b132fa1e325508947c9031a592fb2645f9edd0f546c733ff6f8fd",
+          "sha256": "391314af809b132fa1e325508947c9031a592fb2645f9edd0f546c733ff6f8fd",
+          "transformations": []
+        },
+        {
+          "sourcePath": ".agents/skills/art-direction__defining-game-art/3d__overwatch/references/02-hero-character-quality-bar.md",
+          "path": "3d__overwatch/references/02-hero-character-quality-bar.md",
+          "sourceSha256": "2c034c09b4ad83f08d4760c24224809563403438f2984fccc6771ceebd677b28",
+          "sha256": "2c034c09b4ad83f08d4760c24224809563403438f2984fccc6771ceebd677b28",
+          "transformations": []
+        },
+        {
+          "sourcePath": ".agents/skills/art-direction__defining-game-art/3d__overwatch/references/03-weapons-abilities-vfx-quality-bar.md",
+          "path": "3d__overwatch/references/03-weapons-abilities-vfx-quality-bar.md",
+          "sourceSha256": "1d65b7db13c91a0c8a9366a0a4a0fb5d5db46befec842ffea6cfe036f3b7e0d4",
+          "sha256": "1d65b7db13c91a0c8a9366a0a4a0fb5d5db46befec842ffea6cfe036f3b7e0d4",
+          "transformations": []
+        },
+        {
+          "sourcePath": ".agents/skills/art-direction__defining-game-art/3d__overwatch/references/04-skins-cosmetics-live-service-quality-bar.md",
+          "path": "3d__overwatch/references/04-skins-cosmetics-live-service-quality-bar.md",
+          "sourceSha256": "1736edd10b22612478a98ecd3ca36567d68b0391f722a7c1025a9620dcdb99c0",
+          "sha256": "1736edd10b22612478a98ecd3ca36567d68b0391f722a7c1025a9620dcdb99c0",
+          "transformations": []
+        },
+        {
+          "sourcePath": ".agents/skills/art-direction__defining-game-art/3d__overwatch/references/05-maps-environments-modes-quality-bar.md",
+          "path": "3d__overwatch/references/05-maps-environments-modes-quality-bar.md",
+          "sourceSha256": "eb5df7b8baf56201df8c507f790ff1209c74d784006f5c36c0d8ccf6e7f9f9e9",
+          "sha256": "eb5df7b8baf56201df8c507f790ff1209c74d784006f5c36c0d8ccf6e7f9f9e9",
+          "transformations": []
+        },
+        {
+          "sourcePath": ".agents/skills/art-direction__defining-game-art/3d__overwatch/references/06-animation-camera-presentation-quality-bar.md",
+          "path": "3d__overwatch/references/06-animation-camera-presentation-quality-bar.md",
+          "sourceSha256": "e8594fde304ccd9f25c792612c8f89dd61843f83408eba5ae34d986d3a15cb50",
+          "sha256": "e8594fde304ccd9f25c792612c8f89dd61843f83408eba5ae34d986d3a15cb50",
+          "transformations": []
+        },
+        {
+          "sourcePath": ".agents/skills/art-direction__defining-game-art/3d__overwatch/references/07-pipeline-validation-review-protocols.md",
+          "path": "3d__overwatch/references/07-pipeline-validation-review-protocols.md",
+          "sourceSha256": "259df5aef17a80bfbd2daf0df380e737795baaf0262da2ec5fd1c37c979afee1",
+          "sha256": "259df5aef17a80bfbd2daf0df380e737795baaf0262da2ec5fd1c37c979afee1",
+          "transformations": []
+        },
+        {
+          "sourcePath": ".agents/skills/art-direction__defining-game-art/3d__overwatch/references/08-manual-prompt-probes.md",
+          "path": "3d__overwatch/references/08-manual-prompt-probes.md",
+          "sourceSha256": "34b3cc4c7e8cab6641bb02a29c415b9805a28c6c15eaad8d3873ba885ee24ad4",
+          "sha256": "34b3cc4c7e8cab6641bb02a29c415b9805a28c6c15eaad8d3873ba885ee24ad4",
+          "transformations": []
+        },
+        {
+          "sourcePath": ".agents/skills/art-direction__defining-game-art/SKILL.md",
+          "path": "SKILL.md",
+          "sourceSha256": "7cc22ea5858e1d9c6eaee835449a9e0ba06763579f6fd5c74a2eed913e990b9b",
+          "sha256": "684a214dcf957a0e3f8f7c5599c2a5191fad7dbe2f2812c21610df33da82fcbb",
+          "transformations": [
+            "canonical-skill-identifiers"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "game-art-directing",
+      "sourceId": "game__art-directing",
+      "sourceDirectory": ".agents/skills/game__art-directing",
+      "reviewStatus": "pending",
+      "legacyFrontmatter": {
+        "tools": [
+          "Read",
+          "Grep",
+          "Glob",
+          "Edit",
+          "Write"
+        ],
+        "model": "opus"
+      },
+      "files": [
+        {
+          "sourcePath": ".agents/skills/game__art-directing/SKILL.md",
+          "path": "SKILL.md",
+          "sourceSha256": "d89bb8034a4593467f97dbda2f8342f6a32199cdaf131af03ac7c875a1512052",
+          "sha256": "5c39164b1b38d3c176e5f9677c1e74b74c22cfe229118b28aee053cd74a46523",
+          "transformations": [
+            "canonical-skill-identifiers",
+            "portable-frontmatter"
+          ]
+        },
+        {
+          "sourcePath": ".agents/skills/game__art-directing/references/active-play-visual-quality-gate.md",
+          "path": "references/active-play-visual-quality-gate.md",
+          "sourceSha256": "ab99520af92c72cd54e954e6addf6bfe24bc93733f9427d09ca2bf1480f3d078",
+          "sha256": "ab99520af92c72cd54e954e6addf6bfe24bc93733f9427d09ca2bf1480f3d078",
+          "transformations": []
+        }
+      ]
+    },
+    {
+      "id": "game-assets-generating-images",
+      "sourceId": "game-assets__generating-images",
+      "sourceDirectory": ".agents/skills/game-assets__generating-images",
+      "reviewStatus": "pending",
+      "legacyFrontmatter": {},
+      "files": [
+        {
+          "sourcePath": ".agents/skills/game-assets__generating-images/SKILL.md",
+          "path": "SKILL.md",
+          "sourceSha256": "f4ade703ca29e8ace19adccc33e6c8084699daec668a38c940f89e3d70b7b467",
+          "sha256": "262d49fa7b53c4ae08d7dfcfb3f88c90f88dd2a5a970eccfbf9959b658a5ba7e",
+          "transformations": [
+            "canonical-skill-identifiers"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "game-adding-juice",
+      "sourceId": "game__adding-juice",
+      "sourceDirectory": ".agents/skills/game__adding-juice",
+      "reviewStatus": "pending",
+      "legacyFrontmatter": {
+        "tools": [
+          "Read",
+          "Grep",
+          "Glob",
+          "Edit",
+          "Write"
+        ],
+        "model": "opus"
+      },
+      "files": [
+        {
+          "sourcePath": ".agents/skills/game__adding-juice/SKILL.md",
+          "path": "SKILL.md",
+          "sourceSha256": "7c055ad68f9d4482fb4922f725384818ac746766ce9e0e22d1b049b5f8b9b71c",
+          "sha256": "de399db46b0ca0b220ca6f60504b8f40068a22db68f246b2770d7e33490e408b",
+          "transformations": [
+            "canonical-skill-identifiers",
+            "portable-frontmatter",
+            "reference-filename:references/characrer-movement.md->references/character-movement.md"
+          ]
+        },
+        {
+          "sourcePath": ".agents/skills/game__adding-juice/references/character-movement.md",
+          "path": "references/character-movement.md",
+          "sourceSha256": "9833dcb7c7acd1758e0cb4db3d134ee6ab5dd12c379955937229f3cb4dcf2ea3",
+          "sha256": "9833dcb7c7acd1758e0cb4db3d134ee6ab5dd12c379955937229f3cb4dcf2ea3",
+          "transformations": []
+        }
+      ]
+    },
+    {
+      "id": "design-designing-game-ui-for-idavoll",
+      "sourceId": "design__designing-game-ui-for-idavoll",
+      "sourceDirectory": ".agents/skills/design__designing-game-ui-for-idavoll",
+      "reviewStatus": "pending",
+      "legacyFrontmatter": {},
+      "files": [
+        {
+          "sourcePath": ".agents/skills/design__designing-game-ui-for-idavoll/SKILL.md",
+          "path": "SKILL.md",
+          "sourceSha256": "b0d3ab2b0d2591ac2f766181e2d816fdb5c18cac6cb6d986423b64143526775e",
+          "sha256": "c09cd995002676a51e7f0e22c3014b57934ab6a478dda93af93c9cb4d14f2c98",
+          "transformations": [
+            "canonical-skill-identifiers"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ui-revamping-game-shell-ui",
+      "sourceId": "ui__revamping-game-shell-ui",
+      "sourceDirectory": ".agents/skills/ui__revamping-game-shell-ui",
+      "reviewStatus": "pending",
+      "legacyFrontmatter": {
+        "tools": [
+          "Read",
+          "Grep",
+          "Glob",
+          "Edit",
+          "Write"
+        ],
+        "model": "opus"
+      },
+      "files": [
+        {
+          "sourcePath": ".agents/skills/ui__revamping-game-shell-ui/SKILL.md",
+          "path": "SKILL.md",
+          "sourceSha256": "6dd314afadc3d8d54475de7e4ef570ef1b42892eeb15ce69bd096717b5b72385",
+          "sha256": "e289eb1acac85d033b7b0f400ab6f7bab8a2b25a69019a96f65063909b30469d",
+          "transformations": [
+            "canonical-skill-identifiers",
+            "portable-frontmatter"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "design-designing-end-screen",
+      "sourceId": "design__designing-end-screen",
+      "sourceDirectory": ".agents/skills/design__designing-end-screen",
+      "reviewStatus": "pending",
+      "legacyFrontmatter": {},
+      "files": [
+        {
+          "sourcePath": ".agents/skills/design__designing-end-screen/SKILL.md",
+          "path": "SKILL.md",
+          "sourceSha256": "d23e90207edb56b6518aa623641a4260ab64b54657cd720bb4a041c054f407be",
+          "sha256": "b669e0e7b1335dbbc24a9b6f63411de9e15f68b66bab6c4f22b276ff3e508a49",
+          "transformations": [
+            "canonical-skill-identifiers"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "game-onboarding-designing-game-onboarding",
+      "sourceId": "game-onboarding__designing-game-onboarding",
+      "sourceDirectory": ".agents/skills/game-onboarding__designing-game-onboarding",
+      "reviewStatus": "pending",
+      "legacyFrontmatter": {},
+      "files": [
+        {
+          "sourcePath": ".agents/skills/game-onboarding__designing-game-onboarding/SKILL.md",
+          "path": "SKILL.md",
+          "sourceSha256": "efd6e6d55675760bf263d4668a02bc65109886243d8aa207e405754031a2febd",
+          "sha256": "ff0ab1ddb4fdcbbd71110975766b0038f74a28e0c9eb5598c915d7b203a5369f",
+          "transformations": [
+            "canonical-skill-identifiers",
+            "reference-filename:references/hades-first-death-loop-gold-star.md->references/hades-first-run-gold-star.md"
+          ]
+        },
+        {
+          "sourcePath": ".agents/skills/game-onboarding__designing-game-onboarding/references/eval-cases.md",
+          "path": "references/eval-cases.md",
+          "sourceSha256": "c814dd330d16e238e9c97ed8d6e264837c268a52b5b95785a2b0e9be54691c55",
+          "sha256": "c814dd330d16e238e9c97ed8d6e264837c268a52b5b95785a2b0e9be54691c55",
+          "transformations": []
+        },
+        {
+          "sourcePath": ".agents/skills/game-onboarding__designing-game-onboarding/references/hades-first-run-gold-star.md",
+          "path": "references/hades-first-run-gold-star.md",
+          "sourceSha256": "568a52bed81ddf3fa845366b36094209a8fb4314682a08c9b27c200d3999d7c9",
+          "sha256": "568a52bed81ddf3fa845366b36094209a8fb4314682a08c9b27c200d3999d7c9",
+          "transformations": []
+        },
+        {
+          "sourcePath": ".agents/skills/game-onboarding__designing-game-onboarding/references/megaman-x-highway-gold-star.md",
+          "path": "references/megaman-x-highway-gold-star.md",
+          "sourceSha256": "43c95553d7cc12e042d5df6f2465328cd83c52000ee89e53af6d8de803bf2fdf",
+          "sha256": "43c95553d7cc12e042d5df6f2465328cd83c52000ee89e53af6d8de803bf2fdf",
+          "transformations": []
+        },
+        {
+          "sourcePath": ".agents/skills/game-onboarding__designing-game-onboarding/references/onboarding-beat-canvas.md",
+          "path": "references/onboarding-beat-canvas.md",
+          "sourceSha256": "7b3a98fba71d47a0e255417a2bb628d554ab045f2ea84298e2b3f16da3599b87",
+          "sha256": "7b3a98fba71d47a0e255417a2bb628d554ab045f2ea84298e2b3f16da3599b87",
+          "transformations": []
+        },
+        {
+          "sourcePath": ".agents/skills/game-onboarding__designing-game-onboarding/references/plants-vs-zombies-day-world-gold-star.md",
+          "path": "references/plants-vs-zombies-day-world-gold-star.md",
+          "sourceSha256": "aef15ae7f8b288c933ce78499fb3b18a81a7103c09e2c80be1e7a50755e038be",
+          "sha256": "aef15ae7f8b288c933ce78499fb3b18a81a7103c09e2c80be1e7a50755e038be",
+          "transformations": []
+        },
+        {
+          "sourcePath": ".agents/skills/game-onboarding__designing-game-onboarding/references/review-rubric.md",
+          "path": "references/review-rubric.md",
+          "sourceSha256": "08761046ee36f9d37a64c880efe9afabb3670bc85ab40c4263f9206b4587fdf4",
+          "sha256": "08761046ee36f9d37a64c880efe9afabb3670bc85ab40c4263f9206b4587fdf4",
+          "transformations": []
+        }
+      ]
+    },
+    {
+      "id": "game-proof-auditing-first-playable-comprehension",
+      "sourceId": "game-proof__auditing-first-playable-comprehension",
+      "sourceDirectory": ".agents/skills/game-proof__auditing-first-playable-comprehension",
+      "reviewStatus": "pending",
+      "legacyFrontmatter": {},
+      "files": [
+        {
+          "sourcePath": ".agents/skills/game-proof__auditing-first-playable-comprehension/SKILL.md",
+          "path": "SKILL.md",
+          "sourceSha256": "c4e3ad61749a7282d86cab4769be144b86e968afd657abb5f3f62bead986f6bc",
+          "sha256": "d676355ab27a16a52a7baba8df724ae3f503235e9426a3e233d4fd05b3db8606",
+          "transformations": [
+            "canonical-skill-identifiers"
+          ]
+        },
+        {
+          "sourcePath": ".agents/skills/game-proof__auditing-first-playable-comprehension/scripts/inspect-game-canvas.mjs",
+          "path": "scripts/inspect-game-canvas.mjs",
+          "sourceSha256": "4b4706575624d9baa1222873f8eee6553f4803f7aa42b46f0a09d3ce486c26ef",
+          "sha256": "4b4706575624d9baa1222873f8eee6553f4803f7aa42b46f0a09d3ce486c26ef",
+          "transformations": []
+        }
+      ]
+    },
+    {
+      "id": "game-qa",
+      "sourceId": "game__qa",
+      "sourceDirectory": ".agents/skills/game__qa",
+      "reviewStatus": "pending",
+      "legacyFrontmatter": {},
+      "files": [
+        {
+          "sourcePath": ".agents/skills/game__qa/SKILL.md",
+          "path": "SKILL.md",
+          "sourceSha256": "60fc4c3a4da8dc4380b31aed84494c6bc1aca362cc1ea605a8a9bebe362953b8",
+          "sha256": "60fc4c3a4da8dc4380b31aed84494c6bc1aca362cc1ea605a8a9bebe362953b8",
+          "transformations": []
+        },
+        {
+          "sourcePath": ".agents/skills/game__qa/references/bootstrap.md",
+          "path": "references/bootstrap.md",
+          "sourceSha256": "441f2e9c3355339eb7d1f6317512d5818d2f495536469df37ee5467b6da5cc38",
+          "sha256": "441f2e9c3355339eb7d1f6317512d5818d2f495536469df37ee5467b6da5cc38",
+          "transformations": []
+        },
+        {
+          "sourcePath": ".agents/skills/game__qa/references/role-engineer.md",
+          "path": "references/role-engineer.md",
+          "sourceSha256": "922fa8b3ba6fbe0b9c23d2d4b618573ae1b5a9438c72f62f3b0d6f59944c1ef1",
+          "sha256": "922fa8b3ba6fbe0b9c23d2d4b618573ae1b5a9438c72f62f3b0d6f59944c1ef1",
+          "transformations": []
+        },
+        {
+          "sourcePath": ".agents/skills/game__qa/references/role-enumerator.md",
+          "path": "references/role-enumerator.md",
+          "sourceSha256": "d7494a023cdf0f33a8e365bd9e932af8d6b4369b05458e32c4a78285483bc652",
+          "sha256": "d7494a023cdf0f33a8e365bd9e932af8d6b4369b05458e32c4a78285483bc652",
+          "transformations": []
+        },
+        {
+          "sourcePath": ".agents/skills/game__qa/references/role-lead.md",
+          "path": "references/role-lead.md",
+          "sourceSha256": "5348a61e9f04e922600d50b7bc265d3f3541bae786bc8ab1c99899a93e3a4847",
+          "sha256": "5348a61e9f04e922600d50b7bc265d3f3541bae786bc8ab1c99899a93e3a4847",
+          "transformations": []
+        },
+        {
+          "sourcePath": ".agents/skills/game__qa/references/role-owner.md",
+          "path": "references/role-owner.md",
+          "sourceSha256": "d86d1b82493e57eedb2046568e365ac673e494fd49bfb98404f6f4fe9b5f57c2",
+          "sha256": "d86d1b82493e57eedb2046568e365ac673e494fd49bfb98404f6f4fe9b5f57c2",
+          "transformations": []
+        },
+        {
+          "sourcePath": ".agents/skills/game__qa/references/role-playtest.md",
+          "path": "references/role-playtest.md",
+          "sourceSha256": "7727d34c668d0bcda19b9e5771b26009267dd26b23d4a15edf17271a3ab08490",
+          "sha256": "7727d34c668d0bcda19b9e5771b26009267dd26b23d4a15edf17271a3ab08490",
+          "transformations": []
+        },
+        {
+          "sourcePath": ".agents/skills/game__qa/references/role-reviewer.md",
+          "path": "references/role-reviewer.md",
+          "sourceSha256": "afe2bb6e11187e74751f358d889bcc36e89d5ca8ee4b866acc259c1f78017c69",
+          "sha256": "afe2bb6e11187e74751f358d889bcc36e89d5ca8ee4b866acc259c1f78017c69",
+          "transformations": []
+        }
+      ]
+    },
+    {
+      "id": "code-threejs-rapier-performance",
+      "sourceId": "code__threejs-rapier-performance",
+      "sourceDirectory": ".agents/skills/code__threejs-rapier-performance",
+      "reviewStatus": "pending",
+      "legacyFrontmatter": {},
+      "files": [
+        {
+          "sourcePath": ".agents/skills/code__threejs-rapier-performance/SKILL.md",
+          "path": "SKILL.md",
+          "sourceSha256": "8aba194f464e0e28937d6fdbb970d05d4c8e45f736717f6b32d98bfa2621f5ee",
+          "sha256": "3ec536f7556a42d5aa189c388f1ea03a11a64f965b3b9ae79b677cbfef310903",
+          "transformations": [
+            "canonical-skill-identifiers"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "threejs-improve-performance",
+      "sourceId": "threejs__improve-performance",
+      "sourceDirectory": ".agents/skills/threejs__improve-performance",
+      "reviewStatus": "pending",
+      "legacyFrontmatter": {},
+      "files": [
+        {
+          "sourcePath": ".agents/skills/threejs__improve-performance/SKILL.md",
+          "path": "SKILL.md",
+          "sourceSha256": "9c4b00ee7cca0579f9f9abad5899648513716ebbf5156f751f3b634596b9609c",
+          "sha256": "c719f11eeb4c95a71412950c5ab2fd3d92f085a4cefabe91677cc83dd7660b73",
+          "transformations": [
+            "canonical-skill-identifiers"
+          ]
+        },
+        {
+          "sourcePath": ".agents/skills/threejs__improve-performance/references/observability-and-instrumentation.md",
+          "path": "references/observability-and-instrumentation.md",
+          "sourceSha256": "23bd9fe85bc2a971717eed9f469967b5085737175a0bb05e9e97e8ebe340a251",
+          "sha256": "23bd9fe85bc2a971717eed9f469967b5085737175a0bb05e9e97e8ebe340a251",
+          "transformations": []
+        },
+        {
+          "sourcePath": ".agents/skills/threejs__improve-performance/references/perf-regression-and-acceptance-tests.md",
+          "path": "references/perf-regression-and-acceptance-tests.md",
+          "sourceSha256": "a3d3ce92867da15e45d33b286b0381cd9b4cc60c3b153c96a110c192da1c0c74",
+          "sha256": "a3d3ce92867da15e45d33b286b0381cd9b4cc60c3b153c96a110c192da1c0c74",
+          "transformations": []
+        },
+        {
+          "sourcePath": ".agents/skills/threejs__improve-performance/references/rapier-optimization-playbook.md",
+          "path": "references/rapier-optimization-playbook.md",
+          "sourceSha256": "cea8e1f6b91326d3c9bf9f65fc8646d64e72da853b139f11df5a3169d8caf47a",
+          "sha256": "cea8e1f6b91326d3c9bf9f65fc8646d64e72da853b139f11df5a3169d8caf47a",
+          "transformations": []
+        },
+        {
+          "sourcePath": ".agents/skills/threejs__improve-performance/references/rendering-optimization-playbook.md",
+          "path": "references/rendering-optimization-playbook.md",
+          "sourceSha256": "3ad78fd84e11c605d934d265fad3572880bafac518b45918fac752e28d03fc60",
+          "sha256": "3ad78fd84e11c605d934d265fad3572880bafac518b45918fac752e28d03fc60",
+          "transformations": []
+        }
+      ]
+    },
+    {
+      "id": "product-designing-viral-social-loops",
+      "sourceId": "product__designing-viral-social-loops",
+      "sourceDirectory": ".agents/skills/product__designing-viral-social-loops",
+      "reviewStatus": "pending",
+      "legacyFrontmatter": {},
+      "files": [
+        {
+          "sourcePath": ".agents/skills/product__designing-viral-social-loops/SKILL.md",
+          "path": "SKILL.md",
+          "sourceSha256": "9ca1c9294d8531dc8a0e02f207591ab56f5ea510c51a557fd05403f2c82a03c1",
+          "sha256": "2acae1389b0cd32dd6ee427ce188e8bb920afbecc744bdc892bd54c31f2c08d5",
+          "transformations": [
+            "canonical-skill-identifiers",
+            "reference-filename:references/social-cover-and-plausible-deniability.md->references/plausible-deniability-social-cover.md",
+            "reference-filename:references/nfx-virality-network-effects-density-and-expertise.md->references/virality-network-effects-density-and-expertise.md"
+          ]
+        },
+        {
+          "sourcePath": ".agents/skills/product__designing-viral-social-loops/references/plausible-deniability-social-cover.md",
+          "path": "references/plausible-deniability-social-cover.md",
+          "sourceSha256": "7be33736e8025310b10ad5d438e211d111ca0b7ce48cec52fa0030f0356b3353",
+          "sha256": "7be33736e8025310b10ad5d438e211d111ca0b7ce48cec52fa0030f0356b3353",
+          "transformations": []
+        },
+        {
+          "sourcePath": ".agents/skills/product__designing-viral-social-loops/references/roblox-s-tier-playable-social-loop.md",
+          "path": "references/roblox-s-tier-playable-social-loop.md",
+          "sourceSha256": "5247e18ed80c0ae783c6888e84f93e9f6b36f36b6d9e91be127e8e6ad9efc61f",
+          "sha256": "5247e18ed80c0ae783c6888e84f93e9f6b36f36b6d9e91be127e8e6ad9efc61f",
+          "transformations": []
+        },
+        {
+          "sourcePath": ".agents/skills/product__designing-viral-social-loops/references/tbh-gas-s-tier-loop.md",
+          "path": "references/tbh-gas-s-tier-loop.md",
+          "sourceSha256": "fc2facef9143cf7fe6df418f9285573390cf3f474ffea558ac397e9a4d916f45",
+          "sha256": "fc2facef9143cf7fe6df418f9285573390cf3f474ffea558ac397e9a4d916f45",
+          "transformations": []
+        },
+        {
+          "sourcePath": ".agents/skills/product__designing-viral-social-loops/references/tiktok-s-tier-loop.md",
+          "path": "references/tiktok-s-tier-loop.md",
+          "sourceSha256": "b6e07d5983e7dc386608692987b0b1d2e221462bbbe8bd30788b671177a93234",
+          "sha256": "b6e07d5983e7dc386608692987b0b1d2e221462bbbe8bd30788b671177a93234",
+          "transformations": []
+        },
+        {
+          "sourcePath": ".agents/skills/product__designing-viral-social-loops/references/viral-loop-eval-cases.md",
+          "path": "references/viral-loop-eval-cases.md",
+          "sourceSha256": "548fec2a855c0d6f3824db3afc45a61ab0e19c40b3a7303e4b02f0e46ee143c4",
+          "sha256": "d0f9968aff0514992200827ce6bc54a1e919cb3444c980bd9d049ffa74918a36",
+          "transformations": [
+            "reference-filename:references/social-cover-and-plausible-deniability.md->references/plausible-deniability-social-cover.md",
+            "reference-filename:references/nfx-virality-network-effects-density-and-expertise.md->references/virality-network-effects-density-and-expertise.md"
+          ]
+        },
+        {
+          "sourcePath": ".agents/skills/product__designing-viral-social-loops/references/virality-network-effects-density-and-expertise.md",
+          "path": "references/virality-network-effects-density-and-expertise.md",
+          "sourceSha256": "dfc97025e0a239e9d763c0642c6da5310e07e5dc59d8e0adeca7f0e024938a9d",
+          "sha256": "dfc97025e0a239e9d763c0642c6da5310e07e5dc59d8e0adeca7f0e024938a9d",
+          "transformations": []
+        }
+      ]
+    }
+  ]
+}

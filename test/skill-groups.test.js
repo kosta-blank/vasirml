@@ -84,6 +84,24 @@ function assertInstalledBytes(f, names) {
   }
 }
 
+function assertGamedevAssets(f) {
+  const whitepaper = "whitepaper-analyze-mmo-whitepaper";
+  const nestedWhitepaper = "references/whitepaper-analyze-mmo-whitepaper/SKILL.md";
+  const genre = f.registry.skills.find((skill) => skill.name === "game-genre-routing");
+  const art = f.registry.skills.find((skill) => skill.name === "art-direction-defining-game-art");
+  assert.ok(f.registry.skills.some((skill) => skill.name === whitepaper), "whitepaper is independently installable");
+  assert.ok(genre.files.includes(nestedWhitepaper), "genre bundle retains its nested whitepaper reference");
+  const nestedArtReferences = art.files.filter((file) => /^[^/]+\/references\/[^/]+\.md$/.test(file));
+  assert.ok(nestedArtReferences.length > 0, "art direction retains nested reference libraries");
+  for (const [name, file] of [[whitepaper, "SKILL.md"], [genre.name, nestedWhitepaper], ...nestedArtReferences.map((file) => [art.name, file])]) {
+    assert.deepEqual(
+      fs.readFileSync(path.join(f.project, ".agents/skills", name, file)),
+      fs.readFileSync(path.join(f.bundle, ".agents/skills", name, file)),
+      `${name}/${file}`
+    );
+  }
+}
+
 test("groups lists definitions and unions read-only, independent of cwd", async (t) => {
   const f = await fixture(t);
   const beforeHome = snapshot(f.home);
@@ -129,6 +147,42 @@ test("base plus frontend installs the exact byte-preserving union and tracks a c
   assert.equal(config.tracking.mode, "selected");
   assert.deepEqual(config.tracking.skillNames, expectedUnion("base", "frontend").sort((a, b) => a.localeCompare(b)));
   assert.equal("groups" in config.tracking, false);
+});
+
+test("gamedev installs all 29 pending bundles including whitepaper and nested reference bytes", async (t) => {
+  const f = await fixture(t);
+  const names = expectedUnion("gamedev");
+  const metadata = JSON.parse(fs.readFileSync(path.join(packageRoot, "registry/review-metadata.json"), "utf8"));
+  assert.equal(names.length, 29);
+  assert.deepEqual([...names].sort(), metadata.skills.filter((skill) => skill.reviewStatus === "pending").map((skill) => skill.canonicalId).sort());
+  const result = await f.invoke(["add", "--group", "gamedev", "--json"]);
+  assert.equal(result.exitCode, 0, result.stderr);
+  assert.deepEqual(result.payload.selectedGroups, ["gamedev"]);
+  assert.deepEqual(result.payload.installedSkills, names);
+  assertInstalledBytes(f, names);
+  assertGamedevAssets(f);
+  const config = JSON.parse(fs.readFileSync(path.join(f.project, ".agents/vasir.json")));
+  assert.equal(config.tracking.mode, "selected");
+  assert.deepEqual(config.tracking.skillNames, [...names].sort((a, b) => a.localeCompare(b)));
+  const updated = await f.invoke(["update", "--json"]);
+  assert.equal(updated.exitCode, 0, updated.stderr);
+  assert.equal(updated.payload.unchangedSkills.length, names.length);
+  assertInstalledBytes(f, names);
+});
+
+test("base frontend and gamedev install the exact deduplicated union with preserved bundle bytes", async (t) => {
+  const f = await fixture(t);
+  const names = expectedUnion("base", "frontend", "gamedev");
+  const result = await f.invoke(["add", "--group", "base", "--group", "frontend", "--group", "gamedev", "--group", "gamedev", "whitepaper-analyze-mmo-whitepaper", "--json"]);
+  assert.equal(result.exitCode, 0, result.stderr);
+  assert.deepEqual(result.payload.selectedGroups, ["base", "frontend", "gamedev"]);
+  assert.deepEqual(result.payload.installedSkills, names);
+  assert.equal(names.length, 45);
+  assertInstalledBytes(f, names);
+  assertGamedevAssets(f);
+  const config = JSON.parse(fs.readFileSync(path.join(f.project, ".agents/vasir.json")));
+  assert.equal(config.tracking.mode, "selected");
+  assert.deepEqual(config.tracking.skillNames, [...names].sort((a, b) => a.localeCompare(b)));
 });
 
 test("overlap, repeated groups, and interleaved individual skills deduplicate in argument order", async (t) => {

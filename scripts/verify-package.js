@@ -17,8 +17,10 @@ const installRoot = path.join(sandbox, "installation");
 const allProject = path.join(sandbox, "all-project");
 const coreProject = path.join(sandbox, "core-project");
 const groupProject = path.join(sandbox, "group-project");
+const gamedevProject = path.join(sandbox, "gamedev-project");
+const combinedGroupProject = path.join(sandbox, "combined-group-project");
 const rejectedGroupProject = path.join(sandbox, "rejected-group-project");
-for (const directory of [taskHome, installRoot, allProject, coreProject, groupProject, rejectedGroupProject]) {
+for (const directory of [taskHome, installRoot, allProject, coreProject, groupProject, gamedevProject, combinedGroupProject, rejectedGroupProject]) {
   fs.mkdirSync(directory, { recursive: true });
 }
 const npmPath = process.env.VASIR_TEST_NPM_CLI || process.env.npm_execpath;
@@ -32,8 +34,12 @@ const archive = path.resolve(process.argv[2] || path.join(root, `${release.name}
 const groupDefinitions = JSON.parse(fs.readFileSync(path.join(sourceTree, "skill-groups.json"), "utf8"));
 const groupNames = Object.keys(groupDefinitions.groups);
 const combinedGroupSkills = [...new Set(groupNames.flatMap((name) => groupDefinitions.groups[name].skills))];
+const baseFrontendSkills = [...new Set(["base", "frontend"].flatMap((name) => groupDefinitions.groups[name].skills))];
+const gamedevSkills = groupDefinitions.groups.gamedev.skills;
 const expectedNames = registry.skills.map((entry) => entry.name).sort();
-assert.equal(expectedNames.length, 38);
+assert.equal(expectedNames.length, 67);
+assert.equal(gamedevSkills.length, 29);
+assert.equal(combinedGroupSkills.length, 45);
 assert.ok(fs.existsSync(archive));
 const hash = (file) => crypto.createHash("sha256").update(fs.readFileSync(file)).digest("hex");
 const archiveBefore = hash(archive);
@@ -96,6 +102,19 @@ function verifySkills(project, names) {
     for (const file of files) assert.equal(hash(path.join(installed, file)), hash(path.join(source, file)), name + "/" + file);
   }
 }
+function verifyGamedevAssets(project) {
+  const whitepaper = "whitepaper-analyze-mmo-whitepaper";
+  const genre = registry.skills.find((skill) => skill.name === "game-genre-routing");
+  const art = registry.skills.find((skill) => skill.name === "art-direction-defining-game-art");
+  const nestedWhitepaper = "references/whitepaper-analyze-mmo-whitepaper/SKILL.md";
+  assert.ok(expectedNames.includes(whitepaper));
+  assert.ok(genre.files.includes(nestedWhitepaper));
+  const nestedArtReferences = art.files.filter((file) => /^[^/]+\/references\/[^/]+\.md$/.test(file));
+  assert.ok(nestedArtReferences.length > 0);
+  for (const [name, file] of [[whitepaper, "SKILL.md"], [genre.name, nestedWhitepaper], ...nestedArtReferences.map((file) => [art.name, file])]) {
+    assert.equal(hash(path.join(project, ".agents", "skills", name, file)), hash(path.join(sourceTree, ".agents", "skills", name, file)), name + "/" + file);
+  }
+}
 const binary = path.join(installRoot, "node_modules", "vasir-slim", "bin", "vasir.js");
 function cli(label, args, cwd = allProject, expectedExit = 0) {
   return run(label, process.execPath, [binary, ...args], cwd, expectedExit);
@@ -143,6 +162,8 @@ try {
   seedProject(allProject, "all-reviewed-skills-check");
   seedProject(coreProject, "core-reviewed-skills-check");
   seedProject(groupProject, "group-reviewed-skills-check");
+  seedProject(gamedevProject, "gamedev-pending-skills-check");
+  seedProject(combinedGroupProject, "combined-group-skills-check");
   seedProject(rejectedGroupProject, "rejected-group-skills-check");
   check("group discovery is read-only and matches packaged definitions", () => {
     assert.equal(hash(path.join(installRoot, "node_modules", "vasir-slim", "skill-groups.json")), hash(path.join(sourceTree, "skill-groups.json")));
@@ -174,13 +195,36 @@ try {
   check("base plus frontend installs exact reviewed union and selected tracking", () => {
     const installed = cliJson("add-base-frontend", ["add", "--group", "base", "--group", "frontend", "--group", "base", "code-auditing", "--agents-profile", "frontend"], groupProject);
     assert.deepEqual(installed.selectedGroups, ["base", "frontend"]);
-    assert.deepEqual([...installed.installedSkills].sort(), [...combinedGroupSkills].sort());
-    verifySkills(groupProject, combinedGroupSkills);
+    assert.deepEqual([...installed.installedSkills].sort(), [...baseFrontendSkills].sort());
+    verifySkills(groupProject, baseFrontendSkills);
     const config = JSON.parse(fs.readFileSync(path.join(groupProject, ".agents", "vasir.json"), "utf8"));
     assert.equal(config.tracking.mode, "selected");
-    assert.deepEqual([...config.tracking.skillNames].sort(), [...combinedGroupSkills].sort());
+    assert.deepEqual([...config.tracking.skillNames].sort(), [...baseFrontendSkills].sort());
     assert.equal(config.agents.profile, "frontend");
     for (const host of [".codex", ".claude"]) assert.equal(fs.realpathSync(path.join(groupProject, host, "skills")), fs.realpathSync(path.join(groupProject, ".agents", "skills")));
+  });
+  check("gamedev installs all pending bundles including whitepaper and nested references", () => {
+    const installed = cliJson("add-gamedev", ["add", "--group", "gamedev"], gamedevProject);
+    assert.deepEqual(installed.selectedGroups, ["gamedev"]);
+    assert.deepEqual(installed.installedSkills, gamedevSkills);
+    verifySkills(gamedevProject, gamedevSkills);
+    verifyGamedevAssets(gamedevProject);
+    const config = JSON.parse(fs.readFileSync(path.join(gamedevProject, ".agents", "vasir.json"), "utf8"));
+    assert.equal(config.tracking.mode, "selected");
+    assert.deepEqual([...config.tracking.skillNames].sort(), [...gamedevSkills].sort());
+    const updated = cliJson("gamedev-selected-update", ["update"], gamedevProject);
+    assert.equal(updated.unchangedSkills.length, gamedevSkills.length);
+    verifySkills(gamedevProject, gamedevSkills);
+  });
+  check("base frontend and gamedev install the exact deduplicated union", () => {
+    const installed = cliJson("add-all-groups", ["add", "--group", "base", "--group", "frontend", "--group", "gamedev", "--group", "gamedev", "whitepaper-analyze-mmo-whitepaper"], combinedGroupProject);
+    assert.deepEqual(installed.selectedGroups, groupNames);
+    assert.deepEqual(installed.installedSkills, combinedGroupSkills);
+    verifySkills(combinedGroupProject, combinedGroupSkills);
+    verifyGamedevAssets(combinedGroupProject);
+    const config = JSON.parse(fs.readFileSync(path.join(combinedGroupProject, ".agents", "vasir.json"), "utf8"));
+    assert.equal(config.tracking.mode, "selected");
+    assert.deepEqual([...config.tracking.skillNames].sort(), [...combinedGroupSkills].sort());
   });
   check("group refresh respects existing files and model routing", () => {
     const configFile = path.join(groupProject, ".agents", "vasir.json");
@@ -196,8 +240,8 @@ try {
     assert.deepEqual(JSON.parse(fs.readFileSync(configFile, "utf8")).agents.modelRouting, config.agents.modelRouting);
     assert.deepEqual([hash(path.join(groupProject, "AGENTS.md")), hash(path.join(groupProject, "CLAUDE.md"))], rootBefore);
     const updated = cliJson("group-selected-update", ["update"], groupProject);
-    assert.equal(updated.unchangedSkills.length, combinedGroupSkills.length);
-    verifySkills(groupProject, combinedGroupSkills);
+    assert.equal(updated.unchangedSkills.length, baseFrontendSkills.length);
+    verifySkills(groupProject, baseFrontendSkills);
   });
   check("modified group members remain protected", () => {
     const file = path.join(groupProject, ".agents", "skills", "design-frontend-foundations", "SKILL.md");
@@ -211,18 +255,18 @@ try {
     } finally {
       fs.writeFileSync(file, original);
     }
-    verifySkills(groupProject, combinedGroupSkills);
+    verifySkills(groupProject, baseFrontendSkills);
   });
   check("group members can be removed individually without re-enrollment", () => {
     const removedName = "design-animating-interfaces";
     cliJson("remove-group-member", ["remove", removedName], groupProject);
-    const remaining = combinedGroupSkills.filter((name) => name !== removedName);
+    const remaining = baseFrontendSkills.filter((name) => name !== removedName);
     verifySkills(groupProject, remaining);
     const updated = cliJson("update-after-group-member-removal", ["update"], groupProject);
     assert.equal(updated.unchangedSkills.length, remaining.length);
     verifySkills(groupProject, remaining);
   });
-  check("help and exact reviewed catalog", () => {
+  check("help and exact complete catalog", () => {
     assert.match(cli("help", ["--help"]).stdout, /vasir agents sync/);
     const listed = cliJson("list", ["list"]);
     assert.deepEqual(listed.skills.map((skill) => skill.name).sort(), expectedNames);
@@ -232,7 +276,7 @@ try {
       assert.equal(skill.description, expected.description);
     }
   });
-  check("init installs all 38 exact bundles", () => {
+  check("init installs all 67 exact bundles", () => {
     const initialized = cliJson("init", ["init"]);
     assert.equal(initialized.trackingMode, "all");
     verifySkills(allProject, expectedNames);
@@ -274,12 +318,12 @@ try {
     const diff = cliJson("clean-diff", ["diff", "--exit-code"]);
     assert.equal(diff.overallStatus, "current");
   });
-  check("dry-run and real update retain reviewed bytes", () => {
+  check("dry-run and real update retain catalog bytes", () => {
     const dry = cliJson("update-dry-run", ["update", "--dry-run"]);
     assert.deepEqual(dry.updatedSkills, []);
     assert.deepEqual(dry.blockedSkills, []);
     const updated = cliJson("update", ["update"]);
-    assert.equal(updated.unchangedSkills.length, 38);
+    assert.equal(updated.unchangedSkills.length, expectedNames.length);
     verifySkills(allProject, expectedNames);
   });
   check("local modifications are protected", () => {
@@ -312,9 +356,8 @@ try {
     assert.equal(config.tracking.mode, "selected");
     assert.deepEqual([...config.tracking.skillNames].sort(), [...core].sort());
   });
-  check("unreviewed skills cannot be installed", () => {
-    // This concrete upstream identifier was excluded from the accepted collection.
-    const unknown = "art-direction__defining-game-art";
+  check("unknown skills cannot be installed", () => {
+    const unknown = "nonexistent-catalog-skill";
     assert.ok(!expectedNames.includes(unknown));
     const rejected = cliJson("unknown-skill", ["add", unknown], coreProject, 1);
     assert.equal(rejected.code, "UNKNOWN_SKILL");

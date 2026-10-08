@@ -8,7 +8,7 @@
   "dependencies": {
     "cli-spinners": "3.4.0"
   },
-  "description": "Local Vasir CLI with 38 reviewed canonical skills",
+  "description": "Local Vasir CLI with 67 canonical skills, including a gamedev group",
   "engines": {
     "node": "^18.20.0 || >=20.10.0"
   },
@@ -37,7 +37,8 @@
     ".agents/README.md",
     "MANIFESTO.md",
     "keys.json.example",
-    "work/WORK.md"
+    "work/WORK.md",
+    "registry/gamedev-imports.json"
   ],
   "keywords": [
     "llm",
