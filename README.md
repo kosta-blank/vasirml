@@ -1,6 +1,6 @@
 # Vasir — skills and project contracts
 
-This repository combines Vasir's CLI and generated AGENTS/CLAUDE workflow with 67 active skills: 38 reviewed skills and 29 source imports pending review. Skill folders and CLI requests use canonical hyphenated identifiers; old collection IDs are provenance only and are not CLI aliases. The package is `vasir-slim` version `0.1.0-slim.2`, marked `private: true`, and distributed as a packed archive rather than published to npm.
+This repository combines Vasir's CLI and generated AGENTS/CLAUDE workflow with 67 active skills: 38 reviewed skills and 29 source imports pending review. Skill folders and CLI requests use canonical hyphenated identifiers; old collection IDs are provenance only and are not CLI aliases. The package is `vasir-slim` version `0.1.0-slim.3`, marked `private: true`, and distributed as a packed archive rather than published to npm.
 
 Vasir gives each project generated root contracts, an authored source for local constraints, and a managed skill tree:
 
@@ -30,19 +30,19 @@ npm pack
 Install the generated archive into a chosen local project. Replace the archive path below with the relative path to the archive you built:
 
 ```sh
-npm install --offline --no-audit --no-fund ../vasirml/vasir-slim-0.1.0-slim.2.tgz
+npm install --offline --no-audit --no-fund ../vasirml/vasir-slim-0.1.0-slim.3.tgz
 ./node_modules/.bin/vasir --version
 ./node_modules/.bin/vasir context --json --repo-root .
 ```
 
-With pnpm, use `pnpm add --offline ../vasirml/vasir-slim-0.1.0-slim.2.tgz` and `pnpm exec vasir --version`. The packed archive supports offline installation; building from a fresh source checkout requires installing its declared dependency first.
+With pnpm, use `pnpm add --offline ../vasirml/vasir-slim-0.1.0-slim.3.tgz` and `pnpm exec vasir --version`. The packed archive supports offline installation; building from a fresh source checkout requires installing its declared dependency first.
 
 For subsequent local commands, use `npm exec -- vasir ...`, `pnpm exec vasir ...`, or invoke the installed shim directly. In Windows PowerShell the direct shim is `./node_modules/.bin/vasir.cmd`.
 
 For a global CLI installation:
 
 ```sh
-npm install -g --offline --no-audit --no-fund ./vasir-slim-0.1.0-slim.2.tgz
+npm install -g --offline --no-audit --no-fund ./vasir-slim-0.1.0-slim.3.tgz
 vasir --version
 ```
 
@@ -71,10 +71,14 @@ Run these commands from a target project root after installing the CLI:
 
 ```sh
 npm exec -- vasir init
+npm exec -- vasir skills
+npm exec -- vasir add --group frontend
 npm exec -- vasir agents sync
 ```
 
-`init` syncs the bundled catalog into `~/.agents/vasir`, copies the skills into `.agents/skills/`, creates config and install state, creates host skill links, and seeds missing root contracts. `agents sync` selects an inferred or explicit `frontend`, `backend`, `ios`, or `generic` profile, fills purpose and routing from project context, and injects the sidecar into Section 2. It validates both twins and their 32 KiB limits before writing. Edit `AGENTS__non-obvious.md`, then rerun `agents sync`.
+In a fresh repo, `init` syncs the bundled catalog into `~/.agents/vasir`, copies only the 11 `base` skills into `.agents/skills/`, creates config and install state with selected-skill tracking, creates host skill links, and seeds missing root contracts. Browse short descriptions with `vasir skills`, then expand with `vasir add --group frontend`, `vasir add --group gamedev`, `vasir add --group miscellaneous`, or individual skill IDs. To opt into all 67 skills after init, use `vasir add all --replace`; unchanged tracked skills can be replaced safely, while local edits remain protected. Rerunning `init` preserves an existing repo's selected or full-catalog tracking and does not remove installed skills.
+
+`agents sync` selects an inferred or explicit `frontend`, `backend`, `ios`, or `generic` profile, fills purpose and routing from project context, and injects the sidecar into Section 2. It validates both twins and their 32 KiB limits before writing. Edit `AGENTS__non-obvious.md`, then rerun `agents sync`.
 
 ```sh
 npm exec -- vasir status
@@ -119,6 +123,9 @@ Named groups are a shortcut for selecting skills. Repeated `--group` flags combi
 npm exec -- vasir groups
 npm exec -- vasir groups gamedev
 npm exec -- vasir groups --json
+npm exec -- vasir skills
+npm exec -- vasir skills miscellaneous
+npm exec -- vasir skills frontend gamedev --json
 npm exec -- vasir add --group base --group frontend --repo-root /path/to/project
 npm exec -- vasir add --group gamedev --repo-root /path/to/project
 npm exec -- vasir add --group base --group frontend --group gamedev --repo-root /path/to/project
@@ -195,7 +202,13 @@ The [import provenance](registry/gamedev-imports.json) records source hashes, me
 - `whitepaper-analyze-mmo-whitepaper`
 - `product-designing-viral-social-loops`
 
-`base`, `frontend`, and `gamedev` contain 11, 5, and 29 skills. Their combined selection contains 45 unique skills. Group selection does not automatically choose an AGENTS profile.
+### miscellaneous (22 skills)
+
+Additional engineering, security, architecture, prompting, skill authoring, and workflow tools. These are the skills outside the other three groups. Run `vasir skills miscellaneous` for short descriptions or `vasir add --group miscellaneous` to install them.
+
+`base`, `frontend`, `gamedev`, and `miscellaneous` contain 11, 5, 29, and 22 skills. Together they cover all 67 catalog skills. Group selection does not automatically choose an AGENTS profile.
+
+`vasir skills [group...]` shows each canonical skill ID, group membership, and a short description (at most 160 characters), with installation examples. Optional group arguments filter to their deduplicated union. `--json` returns `selectedGroups`, `skillCount`, and `skills` entries with `name`, `description`, and `groups`. This command is read-only and works without initializing a project or global cache. `vasir list` retains full descriptions and metadata.
 
 ## Source and checks
 
@@ -212,7 +225,7 @@ npm run check:registry
 npm run check:review
 npm test
 npm pack
-npm run check:package -- ./vasir-slim-0.1.0-slim.2.tgz
+npm run check:package -- ./vasir-slim-0.1.0-slim.3.tgz
 ```
 
 `registry.json` inventories local skills and includes the package version in its header. `.vasir-catalog-manifest.json` hashes `registry.json`, `.agents/skills/`, and `templates/`; documentation and group definitions are not catalog hash inputs. `SKILL.md` is the primary skill source; `meta.json` remains a compatibility fallback. CI installs with `npm ci`, checks both projections, tests representative supported Node versions on Linux, Windows, and macOS, and validates package contents. Tag and manual release runs produce a downloadable archive artifact without npm publication.
@@ -221,7 +234,7 @@ npm run check:package -- ./vasir-slim-0.1.0-slim.2.tgz
 
 The original inventory contains 66 top-level skills and one nested whitepaper skill. The existing reviewed set remains 38 skills; 39 completed reviews of selected sources and imports, including the custom project planner, supported that set after two frontend skills were consolidated into one. The 29 restored source imports are active and pending review. Old underscore-style IDs such as `code__fixing-bugs` are not CLI aliases; use canonical hyphenated IDs from the [skill catalog](docs/catalog.md). Removed or merged skills do not imply a one-to-one automatic rename.
 
-The [review evidence guide](docs/review/README.md), [interactive skill map](docs/review/skill-map.html), and [change tracker](docs/review/change-tracker.json) document the review history and reviewed skill hashes. Recommendation tiers in the map and tracker are review metadata; the CLI's actual named installation groups are `base`, `frontend`, and `gamedev`, defined in root `skill-groups.json`.
+The [review evidence guide](docs/review/README.md), [interactive skill map](docs/review/skill-map.html), and [change tracker](docs/review/change-tracker.json) document the review history and reviewed skill hashes. Recommendation tiers in the map and tracker are review metadata; the CLI's actual named installation groups are `base`, `frontend`, `gamedev`, and `miscellaneous`, defined in root `skill-groups.json`.
 
 Before migrating an existing project, back up edited skills, config, install state, and authored or generated contracts. The safest path is to initialize a separate fresh project tree with this release, select the desired groups or canonical skills, and reconcile local customizations there. For an in-place migration, inspect `vasir status`, `vasir diff`, and `vasir update --dry-run`; explicitly remove obsolete tracked skills using the release that recognizes their old IDs, then select canonical skills with the new CLI. Use `vasir adopt` only when deliberately adopting an existing tree of current-catalog canonical IDs; it records matching files and reports unknown directories as unmanaged.
 

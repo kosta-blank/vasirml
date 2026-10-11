@@ -39,7 +39,8 @@ const gamedevSkills = groupDefinitions.groups.gamedev.skills;
 const expectedNames = registry.skills.map((entry) => entry.name).sort();
 assert.equal(expectedNames.length, 67);
 assert.equal(gamedevSkills.length, 29);
-assert.equal(combinedGroupSkills.length, 45);
+assert.equal(combinedGroupSkills.length, expectedNames.length);
+assert.equal(groupDefinitions.groups.miscellaneous.skills.length, 22);
 assert.ok(fs.existsSync(archive));
 const hash = (file) => crypto.createHash("sha256").update(fs.readFileSync(file)).digest("hex");
 const archiveBefore = hash(archive);
@@ -165,6 +166,21 @@ try {
   seedProject(gamedevProject, "gamedev-pending-skills-check");
   seedProject(combinedGroupProject, "combined-group-skills-check");
   seedProject(rejectedGroupProject, "rejected-group-skills-check");
+  check("short skill discovery is read-only and includes every group", () => {
+    const listed = cliJson("skills-list", ["skills"], rejectedGroupProject);
+    assert.deepEqual(listed.skills.map((skill) => skill.name).sort(), expectedNames);
+    assert.equal(listed.skillCount, expectedNames.length);
+    for (const skill of listed.skills) {
+      assert.ok(skill.description.length > 0 && skill.description.length <= 160);
+      assert.equal(skill.groups.length, 1);
+    }
+    const misc = cliJson("skills-miscellaneous", ["skills", "miscellaneous"], rejectedGroupProject);
+    assert.deepEqual(misc.skills.map((skill) => skill.name).sort(), [...groupDefinitions.groups.miscellaneous.skills].sort());
+    assert.match(cli("skills-readable", ["skills", "base"], rejectedGroupProject).stdout, /vasir add --group/);
+    assert.equal(cliJson("skills-unknown-group", ["skills", "unknown"], rejectedGroupProject, 1).code, "UNKNOWN_SKILL_GROUP");
+    assert.equal(fs.existsSync(path.join(taskHome, ".agents", "vasir")), false);
+    assert.equal(fs.existsSync(path.join(rejectedGroupProject, ".agents")), false);
+  });
   check("group discovery is read-only and matches packaged definitions", () => {
     assert.equal(hash(path.join(installRoot, "node_modules", "vasir-slim", "skill-groups.json")), hash(path.join(sourceTree, "skill-groups.json")));
     assert.equal(fs.existsSync(path.join(taskHome, ".agents", "vasir")), false);
@@ -216,8 +232,8 @@ try {
     assert.equal(updated.unchangedSkills.length, gamedevSkills.length);
     verifySkills(gamedevProject, gamedevSkills);
   });
-  check("base frontend and gamedev install the exact deduplicated union", () => {
-    const installed = cliJson("add-all-groups", ["add", "--group", "base", "--group", "frontend", "--group", "gamedev", "--group", "gamedev", "whitepaper-analyze-mmo-whitepaper"], combinedGroupProject);
+  check("all four groups install the exact deduplicated catalog union", () => {
+    const installed = cliJson("add-all-groups", ["add", ...groupNames.flatMap((name) => ["--group", name]), "--group", "gamedev", "whitepaper-analyze-mmo-whitepaper"], combinedGroupProject);
     assert.deepEqual(installed.selectedGroups, groupNames);
     assert.deepEqual(installed.installedSkills, combinedGroupSkills);
     verifySkills(combinedGroupProject, combinedGroupSkills);
@@ -276,10 +292,21 @@ try {
       assert.equal(skill.description, expected.description);
     }
   });
-  check("init installs all 67 exact bundles", () => {
+  check("init installs only base and supports explicit expansion to all 67", () => {
     const initialized = cliJson("init", ["init"]);
-    assert.equal(initialized.trackingMode, "all");
+    assert.equal(initialized.trackingMode, "selected");
+    verifySkills(allProject, groupDefinitions.groups.base.skills);
+    assert.equal(cliJson("base-update", ["update"]).unchangedSkills.length, groupDefinitions.groups.base.skills.length);
+    assert.equal(cliJson("base-reinit", ["init"]).unchangedSkills.length, groupDefinitions.groups.base.skills.length);
+    verifySkills(allProject, groupDefinitions.groups.base.skills);
+    cliJson("expand-frontend", ["add", "--group", "frontend"]);
+    verifySkills(allProject, baseFrontendSkills);
+    assert.equal(cliJson("expanded-selected-reinit", ["init"]).trackingMode, "selected");
+    verifySkills(allProject, baseFrontendSkills);
+    cliJson("explicit-add-all", ["add", "all", "--replace"]);
+    assert.equal(JSON.parse(fs.readFileSync(path.join(allProject, ".agents", "vasir.json"), "utf8")).tracking.mode, "all");
     verifySkills(allProject, expectedNames);
+    assert.equal(cliJson("all-reinit", ["init"]).trackingMode, "all");
     for (const host of [".codex", ".claude"]) {
       assert.equal(fs.realpathSync(path.join(allProject, host, "skills")), fs.realpathSync(path.join(allProject, ".agents", "skills")));
     }

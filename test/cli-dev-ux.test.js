@@ -250,7 +250,7 @@ test("help output documents json support across commands and the explicit replac
   assert.match(capturedOutput.readStdout(), /doctor is the repair-oriented command/i);
   assert.match(capturedOutput.readStdout(), /repair is the one-command recovery path/i);
   assert.match(capturedOutput.readStdout(), /diff is the review command/i);
-  assert.match(capturedOutput.readStdout(), /init inside a repo installs the full catalog into that repo/i);
+  assert.match(capturedOutput.readStdout(), /in a new repo, install and track the base group/i);
   assert.match(capturedOutput.readStdout(), /refreshes the skills tracked by the current repo/i);
   assert.match(capturedOutput.readStdout(), /adopt never copies or overwrites skill files/i);
   assert.match(capturedOutput.readStdout(), /mutates only the current repo/i);
@@ -269,7 +269,7 @@ test("version output gives a beginner the installed cli version immediately", as
   const statusCode = await runCommandLine(["node", "vasir", "--version"], capturedOutput);
 
   assert.equal(statusCode, 0);
-  assert.equal(capturedOutput.readStdout().trim(), "vasir-slim 0.1.0-slim.2");
+  assert.equal(capturedOutput.readStdout().trim(), "vasir-slim 0.1.0-slim.3");
   assert.equal(capturedOutput.readStderr(), "");
 });
 

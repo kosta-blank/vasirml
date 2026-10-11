@@ -64,7 +64,7 @@
     "check:package": "node scripts/verify-package.js"
   },
   "type": "module",
-  "version": "0.1.0-slim.2",
+  "version": "0.1.0-slim.3",
   "repository": {
     "type": "git",
     "url": "https://github.com/kosta-blank/vasirml.git"
