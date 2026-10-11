@@ -129,7 +129,7 @@ Verification:
 - `vasir update` succeeds.
 
 If you expected a repo-local skill refresh too, rerun `vasir update` from inside the target repo root or pass `--repo-root <path>`.
-- Repos initialized with `vasir init` or `vasir add all` track the full catalog, so `update` also installs newly added Vasir skills.
+- Fresh repos initialized with `vasir init` track only the base group's selected skills. Add groups with `vasir add --group <name>`; `update` refreshes only the tracked selection. Repos explicitly enrolled with `vasir add all` track the full catalog, so `update` also installs newly added Vasir skills. After init, use `vasir add all --replace` to enroll unchanged tracked skills safely.
 - Repos initialized with `vasir add <specific skills>` track only that selected subset.
 - Run `vasir diff` first when you want to review exact tracked file changes before updating the repo.
 

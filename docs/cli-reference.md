@@ -7,7 +7,7 @@ Use this page when you need facts about commands, flags, JSON output, filesystem
 Requires Node 18.20 or later within 18.x, or Node 20.10 or newer. Install the local archive in your chosen project:
 
 ```sh
-npm install --offline --no-audit --no-fund /absolute/path/vasir-slim-0.1.0-slim.2.tgz
+npm install --offline --no-audit --no-fund /absolute/path/vasir-slim-0.1.0-ml.tgz
 ./node_modules/.bin/vasir --version
 ```
 
@@ -22,11 +22,12 @@ The dependency is bundled. See [local installation and pnpm instructions](../REA
 | `doctor` | `vasir doctor [--json] [--repo-root <path>]` | Diagnose drift, alias problems, adoption needs, and blocked skill updates |
 | `repair` | `vasir repair [--json] [--repo-root <path>]` | Repair repo-local Vasir metadata, aliases, and missing tracked skills without auto-upgrading current skill content |
 | `diff` | `vasir diff [skill...] [--json] [--exit-code] [--repo-root <path>]` | Review the exact tracked repo-local skill files that would change before `vasir update` |
-| `init` | `vasir init [--json] [--repo-root <path>]` | Sync the installed bundled catalog into `~/.agents/vasir`; inside a repo, also install and track the full catalog there |
+| `init` | `vasir init [--json] [--repo-root <path>]` | Sync the bundled catalog into `~/.agents/vasir`; in a fresh repo, install and track only the base group; preserve existing tracking on reruns |
 | `update` | `vasir update [--json] [--dry-run] [--repo-root <path>]` | Sync `~/.agents/vasir`; then refresh whatever that repo is tracking: the full catalog or a selected installed subset |
 | `list` | `vasir list [--json]` | Read the global catalog and list available skills |
 | `add` | `vasir add [skill...] [--group <name>] [--json] [--replace] [--agents-profile <name>] [--repo-root <path>]` | Copy selected skills or named groups into the repo; repeat `--group` to combine groups; use `all` for full-catalog tracking |
 | `groups` | `vasir groups [group...] [--json]` | Read bundled named-group descriptions and memberships without creating a cache or project files |
+| `skills` | `vasir skills [group...] [--json]` | Browse canonical skill IDs, short descriptions, and group memberships without creating cache or project files |
 | `adopt` | `vasir adopt [--json] [--repo-root <path>]` | Snapshot an existing `.agents/skills` tree into Vasir-managed state without copying or overwriting files |
 | `remove` | `vasir remove <skill> [skill...] [--json] [--repo-root <path>]` | Remove project-local skills from the current repo root |
 | `agents sync` | `vasir agents sync [--scope <path>] [--profile <backend\|frontend\|ios\|generic>] [--json] [--dry-run] [--repo-root <path>]` | Reconcile root or nested root `AGENTS.md` and `CLAUDE.md` from the canonical templates, local context, and `AGENTS__non-obvious.md` |
@@ -157,10 +158,11 @@ vasir diff --repo-root packages/web
 - Purpose: make first success obvious.
 - Result:
   - Outside a repo: `~/.agents/vasir` exists and `~/.claude/vasir` and `~/.codex/vasir` point to it.
-  - Inside a repo: the same global cache is prepared, then the full catalog is copied into that repo under `.agents/skills` and the repo is marked to keep tracking the full catalog on future `vasir update` runs.
+  - Inside a fresh repo: the same global cache is prepared, then only the `base` group's 11 skills are copied under `.agents/skills`. Selected-skill tracking keeps subsequent `vasir update` runs limited to installed selections.
+  - Inside an already managed repo: refresh the existing selected or full-catalog tracking policy without pruning skills or adding unrelated groups.
 - Notes:
   - Vasir copies the catalog from the installed package bundle by default.
-  - Inside a repo, `init` is the pit-of-success command when you want “just give this repo everything and keep it current.”
+  - Expand after init with `vasir add --group frontend`, `vasir add --group gamedev`, `vasir add --group miscellaneous`, or individual skill IDs. Use `vasir add all --replace` to explicitly select the full catalog after init; local edits still block replacement.
   - If the global cache is dirty or contains manual files, `init` moves it aside to `~/.agents/vasir.dirty-backup.<timestamp>` and rebuilds a clean cache.
   - Pass `--repo-root <path>` when you want to initialize a nested package or subproject explicitly.
 
@@ -181,7 +183,7 @@ vasir init --repo-root packages/web
 - Notes:
   - Fails closed if the existing global cache is dirty.
   - Uses the current repo root as the nearest parent containing `.git`, unless `--repo-root <path>` is provided.
-  - `vasir init` marks a repo as full-catalog tracking.
+  - Fresh `vasir init` tracks a selected snapshot of the base group. Rerunning it preserves existing tracking.
   - `vasir add <skill>` marks a repo as selected-subset tracking.
   - `vasir add all` also marks a repo as full-catalog tracking.
   - `vasir remove <skill>` from a full-catalog repo switches that repo back to selected-subset tracking so the removed skill does not come back unexpectedly.
@@ -209,6 +211,22 @@ Example:
 ```bash
 vasir list
 ```
+
+### `skills`
+
+Browse all catalog skills with short descriptions before choosing what to install:
+
+```bash
+vasir skills
+vasir skills miscellaneous
+vasir skills frontend gamedev --json
+vasir add --group miscellaneous
+vasir add security-auditing-code
+```
+
+Each text row shows the canonical skill ID, its group memberships, and a whitespace-normalized description of at most 160 characters. Longer descriptions are truncated at a word boundary with `...`. Optional group arguments select their deduplicated union; unknown groups fail clearly. Without filters, all catalog skills appear. `--json` returns `selectedGroups`, `skillCount`, and `skills` entries with `name`, `description`, and `groups`.
+
+This command reads the effective source catalog without creating a global cache or project files. `vasir list` continues to provide full descriptions and registry metadata. Local catalog overrides can supply their own `skill-groups.json`; otherwise bundled definitions are validated against the override registry.
 
 ### `groups`
 
@@ -260,6 +278,10 @@ Frontend foundations, interface implementation, data visualization, typography, 
 ### gamedev (29 skills)
 
 Game design, playable builds, systems, AI, art, onboarding, QA, 3D performance, MMO analysis, and social loops. All 29 are restored source imports pending content review, including `product-designing-viral-social-loops`. See the [complete membership](../README.md#gamedev-29-skills) or run `vasir groups gamedev`. Combining `base`, `frontend`, and `gamedev` selects 45 distinct skills.
+
+#### miscellaneous (22 skills)
+
+Additional engineering, security, architecture, prompting, skill authoring, and workflow tools outside the other three groups. Inspect names with `vasir groups miscellaneous`, browse short descriptions with `vasir skills miscellaneous`, and install with `vasir add --group miscellaneous`. All four groups together cover the full 67-skill catalog.
 
 ### `add`
 
@@ -584,8 +606,10 @@ vasir --version
 Expected text output:
 
 ```text
-vasir-slim 0.1.0-slim.2
+vasir-slim 0.1.ml
 ```
+
+`0.1.ml` is the release label stored in `package.json` as `displayVersion`. npm requires a numeric patch component, so the package version and archive name use `0.1.0-ml`. `vasir --version --json` returns both `displayVersion: "0.1.ml"` and `version: "0.1.0-ml"`. Catalog and installation provenance retain the npm-compatible package version.
 
 ## Replace
 
@@ -604,7 +628,7 @@ Facts:
 
 ## JSON Output
 
-`--json` is supported by `status`, `context`, `doctor`, `repair`, `diff`, `init`, `update`, `list`, `add`, `adopt`, `remove`, `agents sync`, `agents init`, `agents draft-purpose`, `agents draft-routing`, `agents validate`, and `eval run`.
+`--json` is supported by `status`, `context`, `doctor`, `repair`, `diff`, `init`, `update`, `list`, `groups`, `skills`, `add`, `adopt`, `remove`, `agents sync`, `agents init`, `agents draft-purpose`, `agents draft-routing`, `agents validate`, and `eval run`.
 
 Success envelope:
 

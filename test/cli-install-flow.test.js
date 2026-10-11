@@ -69,6 +69,12 @@ function createFixtureRepository() {
   };
 
   writeFile(path.join(repositoryDirectory, "registry.json"), `${JSON.stringify(registry, null, 2)}\n`);
+  writeFile(path.join(repositoryDirectory, "skill-groups.json"), `${JSON.stringify({
+    schemaVersion: 1,
+    groups: {
+      base: { description: "Core skills", skills: ["react", "roguelike"] }
+    }
+  }, null, 2)}\n`);
   writeFile(
     path.join(repositoryDirectory, "templates", "agents", "AGENTS.md"),
     `# AGENTS.md: [Project Name] Root Manifest
@@ -256,7 +262,7 @@ test("init creates the canonical global catalog and compatibility aliases", asyn
   assert.match(capturedOutput.readStdout(), /Global catalog ready/);
 });
 
-test("init inside a repo installs and tracks the full catalog", async () => {
+test("init inside a repo installs and tracks the base group", async () => {
   const { repositoryUrl } = createFixtureRepository();
   const homeDirectory = createTemporaryDirectory();
   const projectDirectory = createTemporaryDirectory();
@@ -286,12 +292,13 @@ test("init inside a repo installs and tracks the full catalog", async () => {
   const projectConfig = JSON.parse(
     fs.readFileSync(path.join(projectDirectory, ".agents", "vasir.json"), "utf8")
   );
-  assert.equal(projectConfig.tracking.mode, "all");
+  assert.equal(projectConfig.tracking.mode, "selected");
+  assert.deepEqual(projectConfig.tracking.skillNames, ["react", "roguelike"]);
   const installState = JSON.parse(
     fs.readFileSync(path.join(projectDirectory, ".agents", "vasir-install-state.json"), "utf8")
   );
-  assert.equal(installState.catalog.trackingMode, "all");
-  assert.match(capturedOutput.readStdout(), /Tracking Full catalog/);
+  assert.equal(installState.catalog.trackingMode, "selected");
+  assert.match(capturedOutput.readStdout(), /Tracking Selected skills/);
   assert.match(capturedOutput.readStdout(), /AGENTS starter ready at/);
   assert.match(capturedOutput.readStdout(), /CLAUDE starter ready at/);
 });
@@ -560,6 +567,14 @@ test("update installs newly added catalog skills for repos tracking the full cat
   });
 
   assert.equal(initStatusCode, 0);
+  const allOutput = captureCommandWriters();
+  const allStatusCode = await runCommandLine(["node", "vasir", "add", "all", "--replace"], {
+    homeDirectory,
+    currentWorkingDirectory: projectDirectory,
+    repositoryUrl,
+    ...allOutput
+  });
+  assert.equal(allStatusCode, 0);
   assert.ok(!fs.existsSync(path.join(projectDirectory, ".agents", "skills", "platformer", "SKILL.md")));
 
   const nextRegistry = JSON.parse(fs.readFileSync(path.join(repositoryDirectory, "registry.json"), "utf8"));
@@ -721,6 +736,14 @@ test("diff shows newly added full-catalog skills before update", async () => {
   });
 
   assert.equal(initStatusCode, 0);
+  const allOutput = captureCommandWriters();
+  const allStatusCode = await runCommandLine(["node", "vasir", "add", "all", "--replace"], {
+    homeDirectory,
+    currentWorkingDirectory: projectDirectory,
+    repositoryUrl,
+    ...allOutput
+  });
+  assert.equal(allStatusCode, 0);
 
   const nextRegistry = JSON.parse(fs.readFileSync(path.join(repositoryDirectory, "registry.json"), "utf8"));
   nextRegistry.skills.push({
@@ -887,13 +910,13 @@ test("add records install provenance for safer repo updates", async () => {
   );
 
   assert.equal(installState.schemaVersion, 3);
-  assert.equal(installState.catalog.packageVersion, "0.1.0-slim.2");
+  assert.equal(installState.catalog.packageVersion, "0.1.0-ml");
   assert.equal(typeof installState.catalog.sourceHash, "string");
   assert.ok(installState.catalog.sourceHash.length > 0);
   assert.equal(installState.catalog.trackingMode, "selected");
   assert.equal(installState.skills.react.provenance.skillVersion, "1.0.0");
   assert.equal(installState.skills.react.provenance.sourcePath, ".agents/skills/react");
-  assert.equal(installState.skills.react.provenance.installedByVersion, "0.1.0-slim.2");
+  assert.equal(installState.skills.react.provenance.installedByVersion, "0.1.0-ml");
   assert.equal(typeof installState.skills.react.provenance.installedAt, "string");
 });
 

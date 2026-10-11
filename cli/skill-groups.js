@@ -1,4 +1,5 @@
 import fs from "node:fs";
+import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { VasirCliError } from "./cli-error.js";
@@ -11,9 +12,12 @@ function isRecord(value) {
   return value !== null && typeof value === "object" && !Array.isArray(value);
 }
 
-export function readSkillGroups({ registry }) {
+export function readSkillGroups({ registry, sourceDirectory }) {
+  const sourceGroupsPath = sourceDirectory && path.join(sourceDirectory, "skill-groups.json");
+  const groupsFilePath = sourceGroupsPath && fs.existsSync(sourceGroupsPath)
+    ? sourceGroupsPath : GROUPS_FILE_PATH;
   try {
-    const definitions = JSON.parse(fs.readFileSync(GROUPS_FILE_PATH, "utf8"));
+    const definitions = JSON.parse(fs.readFileSync(groupsFilePath, "utf8"));
     if (!isRecord(definitions) || definitions.schemaVersion !== 1 ||
         Object.keys(definitions).some((key) => !["schemaVersion", "groups"].includes(key)) ||
         !isRecord(definitions.groups) || Object.keys(definitions.groups).length === 0) {
@@ -44,7 +48,7 @@ export function readSkillGroups({ registry }) {
       message: `Cannot load skill groups: ${cause.message}`,
       suggestion: "Repair or reinstall the package's skill-groups.json; when using a catalog override, include every referenced skill in its registry.",
       docsRef: ADD_REFERENCE_DOCS_REF,
-      context: { groupsFilePath: GROUPS_FILE_PATH },
+      context: { groupsFilePath },
       cause
     });
   }

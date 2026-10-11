@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import childProcess from "node:child_process";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
@@ -76,6 +77,12 @@ function expectedUnion(...names) {
   return [...new Set(names.flatMap((name) => canonicalGroups.groups[name].skills))];
 }
 
+function expectedSkillGroups(skillName) {
+  return Object.entries(canonicalGroups.groups)
+    .filter(([, group]) => group.skills.includes(skillName))
+    .map(([groupName]) => groupName);
+}
+
 function assertInstalledBytes(f, names) {
   assert.deepEqual(fs.readdirSync(path.join(f.project, ".agents/skills")).sort(), [...names].sort());
   for (const name of names) {
@@ -130,6 +137,106 @@ test("groups lists definitions and unions read-only, independent of cwd", async 
   assert.equal(fs.existsSync(path.join(f.directory, "absent")), false);
   assert.deepEqual(snapshot(f.home), beforeHome);
   assert.deepEqual(snapshot(f.project), beforeProject);
+});
+
+test("the four groups cover all 67 canonical skills and miscellaneous contains the remaining 22", () => {
+  assert.deepEqual(Object.keys(canonicalGroups.groups), ["base", "frontend", "gamedev", "miscellaneous"]);
+  assert.equal(canonicalGroups.groups.base.skills.length, 11);
+  assert.equal(canonicalGroups.groups.miscellaneous.skills.length, 22);
+  const registry = JSON.parse(fs.readFileSync(path.join(catalogRoot, "registry.json"), "utf8"));
+  const allGroupSkills = new Set(Object.values(canonicalGroups.groups).flatMap((group) => group.skills));
+  assert.equal(registry.skills.length, 67);
+  assert.equal(allGroupSkills.size, 67);
+  assert.deepEqual([...allGroupSkills].sort(), registry.skills.map((skill) => skill.name).sort());
+});
+
+test("skills lists canonical IDs and concise descriptions, supports group filters, and stays read-only", async (t) => {
+  const f = await fixture(t);
+  const originalRegistry = JSON.parse(fs.readFileSync(path.join(f.bundle, "registry.json"), "utf8"));
+  const longDescription = `  ${"A deliberately long description with useful words ".repeat(8)}  `;
+  originalRegistry.skills[0].description = longDescription;
+  fs.writeFileSync(path.join(f.bundle, "registry.json"), JSON.stringify(originalRegistry));
+  const beforeHome = snapshot(f.home);
+  const beforeProject = snapshot(f.project);
+
+  const listed = await f.invoke(["skills", "--json"]);
+  assert.equal(listed.exitCode, 0, listed.stderr);
+  assert.deepEqual(listed.payload.selectedGroups, []);
+  assert.equal(listed.payload.skillCount, originalRegistry.skills.length);
+  assert.deepEqual(listed.payload.skills.map((skill) => skill.name), originalRegistry.skills.map((skill) => skill.name));
+  for (const skill of listed.payload.skills) {
+    assert.deepEqual(skill.groups, expectedSkillGroups(skill.name));
+    assert.ok(skill.description.length <= 160);
+    assert.equal(skill.description, skill.description.trim().replace(/\s+/g, " "));
+  }
+  const summarized = listed.payload.skills[0].description;
+  assert.ok(summarized.endsWith("…") || summarized.endsWith("..."));
+  const summaryText = summarized.replace(/(?:…|\.\.\.)$/, "");
+  assert.ok(longDescription.trim().replace(/\s+/g, " ").startsWith(summaryText));
+  assert.match(longDescription.trim().replace(/\s+/g, " ").slice(summaryText.length), /^\s/);
+
+  const text = await f.invoke(["skills", "base"]);
+  assert.equal(text.exitCode, 0, text.stderr);
+  for (const skillName of expectedUnion("base")) {
+    const summary = listed.payload.skills.find((skill) => skill.name === skillName).description;
+    assert.ok(text.stdout.includes(skillName));
+    assert.ok(text.stdout.includes(summary));
+  }
+
+  const filtered = await f.invoke(["skills", "miscellaneous", "base", "miscellaneous", "--json"]);
+  assert.equal(filtered.exitCode, 0, filtered.stderr);
+  assert.deepEqual(filtered.payload.selectedGroups, ["miscellaneous", "base"]);
+  const selectedNames = new Set(expectedUnion("miscellaneous", "base"));
+  const expectedNames = f.registry.skills.filter((skill) => selectedNames.has(skill.name)).map((skill) => skill.name);
+  assert.deepEqual(filtered.payload.skills.map((skill) => skill.name), expectedNames);
+  assert.equal(filtered.payload.skillCount, expectedNames.length);
+  const unknownGroup = await f.invoke(["skills", "missing", "--json"]);
+  assert.equal(unknownGroup.exitCode, 1);
+  assert.equal(unknownGroup.payload.code, "UNKNOWN_SKILL_GROUP");
+  assert.deepEqual(snapshot(f.home), beforeHome);
+  assert.deepEqual(snapshot(f.project), beforeProject);
+});
+
+test("fresh init installs base and reruns preserve selected or all tracking", async (t) => {
+  const f = await fixture(t);
+  const gitInit = childProcess.spawnSync("git", ["init"], { cwd: f.project, encoding: "utf8" });
+  if (gitInit.error) throw gitInit.error;
+  assert.equal(gitInit.status, 0, gitInit.stderr);
+  for (const [key, value] of [["user.email", "test@example.com"], ["user.name", "Test Runner"]]) {
+    const result = childProcess.spawnSync("git", ["config", key, value], { cwd: f.project, encoding: "utf8" });
+    if (result.error) throw result.error;
+    assert.equal(result.status, 0, result.stderr);
+  }
+
+  const baseNames = expectedUnion("base");
+  const initialized = await f.invoke(["init", "--json"]);
+  assert.equal(initialized.exitCode, 0, initialized.stderr);
+  assert.deepEqual(fs.readdirSync(path.join(f.project, ".agents/skills")).sort(), [...baseNames].sort());
+  let config = JSON.parse(fs.readFileSync(path.join(f.project, ".agents/vasir.json"), "utf8"));
+  assert.equal(config.tracking.mode, "selected");
+  assert.deepEqual(config.tracking.skillNames, [...baseNames].sort((a, b) => a.localeCompare(b)));
+
+  const expandedNames = expectedUnion("base", "frontend");
+  const expanded = await f.invoke(["add", "--group", "frontend", "--json"]);
+  assert.equal(expanded.exitCode, 0, expanded.stderr);
+  assert.equal(expanded.payload.installedSkills.length, 5);
+  assert.equal(fs.readdirSync(path.join(f.project, ".agents/skills")).length, 16);
+  const selectedRerun = await f.invoke(["init", "--json"]);
+  assert.equal(selectedRerun.exitCode, 0, selectedRerun.stderr);
+  config = JSON.parse(fs.readFileSync(path.join(f.project, ".agents/vasir.json"), "utf8"));
+  assert.equal(config.tracking.mode, "selected");
+  assert.deepEqual(config.tracking.skillNames, [...expandedNames].sort((a, b) => a.localeCompare(b)));
+  assert.deepEqual(fs.readdirSync(path.join(f.project, ".agents/skills")).sort(), [...expandedNames].sort());
+
+  const all = await f.invoke(["add", "all", "--replace", "--json"]);
+  assert.equal(all.exitCode, 0, all.stderr);
+  const allNames = f.registry.skills.map((skill) => skill.name);
+  assert.deepEqual(all.payload.installedSkills, allNames);
+  const allRerun = await f.invoke(["init", "--json"]);
+  assert.equal(allRerun.exitCode, 0, allRerun.stderr);
+  config = JSON.parse(fs.readFileSync(path.join(f.project, ".agents/vasir.json"), "utf8"));
+  assert.equal(config.tracking.mode, "all");
+  assert.deepEqual(fs.readdirSync(path.join(f.project, ".agents/skills")).sort(), [...allNames].sort());
 });
 
 test("base plus frontend installs the exact byte-preserving union and tracks a concrete snapshot", async (t) => {

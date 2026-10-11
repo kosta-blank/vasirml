@@ -60,6 +60,33 @@
         "threejs-improve-performance",
         "product-designing-viral-social-loops"
       ]
+    },
+    "miscellaneous": {
+      "description": "Additional engineering, security, architecture, prompting, skill authoring, and workflow tools.",
+      "skills": [
+        "agents-creating-folder-agents",
+        "audit-optimizing-node-backend",
+        "code-crafting-dev-ux",
+        "code-enforcing-principles",
+        "design-designing-cli",
+        "eval-implement-proof-gate",
+        "explaining-creating-interactive-articles",
+        "handoff-final-quality-gate",
+        "ops-maintain-incident-postmortem",
+        "persona-selecting",
+        "plan-prepare-goal",
+        "plan-prepare-summary",
+        "plan-question-spec-architecture",
+        "plan-question-spec-infra",
+        "prompt-create-analysis",
+        "prompt-improving-rewriting",
+        "prompt-reverse-engineering",
+        "prompt-writing-persona",
+        "security-auditing-code",
+        "skills-create-analysis",
+        "skills-create-skill",
+        "testing-enforcing-mandate"
+      ]
     }
   }
 }

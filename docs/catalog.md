@@ -150,7 +150,7 @@ These imported skills are available for installation and are pending review. The
 
 ## Named installation groups
 
-Use `vasir groups gamedev` to inspect the game group, and `vasir add --group gamedev` to install it. Repeated group flags combine into a deduplicated union: `base`, `frontend`, and `gamedev` contain 11, 5, and 29 skills, with 45 unique skills in their union. Group selection and AGENTS profiles are independent. See [group usage and editing](../README.md#named-skill-groups).
+Fresh `vasir init` installs the 11 base skills. Browse IDs and short descriptions with `vasir skills`, optionally followed by group names. Use `vasir groups gamedev` to inspect the game group, and `vasir add --group gamedev` to install it. Repeated group flags combine into a deduplicated union: `base`, `frontend`, `gamedev`, and `miscellaneous` contain 11, 5, 29, and 22 skills, covering all 67 catalog skills. Group selection and AGENTS profiles are independent. See [group usage and editing](../README.md#named-skill-groups).
 
 ### base (11 skills)
 
@@ -211,3 +211,30 @@ This group contains 28 game-related imports and `product-designing-viral-social-
 - `threejs-improve-performance`
 - `ui-revamping-game-shell-ui`
 - `whitepaper-analyze-mmo-whitepaper`
+
+### miscellaneous (22 skills)
+
+Additional engineering, security, architecture, prompting, skill authoring, and workflow tools.
+
+- `agents-creating-folder-agents`
+- `audit-optimizing-node-backend`
+- `code-crafting-dev-ux`
+- `code-enforcing-principles`
+- `design-designing-cli`
+- `eval-implement-proof-gate`
+- `explaining-creating-interactive-articles`
+- `handoff-final-quality-gate`
+- `ops-maintain-incident-postmortem`
+- `persona-selecting`
+- `plan-prepare-goal`
+- `plan-prepare-summary`
+- `plan-question-spec-architecture`
+- `plan-question-spec-infra`
+- `prompt-create-analysis`
+- `prompt-improving-rewriting`
+- `prompt-reverse-engineering`
+- `prompt-writing-persona`
+- `security-auditing-code`
+- `skills-create-analysis`
+- `skills-create-skill`
+- `testing-enforcing-mandate`

@@ -340,7 +340,7 @@ export function adoptProjectSkills({
     throw new VasirCliError({
       code: "ADOPT_SKILLS_MISSING",
       message: `No project-local skills exist under ${projectPaths.projectSkillsDirectory}.`,
-      suggestion: "Run `vasir init` to install the full catalog, or `vasir add <skill>` to install a selected subset first.",
+      suggestion: "Run `vasir init` to install the base group, or `vasir add <skill>` to install specific skills first.",
       docsRef: ADOPT_REFERENCE_DOCS_REF
     });
   }
