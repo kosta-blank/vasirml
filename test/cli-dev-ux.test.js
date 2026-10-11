@@ -269,8 +269,13 @@ test("version output gives a beginner the installed cli version immediately", as
   const statusCode = await runCommandLine(["node", "vasir", "--version"], capturedOutput);
 
   assert.equal(statusCode, 0);
-  assert.equal(capturedOutput.readStdout().trim(), "vasir-slim 0.1.0-slim.3");
+  assert.equal(capturedOutput.readStdout().trim(), "vasir-slim 0.1.ml");
   assert.equal(capturedOutput.readStderr(), "");
+  const jsonOutput = captureCommandWriters();
+  assert.equal(await runCommandLine(["node", "vasir", "--version", "--json"], jsonOutput), 0);
+  const version = JSON.parse(jsonOutput.readStdout());
+  assert.equal(version.displayVersion, "0.1.ml");
+  assert.equal(version.version, "0.1.0-ml");
 });
 
 test("list supports json output for automation and llm consumers", async () => {

@@ -81,7 +81,7 @@ function writeJson(outputWriter, payload) {
 
 function formatVersionText() {
   const packageMetadata = readPackageMetadata();
-  return `${packageMetadata.name} ${packageMetadata.version}`;
+  return `${packageMetadata.name} ${packageMetadata.displayVersion ?? packageMetadata.version}`;
 }
 
 function startTiming() {
@@ -4474,7 +4474,8 @@ export async function runCommandLine(
           command: commandName,
           status: "success",
           name: packageMetadata.name,
-          version: packageMetadata.version
+          version: packageMetadata.version,
+          displayVersion: packageMetadata.displayVersion ?? packageMetadata.version
         });
       } else {
         writeLine(stdoutWriter, formatVersionText());

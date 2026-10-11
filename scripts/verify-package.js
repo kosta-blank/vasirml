@@ -158,7 +158,10 @@ try {
     const result = process.platform === "win32"
       ? run("installed-shim-version", "cmd.exe", ["/d", "/s", "/c", `""${shim}" --version"`], installRoot)
       : run("installed-shim-version", shim, ["--version"], installRoot);
-    assert.equal(result.stdout.trim(), `${release.name} ${release.version}`);
+    assert.equal(result.stdout.trim(), `${release.name} ${release.displayVersion ?? release.version}`);
+    const version = cliJson("installed-version-json", ["--version"], installRoot);
+    assert.equal(version.version, release.version);
+    assert.equal(version.displayVersion, release.displayVersion ?? release.version);
   });
   seedProject(allProject, "all-reviewed-skills-check");
   seedProject(coreProject, "core-reviewed-skills-check");

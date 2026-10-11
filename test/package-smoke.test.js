@@ -72,7 +72,7 @@ test("npm pack produces a runnable vasir binary with help and add support", (tes
 
   const versionResult = runCommand(binaryPath, ["--version"], packDirectory, npmEnvironmentVariables);
   assert.equal(versionResult.status, 0, versionResult.stderr);
-  assert.equal(versionResult.stdout.trim(), "vasir-slim 0.1.0-slim.3");
+  assert.equal(versionResult.stdout.trim(), "vasir-slim 0.1.ml");
 
   const statusResult = runCommand(binaryPath, [], packDirectory, npmEnvironmentVariables);
   assert.equal(statusResult.status, 0, statusResult.stderr);

@@ -1,6 +1,6 @@
 # Vasir — skills and project contracts
 
-This repository combines Vasir's CLI and generated AGENTS/CLAUDE workflow with 67 active skills: 38 reviewed skills and 29 source imports pending review. Skill folders and CLI requests use canonical hyphenated identifiers; old collection IDs are provenance only and are not CLI aliases. The package is `vasir-slim` version `0.1.0-slim.3`, marked `private: true`, and distributed as a packed archive rather than published to npm.
+This repository combines Vasir's CLI and generated AGENTS/CLAUDE workflow with 67 active skills: 38 reviewed skills and 29 source imports pending review. Skill folders and CLI requests use canonical hyphenated identifiers; old collection IDs are provenance only and are not CLI aliases. The release label is `0.1.ml` (shown by `vasir --version`); the npm-compatible package version is `0.1.0-ml`. The package is `vasir-slim`, marked `private: true`, and distributed as a packed archive rather than published to npm.
 
 Vasir gives each project generated root contracts, an authored source for local constraints, and a managed skill tree:
 
@@ -30,19 +30,19 @@ npm pack
 Install the generated archive into a chosen local project. Replace the archive path below with the relative path to the archive you built:
 
 ```sh
-npm install --offline --no-audit --no-fund ../vasirml/vasir-slim-0.1.0-slim.3.tgz
+npm install --offline --no-audit --no-fund ../vasirml/vasir-slim-0.1.0-ml.tgz
 ./node_modules/.bin/vasir --version
 ./node_modules/.bin/vasir context --json --repo-root .
 ```
 
-With pnpm, use `pnpm add --offline ../vasirml/vasir-slim-0.1.0-slim.3.tgz` and `pnpm exec vasir --version`. The packed archive supports offline installation; building from a fresh source checkout requires installing its declared dependency first.
+With pnpm, use `pnpm add --offline ../vasirml/vasir-slim-0.1.0-ml.tgz` and `pnpm exec vasir --version`. The packed archive supports offline installation; building from a fresh source checkout requires installing its declared dependency first.
 
 For subsequent local commands, use `npm exec -- vasir ...`, `pnpm exec vasir ...`, or invoke the installed shim directly. In Windows PowerShell the direct shim is `./node_modules/.bin/vasir.cmd`.
 
 For a global CLI installation:
 
 ```sh
-npm install -g --offline --no-audit --no-fund ./vasir-slim-0.1.0-slim.3.tgz
+npm install -g --offline --no-audit --no-fund ./vasir-slim-0.1.0-ml.tgz
 vasir --version
 ```
 
@@ -225,7 +225,7 @@ npm run check:registry
 npm run check:review
 npm test
 npm pack
-npm run check:package -- ./vasir-slim-0.1.0-slim.3.tgz
+npm run check:package -- ./vasir-slim-0.1.0-ml.tgz
 ```
 
 `registry.json` inventories local skills and includes the package version in its header. `.vasir-catalog-manifest.json` hashes `registry.json`, `.agents/skills/`, and `templates/`; documentation and group definitions are not catalog hash inputs. `SKILL.md` is the primary skill source; `meta.json` remains a compatibility fallback. CI installs with `npm ci`, checks both projections, tests representative supported Node versions on Linux, Windows, and macOS, and validates package contents. Tag and manual release runs produce a downloadable archive artifact without npm publication.

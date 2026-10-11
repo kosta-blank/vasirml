@@ -910,13 +910,13 @@ test("add records install provenance for safer repo updates", async () => {
   );
 
   assert.equal(installState.schemaVersion, 3);
-  assert.equal(installState.catalog.packageVersion, "0.1.0-slim.3");
+  assert.equal(installState.catalog.packageVersion, "0.1.0-ml");
   assert.equal(typeof installState.catalog.sourceHash, "string");
   assert.ok(installState.catalog.sourceHash.length > 0);
   assert.equal(installState.catalog.trackingMode, "selected");
   assert.equal(installState.skills.react.provenance.skillVersion, "1.0.0");
   assert.equal(installState.skills.react.provenance.sourcePath, ".agents/skills/react");
-  assert.equal(installState.skills.react.provenance.installedByVersion, "0.1.0-slim.3");
+  assert.equal(installState.skills.react.provenance.installedByVersion, "0.1.0-ml");
   assert.equal(typeof installState.skills.react.provenance.installedAt, "string");
 });
 

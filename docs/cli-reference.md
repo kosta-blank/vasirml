@@ -7,7 +7,7 @@ Use this page when you need facts about commands, flags, JSON output, filesystem
 Requires Node 18.20 or later within 18.x, or Node 20.10 or newer. Install the local archive in your chosen project:
 
 ```sh
-npm install --offline --no-audit --no-fund /absolute/path/vasir-slim-0.1.0-slim.3.tgz
+npm install --offline --no-audit --no-fund /absolute/path/vasir-slim-0.1.0-ml.tgz
 ./node_modules/.bin/vasir --version
 ```
 
@@ -606,8 +606,10 @@ vasir --version
 Expected text output:
 
 ```text
-vasir-slim 0.1.0-slim.3
+vasir-slim 0.1.ml
 ```
+
+`0.1.ml` is the release label stored in `package.json` as `displayVersion`. npm requires a numeric patch component, so the package version and archive name use `0.1.0-ml`. `vasir --version --json` returns both `displayVersion: "0.1.ml"` and `version: "0.1.0-ml"`. Catalog and installation provenance retain the npm-compatible package version.
 
 ## Replace
 
