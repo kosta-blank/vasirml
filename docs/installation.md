@@ -4,6 +4,14 @@ This behavior belongs to the revised source/archive. An older installed CLI stil
 
 ## Install the revised CLI
 
+On macOS, run this in Terminal (zsh or bash) with Node.js, npm, and Git installed. The same command installs or upgrades the global CLI from `main`:
+
+```sh
+npm install -g "git+https://github.com/kosta-blank/vasirml.git#main"
+vasir --version
+vasir groups
+```
+
 From this source checkout, after dependencies are installed:
 
 ```sh
@@ -100,7 +108,25 @@ vasir uninstall --dry-run
 vasir uninstall
 ```
 
-Remove it from several explicit project roots in one command (quote paths containing spaces):
+Remove it from several explicit project roots in one command (replace the example paths with your own).
+
+macOS Terminal (zsh or bash):
+
+```sh
+vasir uninstall "$HOME/Projects/app-one" "$HOME/Projects/app-two" --dry-run
+vasir uninstall "$HOME/Projects/app-one" "$HOME/Projects/app-two"
+```
+
+For one Mac project:
+
+```sh
+vasir uninstall --repo-root "$HOME/Projects/app-one" --dry-run
+vasir uninstall --repo-root "$HOME/Projects/app-one"
+```
+
+Use `"$HOME/..."` for quoted home-directory paths; a quoted `"~/..."` does not expand to your home directory. Keep paths quoted when they contain spaces.
+
+Windows PowerShell:
 
 ```powershell
 vasir uninstall "C:\Projects\app-one" "C:\Projects\app-two" --dry-run
