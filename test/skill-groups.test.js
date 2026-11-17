@@ -359,6 +359,88 @@ test("overlap, repeated groups, and interleaved individual skills deduplicate in
   assertInstalledBytes(f, [a, b, c]);
 });
 
+for (const [tier, argument, count] of [["A", "a", 20], ["B", "B", 18], ["C", "c", 29]]) {
+  test(`tier ${tier} installs its ${count} exact skill bundles`, async (t) => {
+    const f = await fixture(t);
+    const names = canonicalPriorities.tiers[tier];
+    const result = await f.invoke(["add", "--tier", argument, "--json"]);
+    assert.equal(result.exitCode, 0, result.stderr);
+    assert.deepEqual(result.payload.selectedTiers, [tier]);
+    assert.deepEqual(result.payload.selectedGroups, []);
+    assert.equal(result.payload.installedSkills.length, count);
+    assert.deepEqual(result.payload.installedSkills, names);
+    assertInstalledBytes(f, names);
+    const config = JSON.parse(fs.readFileSync(path.join(f.project, ".agents/vasir.json")));
+    assert.deepEqual(config.tracking, {
+      mode: "selected",
+      skillNames: [...names].sort((left, right) => left.localeCompare(right))
+    });
+  });
+}
+
+test("tier add uses the effective override and deduplicates mixed selectors in argument order", async (t) => {
+  const f = await fixture(t);
+  const override = path.join(f.directory, "override");
+  fs.cpSync(path.join(f.bundle, "templates"), path.join(override, "templates"), { recursive: true });
+  const skills = f.registry.skills.slice(0, 5);
+  const [first, second, third, fourth, fifth] = skills.map((entry) => entry.name);
+  fs.writeFileSync(path.join(override, "registry.json"), JSON.stringify({ ...f.registry, skills }));
+  for (const entry of skills) {
+    fs.cpSync(path.join(f.bundle, entry.path), path.join(override, entry.path), { recursive: true });
+  }
+  const prioritiesPath = path.join(override, "skill-priorities.json");
+  const writePriorities = (tiers) => fs.writeFileSync(prioritiesPath, JSON.stringify({ schemaVersion: 1, tiers }));
+  fs.writeFileSync(path.join(override, "skill-groups.json"), JSON.stringify({ schemaVersion: 1, groups: {
+    mixed: { description: "Mixed skills", skills: [third, fourth] }
+  } }));
+  const options = { repositoryUrl: pathToFileURL(override).href };
+  writePriorities({ A: [first], B: [second, third], C: ["missing-skill"] });
+  const invalid = await f.invoke(["add", "--tier", "B", "--json"], options);
+  assert.equal(invalid.payload.code, "INVALID_SKILL_PRIORITIES", invalid.stderr);
+  assert.match(invalid.payload.message, /effective catalog/);
+  assert.deepEqual(snapshot(f.home), {});
+  assert.deepEqual(snapshot(f.project), {});
+
+  writePriorities({ A: [first], B: [second, third], C: [] });
+  const result = await f.invoke([
+    "add", fifth, "--tier", "b", "--group", "mixed", "--tier", "C", "--tier", "A", "--tier", "B", second, "--json"
+  ], options);
+  assert.equal(result.exitCode, 0, result.stderr);
+  assert.deepEqual(result.payload.selectedTiers, ["B", "C", "A"]);
+  assert.deepEqual(result.payload.selectedGroups, ["mixed"]);
+  assert.deepEqual(result.payload.installedSkills, [fifth, second, third, fourth, first]);
+  assertInstalledBytes(f, [first, second, third, fourth, fifth]);
+});
+
+test("invalid and empty tier selections fail before cache or project mutation", async (t) => {
+  const f = await fixture(t);
+  f.writePriorities({ schemaVersion: 1, tiers: { A: [f.registry.skills[0].name], B: [], C: [] } });
+  for (const [args, code] of [
+    [["add", "--tier"], "TIER_FLAG_VALUE_REQUIRED"],
+    [["add", "--tier", "D"], "UNKNOWN_SKILL_TIER"],
+    [["add", "--tier", "B,C"], "UNKNOWN_SKILL_TIER"],
+    [["add", "ALL", "--tier", "A"], "ALL_SKILLS_REQUEST_CONFLICT"],
+    [["init", "--tier", "A"], "INVALID_COMMAND_FLAG"],
+    [["remove", "--tier", "A"], "INVALID_COMMAND_FLAG"],
+    [["groups", "--tier", "A"], "INVALID_COMMAND_FLAG"],
+    [["add", "--tier=B"], "UNKNOWN_FLAG"],
+    [["add", "--tier", "B", "--tier", "c"], "SKILL_NAME_REQUIRED"]
+  ]) {
+    const result = await f.invoke([...args, "--json"]);
+    assert.equal(result.exitCode, 1, args.join(" "));
+    assert.equal(result.payload.code, code, result.stderr);
+    assert.equal(result.stdout, "");
+    assert.ok(result.payload.suggestion);
+    assert.deepEqual(snapshot(f.home), {});
+    assert.deepEqual(snapshot(f.project), {});
+  }
+  fs.writeFileSync(path.join(f.bundle, "skill-priorities.json"), "{broken");
+  const malformed = await f.invoke(["add", "--tier", "A", "--json"]);
+  assert.equal(malformed.payload.code, "INVALID_SKILL_PRIORITIES", malformed.stderr);
+  assert.deepEqual(snapshot(f.home), {});
+  assert.deepEqual(snapshot(f.project), {});
+});
+
 for (const [args, code] of [
   [["add", "--group"], "GROUP_FLAG_VALUE_REQUIRED"],
   [["add", "--group", "--json"], "GROUP_FLAG_VALUE_REQUIRED"],
@@ -435,6 +517,7 @@ test("plain individual add and add all retain installation and tracking behavior
   assert.equal(individual.exitCode, 0, individual.stderr);
   assert.deepEqual(individual.payload.installedSkills, [name]);
   assert.deepEqual(individual.payload.selectedGroups, []);
+  assert.deepEqual(individual.payload.selectedTiers, []);
   const duplicates = await f.invoke(["add", name, name, "--replace", "--json"]);
   assert.equal(duplicates.payload.code, "DUPLICATE_SKILL_REQUEST");
   const all = await f.invoke(["add", "all", "--replace", "--json"]);
@@ -443,6 +526,43 @@ test("plain individual add and add all retain installation and tracking behavior
   const config = JSON.parse(fs.readFileSync(path.join(f.project, ".agents/vasir.json")));
   assert.equal(config.tracking.mode, "all");
   assertInstalledBytes(f, f.registry.skills.map((entry) => entry.name));
+});
+
+test("tier refresh retains other installed skills and rejects unsafe replacements", async (t) => {
+  const f = await fixture(t);
+  const [name] = canonicalPriorities.tiers.B;
+  const target = path.join(f.project, ".agents/skills", name, "SKILL.md");
+  const addTier = ["add", "--tier", "B", "--json"];
+  fs.mkdirSync(path.dirname(target), { recursive: true });
+  fs.writeFileSync(target, "Untracked local skill\n");
+  const untracked = snapshot(f.project);
+  const blockedUntracked = await f.invoke([...addTier, "--replace"]);
+  assert.equal(blockedUntracked.payload.code, "PROJECT_SKILL_UNTRACKED", blockedUntracked.stderr);
+  assert.deepEqual(snapshot(f.project), untracked);
+  fs.unlinkSync(target);
+  fs.rmdirSync(path.dirname(target));
+
+  const all = await f.invoke(["add", "all", "--json"]);
+  assert.equal(all.exitCode, 0, all.stderr);
+  const before = snapshot(f.project);
+  assert.equal((await f.invoke(addTier)).payload.code, "PROJECT_SKILL_EXISTS");
+  assert.deepEqual(snapshot(f.project), before);
+  const refreshed = await f.invoke([...addTier, "--replace"]);
+  assert.equal(refreshed.exitCode, 0, refreshed.stderr);
+  assert.deepEqual(refreshed.payload.replacedSkills, canonicalPriorities.tiers.B);
+  const allNames = f.registry.skills.map((entry) => entry.name);
+  assertInstalledBytes(f, allNames);
+  const config = JSON.parse(fs.readFileSync(path.join(f.project, ".agents/vasir.json")));
+  assert.deepEqual(config.tracking, {
+    mode: "selected",
+    skillNames: [...allNames].sort((left, right) => left.localeCompare(right))
+  });
+
+  fs.appendFileSync(target, "\nLocal customization\n");
+  const modified = snapshot(f.project);
+  const blockedModified = await f.invoke([...addTier, "--replace"]);
+  assert.equal(blockedModified.payload.code, "PROJECT_SKILL_MODIFIED", blockedModified.stderr);
+  assert.deepEqual(snapshot(f.project), modified);
 });
 
 test("repeated group add preserves safeguards and safe refresh preserves AGENTS and model choices", async (t) => {

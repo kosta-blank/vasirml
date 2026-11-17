@@ -56,7 +56,7 @@ test("npm pack produces a runnable vasir binary with help and add support", (tes
   assert.match(helpResult.stdout, /vasir diff \[skill\.\.\.\] \[--json\] \[--exit-code\] \[--repo-root <path>\]/);
   assert.match(
     helpResult.stdout,
-    /vasir add \[skill\.\.\.\] \[--group <name>\]\.\.\. \[--json\] \[--replace\] \[--agents-profile <name>\]/
+    /vasir add \[skill\.\.\.\] \[--group <name>\]\.\.\. \[--tier <A\|B\|C>\]\.\.\. \[--json\] \[--replace\] \[--agents-profile <name>\]/
   );
   assert.match(helpResult.stdout, /vasir adopt \[--json\]/);
   assert.match(helpResult.stdout, /vasir remove <skill> \[skill...\] \[--json\]/);

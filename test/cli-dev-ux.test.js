@@ -221,7 +221,7 @@ test("help output documents json support across commands and the explicit replac
   assert.match(capturedOutput.readStdout(), /vasir list \[--json\]/);
   assert.match(
     capturedOutput.readStdout(),
-    /vasir add \[skill\.\.\.\] \[--group <name>\]\.\.\. \[--json\] \[--replace\] \[--agents-profile <name>\]/
+    /vasir add \[skill\.\.\.\] \[--group <name>\]\.\.\. \[--tier <A\|B\|C>\]\.\.\. \[--json\] \[--replace\] \[--agents-profile <name>\]/
   );
   assert.match(capturedOutput.readStdout(), /vasir adopt \[--json\]/);
   assert.match(capturedOutput.readStdout(), /vasir remove <skill> \[skill...\] \[--json\]/);

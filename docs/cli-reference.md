@@ -25,7 +25,7 @@ The CLI has no external runtime dependencies. See [local installation and pnpm i
 | `init` | `vasir init [--json] [--repo-root <path>]` | Sync the bundled catalog into `~/.agents/vasir`; in a fresh repo, install and track the 20 Tier A skills; preserve existing tracking on reruns |
 | `update` | `vasir update [--json] [--dry-run] [--repo-root <path>]` | Sync `~/.agents/vasir`; then refresh whatever that repo is tracking: the full catalog or a selected installed subset |
 | `list` | `vasir list [--json]` | Read the global catalog and list available skills |
-| `add` | `vasir add [skill...] [--group <name>] [--json] [--replace] [--agents-profile <name>] [--repo-root <path>]` | Copy selected skills or named groups into the repo; repeat `--group` to combine groups; use `all` for full-catalog tracking |
+| `add` | `vasir add [skill...] [--group <name>] [--tier <A\|B\|C>] [--json] [--replace] [--agents-profile <name>] [--repo-root <path>]` | Copy skills selected by ID, group, or priority tier; repeat selectors to combine them; use `all` alone for full-catalog tracking |
 | `groups` | `vasir groups [group...] [--json]` | Read bundled named-group descriptions and memberships without creating a cache or project files |
 | `skills` | `vasir skills [group...] [--json]` | Browse canonical skill IDs, short descriptions, and group memberships without creating cache or project files |
 | `adopt` | `vasir adopt [--json] [--repo-root <path>]` | Snapshot an existing `.agents/skills` tree into Vasir-managed state without copying or overwriting files |
@@ -244,7 +244,7 @@ npm exec -- vasir add code-auditing --group frontend --replace --repo-root /path
 npm exec -- vasir add --group frontend --agents-profile frontend --replace --repo-root /path/to/project
 ```
 
-Groups expand to tracked individual skill snapshots when you run `add`. Later `update` refreshes the tracked skills; editing a group definition does not automatically install new group members. To select current members when some are already installed, run `npm exec -- vasir add --group <name> --replace --repo-root /path/to/project`. Replacement succeeds for unchanged tracked files; local edits still block replacement. Use `update` for routine refreshes. `remove` remains per-skill. `all` cannot be combined with groups or individual skills.
+Groups expand to tracked individual skill snapshots when you run `add`. Later `update` refreshes the tracked skills; editing a group definition does not automatically install new group members. To select current members when some are already installed, run `npm exec -- vasir add --group <name> --replace --repo-root /path/to/project`. Replacement succeeds for unchanged tracked files; local edits still block replacement. Use `update` for routine refreshes. `remove` remains per-skill. `all` cannot be combined with tiers, groups, or individual skills.
 
 For a globally installed CLI, use the same commands directly: `vasir groups` and `vasir add --group backend --group frontend --replace --repo-root /path/to/project`.
 
@@ -268,7 +268,18 @@ See [installation and defaults](installation.md) for exact Tier A membership.
 
 ### `add`
 
-- Purpose: copy individual skills or the deduplicated union of selected groups into the current repo root.
+`--tier A`, `--tier B`, and `--tier C` expand the validated `skill-priorities.json` into skill IDs (currently 20, 18, and 29). Lowercase values are accepted and normalized to uppercase. Repeat the flag to combine tiers; tiers may also be interleaved with `--group` and individual skill IDs. Expansion preserves argument order and installs each canonical skill once. `all` is exclusive of these selectors. Invalid or missing tiers and invalid priority definitions fail before cache or project writes.
+
+```sh
+vasir add --tier A
+vasir add --tier B --replace
+vasir add --tier C
+vasir add --tier A --tier B --group frontend --replace
+```
+
+Tier selection preserves other installed skills and uses the same concrete tracking snapshots and `--replace` safeguards as group selection. Like other selective adds, a tier add switches existing full-catalog tracking to selected-skill tracking; use `vasir add all --replace` to enroll in full-catalog tracking again. Re-adding a tier enrolls its current members; `update` does not expand the tier automatically. Empty tier selections in custom catalogs fail when the combined selection contains no skills. Fresh `init` continues to select Tier A, while existing-project init preserves tracking. See [tier installation](installation.md#install-tiers).
+
+- Purpose: copy individual skills or the deduplicated union of selected groups and tiers into the current repo root.
 - Result:
   - `.agents/skills/<name>/...` is created in the resolved repo root.
   - `.claude/skills` and `.codex/skills` are repaired as aliases to `.agents/skills`.
@@ -285,7 +296,7 @@ See [installation and defaults](installation.md) for exact Tier A membership.
   - If you pass `--agents-profile` and `AGENTS.md` or `CLAUDE.md` already exists, the command fails closed unless `--replace` is explicitly provided.
   - Repeat `--group <name>` to combine groups, optionally with individual skill names. Unknown groups or invalid definitions fail before project writes.
   - Groups expand to tracked individual skills; see `groups` above for update and removal semantics.
-  - `all` cannot be combined with groups or specific skill names in the same command.
+  - `all` cannot be combined with tiers, groups, or specific skill names in the same command.
 
 Examples:
 
@@ -635,7 +646,7 @@ Success envelope:
 - `catalogSourceDirectory`, `trackingMode`, `requestedSkills`, `hasDiff`, `hasBlockedSkills`, and `skills[]` for `diff`
 - `projectRootDirectory`, `projectConfigFilePath`, `projectSkillsDirectory`, `updatedSkills`, `agentsFilePath`, `claudeFilePath`, `wroteAgentsFile`, and `wroteClaudeFile` for repo-local `init` and `update`
 - `skills` for `list`
-- `projectRootDirectory`, `projectConfigFilePath`, `projectSkillsDirectory`, `installedSkills`, `replacedSkills`, `agentsFilePath`, `claudeFilePath`, `wroteAgentsFile`, and `wroteClaudeFile` for `add`
+- `projectRootDirectory`, `projectConfigFilePath`, `projectSkillsDirectory`, `selectedGroups`, `selectedTiers`, `installedSkills`, `replacedSkills`, `agentsFilePath`, `claudeFilePath`, `wroteAgentsFile`, and `wroteClaudeFile` for `add`; `selectedTiers` contains unique uppercase tier letters in request order
 - `subcommand`, `agentsFilePath`, `claudeFilePath`, `profile`, `wroteAgentsFile`, and `wroteClaudeFile` for `agents init`
 - `subcommand`, `agentsFilePath`, `claudeFilePath`, `profile`, `profileSource`, `purposeSource`, `nonobviousFilePath`, `wroteAgentsFile`, `wroteClaudeFile`, `wroteNonobviousFile`, `routingLines[]`, `modelRouting`, `modelRoutingSources[]`, and `issues[]` for `agents sync`
 - `projectRootDirectory`, `projectConfigFilePath`, `projectSkillsDirectory`, `adoptedSkills`, and `skippedSkills` for `adopt`
@@ -768,7 +779,7 @@ VASIR_REPOSITORY_URL=file:///absolute/path/to/vasir-fixture-repo vasir init
 
 Normal installs should not set it.
 
-An override may also provide `skill-groups.json` and `skill-priorities.json`; otherwise each definition falls back to the installed package. All referenced IDs must exist in the override registry. A reduced catalog should provide its own priorities for fresh init, for example:
+An override may also provide `skill-groups.json` and `skill-priorities.json`; otherwise each definition falls back to the installed package. All referenced IDs must exist in the override registry. A reduced catalog should provide its own priorities for fresh init and tier installation, for example:
 
 ```json
 {"schemaVersion":1,"tiers":{"A":["code-auditing"],"B":[],"C":[]}}

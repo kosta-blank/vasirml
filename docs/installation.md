@@ -36,6 +36,29 @@ vasir status
 
 Fresh init prepares the global catalog cache, installs and tracks Tier A under `.agents/skills/`, creates `.codex/skills` and `.claude/skills` aliases, writes project config/install state, and seeds missing root contracts. Outside a repository without an explicit root, init only prepares the global cache. Rerunning init in an existing managed project preserves its selected or full-catalog tracking. It does not switch an existing project to Tier A.
 
+## Install tiers
+
+These commands work in macOS Terminal and Windows PowerShell:
+
+| Tier | Skills | Install |
+| --- | ---: | --- |
+| A: frequent | 20 | `vasir add --tier A` |
+| B: occasional | 18 | `vasir add --tier B` |
+| C: game development | 29 | `vasir add --tier C` |
+
+Use `--replace` when the selection includes skills already installed, including Tier A after `init`. Unchanged tracked copies can be refreshed; locally edited copies remain protected. For example:
+
+```sh
+vasir add --tier A --replace
+vasir add --tier A --tier B --replace
+vasir add --tier A --group backend --replace
+vasir add --tier B design-building-frontend-interfaces --replace
+```
+
+Repeat `--tier` for each tier; lowercase letters also work. Tiers, groups, and individual skills combine into one deduplicated selection in argument order. `--tier` is supported only by `add`; `all` cannot be combined with tiers, groups, or individual IDs.
+
+The tier definition comes from `skill-priorities.json`. Adding a tier retains other installed skills and tracks a snapshot of its current members. `vasir update` refreshes tracked skills; it does not automatically enroll future tier members. Add the tier again to select its latest members. Even selecting all three tiers uses snapshot tracking; `vasir add all --replace` explicitly enables full-catalog tracking in an existing install. Like other selective adds, adding a tier switches an existing full-catalog tracker to selected-skill tracking while retaining its installed IDs.
+
 ## Install groups
 
 Fresh `vasir init` installs the 20 Tier A skills. Groups organize domains; tiers express frequency of use. Each non-game group includes its Tier A and Tier B members. Tier C is the unchanged game catalog. Shared skills have one canonical file and install once. Software development is the union of frontend and backend.
@@ -87,14 +110,14 @@ Profiles are separate from groups. `frontend`, `backend`, `ios`, and `generic` p
 - `plan-question-spec-architecture`
 - `testing-enforcing-mandate`
 
-Tier B contains 18 occasional skills, including security review. Select them individually or through a domain group. Tier C contains the 29 game skills, available through `gamedev`. Tiers are defined in `skill-priorities.json` and are not `--group` aliases.
+Tier B contains 18 occasional skills, including security review; install it with `vasir add --tier B`. Tier C contains the 29 game skills, available through `vasir add --tier C` or the `gamedev` group. Tiers are defined in `skill-priorities.json` and selected with `--tier`, independently of `--group`.
 
 ## Add Tier A to an existing project
 
 Init preserves an existing selection. To add the current Tier A snapshot explicitly:
 
 ```sh
-vasir add code-auditing code-crafting-dev-ux code-enforcing-principles code-fixing-bugs design-building-frontend-interfaces design-frontend-foundations design-visualizing-data doc-guard-drift documentation-writing eval-design-proof-gates eval-implement-proof-gate explaining-creating-interactive-articles handoff-final-quality-gate plan-maintain-work-spec plan-prepare-goal plan-prepare-summary plan-project-milestones plan-question-spec plan-question-spec-architecture testing-enforcing-mandate --replace
+vasir add --tier A --replace
 ```
 
 This retains other installed skills. Use `vasir remove <skill>` for deliberate removal, or `vasir add all --replace` to opt into the entire catalog.

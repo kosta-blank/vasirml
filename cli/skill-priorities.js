@@ -7,14 +7,14 @@ import { COMMANDS_REFERENCE_DOCS_REF } from "./docs-ref.js";
 
 const PRIORITIES_FILENAME = "skill-priorities.json";
 const PRIORITIES_FILE_PATH = fileURLToPath(new URL(`../${PRIORITIES_FILENAME}`, import.meta.url));
-const TIER_NAMES = ["A", "B", "C"];
+export const SKILL_TIER_NAMES = ["A", "B", "C"];
 const CANONICAL_NAME = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 
 function isRecord(value) {
   return value !== null && typeof value === "object" && !Array.isArray(value);
 }
 
-export function readDefaultSkillNames({ registry, sourceDirectory }) {
+export function readSkillTiers({ registry, sourceDirectory }) {
   const sourcePrioritiesPath = sourceDirectory && path.join(sourceDirectory, PRIORITIES_FILENAME);
   const prioritiesFilePath = sourcePrioritiesPath && fs.existsSync(sourcePrioritiesPath)
     ? sourcePrioritiesPath : PRIORITIES_FILE_PATH;
@@ -23,15 +23,15 @@ export function readDefaultSkillNames({ registry, sourceDirectory }) {
     const definitions = JSON.parse(fs.readFileSync(prioritiesFilePath, "utf8"));
     if (!isRecord(definitions) || definitions.schemaVersion !== 1 ||
         Object.keys(definitions).some((key) => !["schemaVersion", "tiers"].includes(key)) ||
-        !isRecord(definitions.tiers) || Object.keys(definitions.tiers).length !== TIER_NAMES.length ||
-        !TIER_NAMES.every((name) => Array.isArray(definitions.tiers[name])) ||
+        !isRecord(definitions.tiers) || Object.keys(definitions.tiers).length !== SKILL_TIER_NAMES.length ||
+        !SKILL_TIER_NAMES.every((name) => Array.isArray(definitions.tiers[name])) ||
         definitions.tiers.A.length === 0) {
       throw new Error("Expected schemaVersion 1 and skill lists for tiers A, B, and C, with at least one Tier A skill.");
     }
 
     const knownSkills = new Set(registry.skills.map((entry) => entry.name));
     const seenSkills = new Set();
-    for (const tierName of TIER_NAMES) {
+    for (const tierName of SKILL_TIER_NAMES) {
       for (const skillName of definitions.tiers[tierName]) {
         if (typeof skillName !== "string" || !CANONICAL_NAME.test(skillName)) {
           throw new Error(`Tier ${tierName} contains a noncanonical skill name.`);
@@ -45,7 +45,7 @@ export function readDefaultSkillNames({ registry, sourceDirectory }) {
         seenSkills.add(skillName);
       }
     }
-    return definitions.tiers.A;
+    return definitions.tiers;
   } catch (cause) {
     throw new VasirCliError({
       code: "INVALID_SKILL_PRIORITIES",
@@ -56,4 +56,8 @@ export function readDefaultSkillNames({ registry, sourceDirectory }) {
       cause
     });
   }
+}
+
+export function readDefaultSkillNames({ registry, sourceDirectory }) {
+  return readSkillTiers({ registry, sourceDirectory }).A;
 }

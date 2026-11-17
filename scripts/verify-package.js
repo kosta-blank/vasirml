@@ -33,7 +33,8 @@ const release = JSON.parse(fs.readFileSync(path.join(sourceTree, "package.json")
 const archive = path.resolve(process.argv[2] || path.join(root, `${release.name}-${release.version}.tgz`));
 const groupDefinitions = JSON.parse(fs.readFileSync(path.join(sourceTree, "skill-groups.json"), "utf8"));
 const groupNames = Object.keys(groupDefinitions.groups);
-const tierANames = JSON.parse(fs.readFileSync(path.join(sourceTree, "skill-priorities.json"), "utf8")).tiers.A;
+const tierDefinitions = JSON.parse(fs.readFileSync(path.join(sourceTree, "skill-priorities.json"), "utf8")).tiers;
+const tierANames = tierDefinitions.A;
 const combinedGroupSkills = [...new Set(groupNames.flatMap((name) => groupDefinitions.groups[name].skills))];
 const backendFrontendSkills = [...new Set(["backend", "frontend"].flatMap((name) => groupDefinitions.groups[name].skills))];
 const expandedTierASkills = [...new Set([...tierANames, ...groupDefinitions.groups.frontend.skills])];
@@ -395,6 +396,28 @@ try {
     const rejected = cliJson("unknown-skill", ["add", unknown], coreProject, 1);
     assert.equal(rejected.code, "UNKNOWN_SKILL");
     verifySkills(coreProject, coreNames);
+  });
+  check("tier selectors install exact members and combine with groups from the archive", () => {
+    const tierProjects = {};
+    for (const [tier, members] of Object.entries(tierDefinitions)) {
+      const directory = path.join(sandbox, "tier-" + tier);
+      fs.mkdirSync(directory);
+      seedProject(directory, "tier-" + tier.toLowerCase());
+      const result = cliJson("add-tier-" + tier, ["add", "--tier", tier.toLowerCase()], directory);
+      assert.deepEqual(result.selectedTiers, [tier]);
+      assert.deepEqual(result.installedSkills, members);
+      verifySkills(directory, members);
+      tierProjects[tier] = directory;
+    }
+    const mixed = cliJson("add-tier-mixed", ["add", "--tier", "A", "--tier", "b", "--tier", "B", "--group", "backend", "--replace"], tierProjects.A);
+    assert.deepEqual(mixed.selectedTiers, ["A", "B"]);
+    assert.deepEqual(mixed.selectedGroups, ["backend"]);
+    verifySkills(tierProjects.A, [...new Set([...tierDefinitions.A, ...tierDefinitions.B, ...groupDefinitions.groups.backend.skills])]);
+    const config = JSON.parse(fs.readFileSync(path.join(tierProjects.A, ".agents", "vasir.json"), "utf8"));
+    assert.equal(config.tracking.mode, "selected");
+    const invalid = cliJson("add-tier-invalid", ["add", "--tier", "D"], tierProjects.A, 1);
+    assert.equal(invalid.status, "error");
+    assert.deepEqual(JSON.parse(fs.readFileSync(path.join(tierProjects.A, ".agents", "vasir.json"), "utf8")), config);
   });
   check("batch uninstall previews and backs up managed files while preserving unrelated content", () => {
     const targets = ["uninstall-one", "uninstall-two"].map((name) => {

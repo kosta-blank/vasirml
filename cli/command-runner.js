@@ -27,7 +27,7 @@ import {
 } from "./docs-ref.js";
 import { readPackageMetadata } from "./package-metadata.js";
 import { readSkillGroups, resolveSkillGroups } from "./skill-groups.js";
-import { readDefaultSkillNames } from "./skill-priorities.js";
+import { readDefaultSkillNames, readSkillTiers, SKILL_TIER_NAMES } from "./skill-priorities.js";
 import {
   inspectGlobalCatalog,
   readCatalogSourceRegistry,
@@ -465,7 +465,7 @@ function inspectProjectSurface({
   } else if (repoStatus === "adoption-required") {
     nextSteps.push("Run `vasir repair` in this repo to bring the existing `.agents/skills` tree under Vasir management.");
   } else if (repoStatus === "not-initialized") {
-    nextSteps.push("Run `vasir init` in this repo to install Tier A skills, then `vasir add --group <name> --replace` to expand it.");
+    nextSteps.push("Run `vasir init` in this repo to install Tier A skills, then `vasir add --tier B` or `vasir add --group <name> --replace` to expand it.");
   } else if ((syncPlan?.updatedSkillNames.length ?? 0) > 0 || (syncPlan?.installedSkillNames.length ?? 0) > 0) {
     nextSteps.push("Run `vasir update --dry-run`, then `vasir update`, to refresh the tracked skills in this repo.");
   } else {
@@ -1368,7 +1368,7 @@ Usage:
   vasir list [--json]                               Show available skills from the global catalog
   vasir groups [group...] [--json]                 Inspect named skill groups without mutating files
   vasir skills [group...] [--json]                 Browse skill IDs, short descriptions, and groups without mutating files
-  vasir add [skill...] [--group <name>]... [--json] [--replace] [--agents-profile <name>] [--repo-root <path>] Copy skills into the current repo root at .agents/skills
+  vasir add [skill...] [--group <name>]... [--tier <A|B|C>]... [--json] [--replace] [--agents-profile <name>] [--repo-root <path>] Copy skills into the current repo root at .agents/skills
   vasir adopt [--json] [--repo-root <path>]        Bring an existing .agents/skills tree under Vasir management without copying files
   vasir remove <skill> [skill...] [--json] [--repo-root <path>] Remove project-local skills from the current repo root
   vasir uninstall [project-path...] [--repo-root <path>] [--dry-run] [--json] Back up and remove Vasir from one or more projects
@@ -1402,8 +1402,9 @@ Notes:
   Pass --repo-root <path> to target an explicit repo root, including monorepo subprojects.
   Use "vasir add all" to install every catalog skill into the current repo.
   Use "vasir groups" to inspect group membership and "vasir add --group frontend --group backend" to compose groups.
-  Repeat --group once per name; individual skills may be combined with groups. Group installs track the resolved skills as a snapshot.
-  "all" cannot be combined with groups.
+  Use "vasir add --tier B --tier C" to install multiple tiers. Tier letters are case-insensitive.
+  Repeat --group or --tier for each selection. Combine them with individual skills to track the resolved skill IDs as a snapshot.
+  "all" cannot be combined with individual skills, groups, or tiers.
   add auto-initializes the global catalog if needed.
   add also seeds AGENTS.md + CLAUDE.md when no root contract already exists; --agents-profile backend|frontend|ios|generic overrides profile inference.
   agents sync is the one-command generated AGENTS/CLAUDE path: it infers or accepts a profile, can target a nested app/package root with --scope, fills purpose/routing locally, injects AGENTS__non-obvious.md into both root contracts, and validates both generated contracts and their size limits.
@@ -1437,7 +1438,7 @@ function resolveRequestedAddSkillNames({ requestedSkillNames, registry }) {
     throw new VasirCliError({
       code: "SKILL_NAME_REQUIRED",
       message: "At least one skill name is required.",
-      suggestion: "Run `vasir list` to discover valid skill names, then rerun `vasir add <skill>` or `vasir add all`.",
+      suggestion: "Use `vasir add --tier A`, `vasir add all`, or find skill names with `vasir list` and run `vasir add <skill>`.",
       docsRef: ADD_REFERENCE_DOCS_REF
     });
   }
@@ -1473,7 +1474,6 @@ function parseCommandInvocation(argumentVector) {
   const rawArguments = argumentVector.slice(2);
   const positionalArguments = [];
   const skillSelections = [];
-  const groupNames = [];
   let debugRequested = false;
   let jsonOutput = false;
   let helpRequested = false;
@@ -1554,8 +1554,22 @@ function parseCommandInvocation(argumentVector) {
           docsRef: ADD_REFERENCE_DOCS_REF
         });
       }
-      groupNames.push(groupName);
       skillSelections.push({ kind: "group", name: groupName });
+      argumentIndex += 1;
+      continue;
+    }
+
+    if (rawArgument === "--tier") {
+      const tierName = rawArguments[argumentIndex + 1];
+      if (!tierName || tierName.startsWith("-")) {
+        throw new VasirCliError({
+          code: "TIER_FLAG_VALUE_REQUIRED",
+          message: "`--tier` requires exactly one tier letter (A, B, or C).",
+          suggestion: "Use `vasir add --tier B` and repeat `--tier` for each additional tier.",
+          docsRef: ADD_REFERENCE_DOCS_REF
+        });
+      }
+      skillSelections.push({ kind: "tier", name: tierName.toUpperCase() });
       argumentIndex += 1;
       continue;
     }
@@ -1683,7 +1697,6 @@ function parseCommandInvocation(argumentVector) {
   return {
     commandName,
     commandArguments: positionalArguments.slice(1),
-    groupNames,
     skillSelections,
     debugRequested,
     jsonOutput,
@@ -1958,7 +1971,7 @@ async function runInit({
         kind: "info",
         text: "Next",
         detail: projectInitialized
-          ? "Browse `vasir skills`, expand with `vasir add --group <name> --replace`, and run `vasir update` to keep tracked skills current."
+          ? "Browse `vasir skills`, expand with `vasir add --tier B` or `vasir add --group <name> --replace`, and run `vasir update` to keep tracked skills current."
           : "Run `vasir update` later in this repo to keep the tracked skills current."
       })
     );
@@ -3584,7 +3597,6 @@ function runList({
 
 async function runAdd({
   skillNames,
-  groupNames,
   skillSelections,
   agentsProfileName,
   replaceExistingSkills,
@@ -3599,30 +3611,56 @@ async function runAdd({
   stdoutWriter,
   jsonOutput
 }) {
-  // Validate selections against the effective source before cache or project mutation.
-  const { registry: sourceRegistry, sourceDirectory } = readCatalogSourceRegistry({ repositoryUrl });
-  const selectedGroups = [...new Set(groupNames)];
-  let requestedSkillNames = skillNames;
-  if (groupNames.length > 0) {
-    if (skillNames.some((name) => name.toLowerCase() === ADD_ALL_SKILLS_KEYWORD)) {
+  const selectedGroups = [...new Set(skillSelections.filter(({ kind }) => kind === "group").map(({ name }) => name))];
+  const selectedTiers = [...new Set(skillSelections.filter(({ kind }) => kind === "tier").map(({ name }) => name))];
+  const hasGroupOrTierSelection = selectedGroups.length > 0 || selectedTiers.length > 0;
+  const tracksFullCatalog = skillNames.some((name) => name.toLowerCase() === ADD_ALL_SKILLS_KEYWORD);
+  if (hasGroupOrTierSelection && tracksFullCatalog) {
+    throw new VasirCliError({
+      code: "ALL_SKILLS_REQUEST_CONFLICT",
+      message: "`all` cannot be combined with skill groups or tiers.",
+      suggestion: "Use `vasir add all`, or remove `all` and select the groups, tiers, and individual skills you want.",
+      docsRef: ADD_REFERENCE_DOCS_REF,
+      context: { selectedGroups, selectedTiers }
+    });
+  }
+  for (const tierName of selectedTiers) {
+    if (!SKILL_TIER_NAMES.includes(tierName)) {
       throw new VasirCliError({
-        code: "ALL_SKILLS_REQUEST_CONFLICT",
-        message: "`all` cannot be combined with skill groups.",
-        suggestion: "Use `vasir add all`, or remove `all` and select groups and individual skills.",
+        code: "UNKNOWN_SKILL_TIER",
+        message: `Unknown skill tier: ${tierName}`,
+        suggestion: "Use `vasir add --tier A`, `vasir add --tier B`, or `vasir add --tier C`.",
         docsRef: ADD_REFERENCE_DOCS_REF,
-        context: { selectedGroups }
+        context: { tierName, availableTiers: SKILL_TIER_NAMES }
       });
     }
-    const definitions = readSkillGroups({ registry: sourceRegistry, sourceDirectory });
-    resolveSkillGroups({ definitions, requestedGroupNames: groupNames });
-    requestedSkillNames = [...new Set(skillSelections.flatMap((selection) =>
-      selection.kind === "group" ? definitions.groups[selection.name].skills : [selection.name]
-    ))];
   }
-  const resolvedSkillNames = resolveRequestedAddSkillNames({
-    requestedSkillNames,
-    registry: sourceRegistry
-  });
+
+  // Validate selections against the effective source before cache or project mutation.
+  const { registry: sourceRegistry, sourceDirectory } = readCatalogSourceRegistry({ repositoryUrl });
+  const groupDefinitions = selectedGroups.length > 0
+    ? readSkillGroups({ registry: sourceRegistry, sourceDirectory }) : null;
+  if (groupDefinitions !== null) {
+    resolveSkillGroups({ definitions: groupDefinitions, requestedGroupNames: selectedGroups });
+  }
+  const tierSkills = selectedTiers.length > 0
+    ? readSkillTiers({ registry: sourceRegistry, sourceDirectory }) : null;
+  const resolvedSkillNames = hasGroupOrTierSelection
+    ? [...new Set(skillSelections.flatMap(({ kind, name }) => {
+        if (kind === "group") return groupDefinitions.groups[name].skills;
+        if (kind === "tier") return tierSkills[name];
+        return [name];
+      }))]
+    : resolveRequestedAddSkillNames({ requestedSkillNames: skillNames, registry: sourceRegistry });
+  if (hasGroupOrTierSelection && resolvedSkillNames.length === 0) {
+    throw new VasirCliError({
+      code: "SKILL_NAME_REQUIRED",
+      message: "The selected tiers contain no skills in the effective catalog.",
+      suggestion: "Select another tier, group, or individual skill to install.",
+      docsRef: ADD_REFERENCE_DOCS_REF,
+      context: { selectedTiers }
+    });
+  }
   const validSkillNames = new Set(sourceRegistry.skills.map((entry) => entry.name));
   for (const name of resolvedSkillNames) {
     if (!validSkillNames.has(name)) {
@@ -3641,9 +3679,6 @@ async function runAdd({
     platform,
     spawnSyncImplementation
   });
-  const tracksFullCatalog = skillNames.some(
-    (requestedSkillName) => requestedSkillName.toLowerCase() === ADD_ALL_SKILLS_KEYWORD
-  );
 
   const projectPaths = buildProjectPaths({
     currentWorkingDirectory,
@@ -3785,6 +3820,7 @@ async function runAdd({
 
   return {
     selectedGroups,
+    selectedTiers,
     globalCatalogDirectory: globalPaths.globalCatalogDirectory,
     projectRootDirectory: installResult.projectPaths.projectRootDirectory,
     projectConfigFilePath: installResult.projectPaths.projectConfigFilePath,
@@ -4041,7 +4077,6 @@ async function runEval({
 async function runSelectedCommand({
   commandName,
   commandArguments,
-  groupNames,
   skillSelections,
   agentsProfileName,
   agentsScopeArgument,
@@ -4066,11 +4101,20 @@ async function runSelectedCommand({
   environmentVariables,
   fetchImplementation
 }) {
-  if (groupNames.length > 0 && commandName !== "add") {
+  if (commandName !== "add" && skillSelections.some(({ kind }) => kind === "group")) {
     throw new VasirCliError({
       code: "INVALID_COMMAND_FLAG",
       message: "--group is only supported by `vasir add`.",
       suggestion: "Use `vasir groups [group...]` to inspect groups, or `vasir add --group <name>` to install them.",
+      docsRef: ADD_REFERENCE_DOCS_REF
+    });
+  }
+
+  if (commandName !== "add" && skillSelections.some(({ kind }) => kind === "tier")) {
+    throw new VasirCliError({
+      code: "INVALID_COMMAND_FLAG",
+      message: "--tier is only supported by `vasir add`.",
+      suggestion: "Use `vasir add --tier A`, `vasir add --tier B`, or `vasir add --tier C`.",
       docsRef: ADD_REFERENCE_DOCS_REF
     });
   }
@@ -4386,7 +4430,6 @@ async function runSelectedCommand({
   if (commandName === "add") {
     return await runAdd({
       skillNames: commandArguments,
-      groupNames,
       skillSelections,
       agentsProfileName,
       replaceExistingSkills,
@@ -4534,7 +4577,6 @@ export async function runCommandLine(
     const commandResult = await runSelectedCommand({
       commandName,
       commandArguments: invocation.commandArguments,
-      groupNames: invocation.groupNames,
       skillSelections: invocation.skillSelections,
       agentsProfileName: invocation.agentsProfileName,
       agentsScopeArgument: invocation.agentsScopeArgument,

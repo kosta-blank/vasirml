@@ -150,7 +150,7 @@ These imported skills are available for installation and are pending review. The
 
 ## Named installation groups
 
-Fresh `vasir init` installs the 20 Tier A skills. Groups organize domains; tiers express frequency of use. Each non-game group includes its Tier A and Tier B members. Tier C is the unchanged game catalog. Shared skills have one canonical file and install once. Software development is the union of frontend and backend.
+Fresh `vasir init` installs the 20 Tier A skills. Use `vasir add --tier A`, `vasir add --tier B`, or `vasir add --tier C` to select a priority tier directly; add `--replace` when its skills are already installed. Groups organize domains; tiers express frequency of use. Each non-game group includes its Tier A and Tier B members. Tier C is the unchanged game catalog. Shared skills have one canonical file and install once. Software development is the union of frontend and backend.
 
 | Group | Skills | Install |
 | --- | ---: | --- |

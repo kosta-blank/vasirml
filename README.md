@@ -117,6 +117,19 @@ Optional role choices belong under `agents.modelRouting` in `.agents/vasir.json`
 
 The host validates model availability and supported effort, applies explicit user choices first, and executes any authorized delegation or handoff. Use only a configured fallback if a route is unavailable. See [persistent routing contracts](docs/project-model-routing.md), the [project example](docs/example-agents.md#model-routing), and [complete JSON example](templates/agents/model-routing.example.json).
 
+## Priority tiers
+
+Install a priority tier with `vasir add --tier A`, `vasir add --tier B`, or `vasir add --tier C` (20, 18, and 29 skills). Letters are case-insensitive. Fresh `init` still starts with Tier A; existing projects can add it explicitly with `vasir add --tier A --replace`.
+
+Combine tiers and groups with repeated flags:
+
+```sh
+vasir add --tier A --tier B --replace
+vasir add --tier A --group backend --replace
+```
+
+Shared skills install once. Tier adds retain other installed skills and track a concrete snapshot; `--replace` refreshes only unchanged managed copies. `all` cannot be combined with tiers or groups. See [tier installation](docs/installation.md#install-tiers) for macOS and PowerShell examples and tracking behavior.
+
 ## Named skill groups
 
 Named groups are a shortcut for selecting skills. Repeated `--group` flags combine their members into a deduplicated union, and you can mix individual skill names with groups. Group selection does not select an AGENTS profile or model routing. Use `--agents-profile frontend` explicitly when you want the optional frontend root-contract scaffold.

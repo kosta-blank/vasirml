@@ -51,4 +51,8 @@ test("fresh Git installation starts and initializes Tier A without source node_m
   assert.ok(fs.existsSync(path.join(project, ".agents", "vasir.json")));
   assert.ok(fs.existsSync(path.join(project, "AGENTS.md")));
   assert.ok(fs.existsSync(path.join(project, "CLAUDE.md")));
+  const tierB = JSON.parse(run(shim, ["add", "--tier", "b", "--replace", "--repo-root", project, "--json"], project));
+  assert.deepEqual(tierB.selectedTiers, ["B"]);
+  const priorities = JSON.parse(fs.readFileSync(path.join(root, "skill-priorities.json"), "utf8")).tiers;
+  assert.deepEqual(fs.readdirSync(path.join(project, ".agents", "skills")).sort(), [...priorities.A, ...priorities.B].sort());
 });
