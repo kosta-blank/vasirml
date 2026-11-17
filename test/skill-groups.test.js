@@ -11,6 +11,7 @@ const packageRoot = fileURLToPath(new URL("../", import.meta.url));
 const catalogRoot = fs.existsSync(path.join(packageRoot, "registry.json"))
   ? packageRoot : path.resolve(packageRoot, "../../output/vasir-slim");
 const canonicalGroups = JSON.parse(fs.readFileSync(path.join(packageRoot, "skill-groups.json"), "utf8"));
+const canonicalPriorities = JSON.parse(fs.readFileSync(path.join(packageRoot, "skill-priorities.json"), "utf8"));
 
 function snapshot(directory) {
   const files = {};
@@ -41,7 +42,7 @@ async function fixture(t) {
     const source = path.join(catalogRoot, relative);
     if (fs.existsSync(source)) fs.cpSync(source, path.join(bundle, relative), { recursive: true });
   }
-  for (const relative of ["cli/command-runner.js", "cli/skill-groups.js", "skill-groups.json"]) {
+  for (const relative of ["cli/command-runner.js", "cli/skill-groups.js", "cli/skill-priorities.js", "skill-groups.json", "skill-priorities.json"]) {
     fs.copyFileSync(path.join(packageRoot, relative), path.join(bundle, relative));
   }
   const project = path.join(directory, "project");
@@ -51,6 +52,7 @@ async function fixture(t) {
   const { runCommandLine } = await import(pathToFileURL(path.join(bundle, "cli/command-runner.js")));
   const registry = JSON.parse(fs.readFileSync(path.join(bundle, "registry.json"), "utf8"));
   const writeGroups = (groups) => fs.writeFileSync(path.join(bundle, "skill-groups.json"), JSON.stringify(groups));
+  const writePriorities = (priorities) => fs.writeFileSync(path.join(bundle, "skill-priorities.json"), JSON.stringify(priorities));
   async function invoke(args, options = {}) {
     let stdout = "";
     let stderr = "";
@@ -70,7 +72,7 @@ async function fixture(t) {
     const payload = args.includes("--json") ? JSON.parse(exitCode === 0 ? stdout : stderr) : null;
     return { exitCode, stdout, stderr, payload };
   }
-  return { directory, bundle, project, home, registry, invoke, writeGroups };
+  return { directory, bundle, project, home, registry, invoke, writeGroups, writePriorities };
 }
 
 function expectedUnion(...names) {
@@ -124,14 +126,14 @@ test("groups lists definitions and unions read-only, independent of cwd", async 
     assert.deepEqual(group.skills, canonicalGroups.groups[group.name].skills);
     assert.equal(group.skillCount, group.skills.length);
   }
-  const detailed = await f.invoke(["groups", "frontend", "base", "frontend", "--json"]);
+  const detailed = await f.invoke(["groups", "frontend", "backend", "frontend", "--json"]);
   assert.equal(detailed.exitCode, 0, detailed.stderr);
-  assert.deepEqual(detailed.payload.selectedGroups, ["frontend", "base"]);
-  assert.deepEqual(detailed.payload.skills, expectedUnion("frontend", "base"));
-  const text = await f.invoke(["groups", "base"]);
+  assert.deepEqual(detailed.payload.selectedGroups, ["frontend", "backend"]);
+  assert.deepEqual(detailed.payload.skills, expectedUnion("frontend", "backend"));
+  const text = await f.invoke(["groups", "backend"]);
   assert.equal(text.exitCode, 0, text.stderr);
-  assert.ok(text.stdout.includes(`base (${canonicalGroups.groups.base.skills.length} skills)`));
-  for (const name of expectedUnion("base")) assert.ok(text.stdout.includes(name));
+  assert.ok(text.stdout.includes(`backend (${canonicalGroups.groups.backend.skills.length} skills)`));
+  for (const name of expectedUnion("backend")) assert.ok(text.stdout.includes(name));
   const unsupported = await f.invoke(["groups", "--repo-root", path.join(f.directory, "absent"), "--json"]);
   assert.equal(unsupported.payload.code, "INVALID_COMMAND_FLAG");
   assert.equal(fs.existsSync(path.join(f.directory, "absent")), false);
@@ -139,15 +141,27 @@ test("groups lists definitions and unions read-only, independent of cwd", async 
   assert.deepEqual(snapshot(f.project), beforeProject);
 });
 
-test("the four groups cover all 67 canonical skills and miscellaneous contains the remaining 22", () => {
-  assert.deepEqual(Object.keys(canonicalGroups.groups), ["base", "frontend", "gamedev", "miscellaneous"]);
-  assert.equal(canonicalGroups.groups.base.skills.length, 11);
-  assert.equal(canonicalGroups.groups.miscellaneous.skills.length, 22);
+test("the seven groups and priority tiers cover all 67 canonical skills", () => {
+  assert.deepEqual(Object.fromEntries(Object.entries(canonicalGroups.groups).map(([name, group]) => [name, group.skills.length])), {
+    "software-development": 18,
+    frontend: 15,
+    backend: 12,
+    "specs-and-documentation": 12,
+    design: 7,
+    "llm-tools": 8,
+    gamedev: 29
+  });
+  assert.deepEqual(canonicalGroups.groups["software-development"].skills, expectedUnion("frontend", "backend"));
+  const { A, B, C } = canonicalPriorities.tiers;
+  assert.deepEqual([A.length, B.length, C.length], [20, 18, 29]);
+  assert.deepEqual(C, canonicalGroups.groups.gamedev.skills);
   const registry = JSON.parse(fs.readFileSync(path.join(catalogRoot, "registry.json"), "utf8"));
   const allGroupSkills = new Set(Object.values(canonicalGroups.groups).flatMap((group) => group.skills));
   assert.equal(registry.skills.length, 67);
   assert.equal(allGroupSkills.size, 67);
-  assert.deepEqual([...allGroupSkills].sort(), registry.skills.map((skill) => skill.name).sort());
+  const allSkillNames = registry.skills.map((skill) => skill.name).sort();
+  assert.deepEqual([...allGroupSkills].sort(), allSkillNames);
+  assert.deepEqual([...A, ...B, ...C].sort(), allSkillNames);
 });
 
 test("skills lists canonical IDs and concise descriptions, supports group filters, and stays read-only", async (t) => {
@@ -175,18 +189,18 @@ test("skills lists canonical IDs and concise descriptions, supports group filter
   assert.ok(longDescription.trim().replace(/\s+/g, " ").startsWith(summaryText));
   assert.match(longDescription.trim().replace(/\s+/g, " ").slice(summaryText.length), /^\s/);
 
-  const text = await f.invoke(["skills", "base"]);
+  const text = await f.invoke(["skills", "backend"]);
   assert.equal(text.exitCode, 0, text.stderr);
-  for (const skillName of expectedUnion("base")) {
+  for (const skillName of expectedUnion("backend")) {
     const summary = listed.payload.skills.find((skill) => skill.name === skillName).description;
     assert.ok(text.stdout.includes(skillName));
     assert.ok(text.stdout.includes(summary));
   }
 
-  const filtered = await f.invoke(["skills", "miscellaneous", "base", "miscellaneous", "--json"]);
+  const filtered = await f.invoke(["skills", "design", "backend", "design", "--json"]);
   assert.equal(filtered.exitCode, 0, filtered.stderr);
-  assert.deepEqual(filtered.payload.selectedGroups, ["miscellaneous", "base"]);
-  const selectedNames = new Set(expectedUnion("miscellaneous", "base"));
+  assert.deepEqual(filtered.payload.selectedGroups, ["design", "backend"]);
+  const selectedNames = new Set(expectedUnion("design", "backend"));
   const expectedNames = f.registry.skills.filter((skill) => selectedNames.has(skill.name)).map((skill) => skill.name);
   assert.deepEqual(filtered.payload.skills.map((skill) => skill.name), expectedNames);
   assert.equal(filtered.payload.skillCount, expectedNames.length);
@@ -197,7 +211,7 @@ test("skills lists canonical IDs and concise descriptions, supports group filter
   assert.deepEqual(snapshot(f.project), beforeProject);
 });
 
-test("fresh init installs base and reruns preserve selected or all tracking", async (t) => {
+test("fresh init installs Tier A and reruns preserve selected or all tracking", async (t) => {
   const f = await fixture(t);
   const gitInit = childProcess.spawnSync("git", ["init"], { cwd: f.project, encoding: "utf8" });
   if (gitInit.error) throw gitInit.error;
@@ -208,19 +222,21 @@ test("fresh init installs base and reruns preserve selected or all tracking", as
     assert.equal(result.status, 0, result.stderr);
   }
 
-  const baseNames = expectedUnion("base");
+  const tierANames = canonicalPriorities.tiers.A;
   const initialized = await f.invoke(["init", "--json"]);
   assert.equal(initialized.exitCode, 0, initialized.stderr);
-  assert.deepEqual(fs.readdirSync(path.join(f.project, ".agents/skills")).sort(), [...baseNames].sort());
+  assert.deepEqual(fs.readdirSync(path.join(f.project, ".agents/skills")).sort(), [...tierANames].sort());
   let config = JSON.parse(fs.readFileSync(path.join(f.project, ".agents/vasir.json"), "utf8"));
   assert.equal(config.tracking.mode, "selected");
-  assert.deepEqual(config.tracking.skillNames, [...baseNames].sort((a, b) => a.localeCompare(b)));
+  assert.deepEqual(config.tracking.skillNames, [...tierANames].sort((a, b) => a.localeCompare(b)));
 
-  const expandedNames = expectedUnion("base", "frontend");
-  const expanded = await f.invoke(["add", "--group", "frontend", "--json"]);
+  const frontendNames = expectedUnion("frontend");
+  const expandedNames = [...new Set([...tierANames, ...frontendNames])];
+  const expanded = await f.invoke(["add", "--group", "frontend", "--replace", "--json"]);
   assert.equal(expanded.exitCode, 0, expanded.stderr);
-  assert.equal(expanded.payload.installedSkills.length, 5);
-  assert.equal(fs.readdirSync(path.join(f.project, ".agents/skills")).length, 16);
+  assert.equal(expanded.payload.installedSkills.length, frontendNames.length);
+  assertInstalledBytes(f, expandedNames);
+  f.writePriorities({ schemaVersion: 1, tiers: { A: [f.registry.skills[0].name], B: [], C: [] } });
   const selectedRerun = await f.invoke(["init", "--json"]);
   assert.equal(selectedRerun.exitCode, 0, selectedRerun.stderr);
   config = JSON.parse(fs.readFileSync(path.join(f.project, ".agents/vasir.json"), "utf8"));
@@ -239,20 +255,54 @@ test("fresh init installs base and reruns preserve selected or all tracking", as
   assert.deepEqual(fs.readdirSync(path.join(f.project, ".agents/skills")).sort(), [...allNames].sort());
 });
 
-test("base plus frontend installs the exact byte-preserving union and tracks a concrete snapshot", async (t) => {
+test("fresh repo init validates priorities before installing project files", async (t) => {
   const f = await fixture(t);
-  const result = await f.invoke(["add", "--group", "base", "--group", "frontend", "--agents-profile", "frontend", "--json"]);
+  const [skillName] = canonicalPriorities.tiers.A;
+  const validTiers = { A: [skillName], B: [], C: [] };
+  for (const invalid of [
+    { schemaVersion: 2, tiers: validTiers },
+    { schemaVersion: 1, tiers: { A: [skillName], B: [] } },
+    { schemaVersion: 1, tiers: { ...validTiers, D: [] } },
+    { schemaVersion: 1, tiers: { ...validTiers, A: [] } },
+    { schemaVersion: 1, tiers: { ...validTiers, A: [skillName, skillName] } },
+    { schemaVersion: 1, tiers: { ...validTiers, B: [skillName] } },
+    { schemaVersion: 1, tiers: { ...validTiers, C: ["missing-skill"] } },
+    { schemaVersion: 1, tiers: { ...validTiers, A: ["Noncanonical"] } }
+  ]) {
+    f.writePriorities(invalid);
+    const result = await f.invoke(["init", "--repo-root", f.project, "--json"]);
+    assert.equal(result.exitCode, 1);
+    assert.equal(result.payload.code, "INVALID_SKILL_PRIORITIES", result.stderr);
+    assert.deepEqual(snapshot(f.project), {});
+  }
+
+  const prioritiesFile = path.join(f.bundle, "skill-priorities.json");
+  fs.writeFileSync(prioritiesFile, "{broken");
+  assert.equal((await f.invoke(["init", "--repo-root", f.project, "--json"])).payload.code, "INVALID_SKILL_PRIORITIES");
+  fs.unlinkSync(prioritiesFile);
+  assert.equal((await f.invoke(["init", "--repo-root", f.project, "--json"])).payload.code, "INVALID_SKILL_PRIORITIES");
+
+  const cacheOnly = await f.invoke(["init", "--json"]);
+  assert.equal(cacheOnly.exitCode, 0, cacheOnly.stderr);
+  assert.equal(cacheOnly.payload.projectInitialized, false);
+  assert.ok(fs.existsSync(path.join(f.home, ".agents/vasir/registry.json")));
+  assert.deepEqual(snapshot(f.project), {});
+});
+
+test("backend plus frontend installs the exact byte-preserving union and tracks a concrete snapshot", async (t) => {
+  const f = await fixture(t);
+  const result = await f.invoke(["add", "--group", "backend", "--group", "frontend", "--agents-profile", "frontend", "--json"]);
   assert.equal(result.exitCode, 0, result.stderr);
-  assert.deepEqual(result.payload.selectedGroups, ["base", "frontend"]);
-  assert.deepEqual(result.payload.installedSkills, expectedUnion("base", "frontend"));
+  assert.deepEqual(result.payload.selectedGroups, ["backend", "frontend"]);
+  assert.deepEqual(result.payload.installedSkills, expectedUnion("backend", "frontend"));
   assert.equal(result.payload.agentsProfile, "frontend");
   assert.equal(result.payload.agentsProfileSource, "flag");
   assert.equal(result.payload.wroteAgentsFile, true);
   assert.equal(result.payload.wroteClaudeFile, true);
-  assertInstalledBytes(f, expectedUnion("base", "frontend"));
+  assertInstalledBytes(f, expectedUnion("backend", "frontend"));
   const config = JSON.parse(fs.readFileSync(path.join(f.project, ".agents/vasir.json")));
   assert.equal(config.tracking.mode, "selected");
-  assert.deepEqual(config.tracking.skillNames, expectedUnion("base", "frontend").sort((a, b) => a.localeCompare(b)));
+  assert.deepEqual(config.tracking.skillNames, expectedUnion("backend", "frontend").sort((a, b) => a.localeCompare(b)));
   assert.equal("groups" in config.tracking, false);
 });
 
@@ -277,14 +327,14 @@ test("gamedev installs all 29 pending bundles including whitepaper and nested re
   assertInstalledBytes(f, names);
 });
 
-test("base frontend and gamedev install the exact deduplicated union with preserved bundle bytes", async (t) => {
+test("backend, frontend, and gamedev install the exact deduplicated union with preserved bundle bytes", async (t) => {
   const f = await fixture(t);
-  const names = expectedUnion("base", "frontend", "gamedev");
-  const result = await f.invoke(["add", "--group", "base", "--group", "frontend", "--group", "gamedev", "--group", "gamedev", "whitepaper-analyze-mmo-whitepaper", "--json"]);
+  const names = expectedUnion("backend", "frontend", "gamedev");
+  const result = await f.invoke(["add", "--group", "backend", "--group", "frontend", "--group", "gamedev", "--group", "gamedev", "whitepaper-analyze-mmo-whitepaper", "--json"]);
   assert.equal(result.exitCode, 0, result.stderr);
-  assert.deepEqual(result.payload.selectedGroups, ["base", "frontend", "gamedev"]);
+  assert.deepEqual(result.payload.selectedGroups, ["backend", "frontend", "gamedev"]);
   assert.deepEqual(result.payload.installedSkills, names);
-  assert.equal(names.length, 45);
+  assert.equal(names.length, 47);
   assertInstalledBytes(f, names);
   assertGamedevAssets(f);
   const config = JSON.parse(fs.readFileSync(path.join(f.project, ".agents/vasir.json")));
@@ -296,15 +346,15 @@ test("overlap, repeated groups, and interleaved individual skills deduplicate in
   const f = await fixture(t);
   const [a, b, c] = f.registry.skills.map((entry) => entry.name);
   f.writeGroups({ schemaVersion: 1, groups: {
-    base: { description: "Base", skills: [a, b] },
+    backend: { description: "Backend", skills: [a, b] },
     frontend: { description: "Frontend", skills: [b, c] }
   } });
   const listed = await f.invoke(["groups", "--json"]);
   assert.deepEqual(listed.payload.skills, [a, b, c]);
   assert.equal(listed.payload.groups[0].skillCount, 2);
-  const result = await f.invoke(["add", c, "--group", "base", a, "--group", "frontend", "--group", "base", "--json"]);
+  const result = await f.invoke(["add", c, "--group", "backend", a, "--group", "frontend", "--group", "backend", "--json"]);
   assert.equal(result.exitCode, 0, result.stderr);
-  assert.deepEqual(result.payload.selectedGroups, ["base", "frontend"]);
+  assert.deepEqual(result.payload.selectedGroups, ["backend", "frontend"]);
   assert.deepEqual(result.payload.installedSkills, [c, a, b]);
   assertInstalledBytes(f, [a, b, c]);
 });
@@ -314,14 +364,14 @@ for (const [args, code] of [
   [["add", "--group", "--json"], "GROUP_FLAG_VALUE_REQUIRED"],
   [["add", "--group", "missing"], "UNKNOWN_SKILL_GROUP"],
   [["groups", "missing"], "UNKNOWN_SKILL_GROUP"],
-  [["add", "--group", "base,frontend"], "UNKNOWN_SKILL_GROUP"],
-  [["add", "--group", "Base"], "UNKNOWN_SKILL_GROUP"],
-  [["add", "--group", "base", "missing-skill"], "UNKNOWN_SKILL"],
-  [["add", "all", "--group", "base"], "ALL_SKILLS_REQUEST_CONFLICT"],
-  [["remove", "--group", "base"], "INVALID_COMMAND_FLAG"],
-  [["init", "--group", "base"], "INVALID_COMMAND_FLAG"],
-  [["groups", "--group", "base"], "INVALID_COMMAND_FLAG"],
-  [["add", "--group=base"], "UNKNOWN_FLAG"]
+  [["add", "--group", "backend,frontend"], "UNKNOWN_SKILL_GROUP"],
+  [["add", "--group", "Backend"], "UNKNOWN_SKILL_GROUP"],
+  [["add", "--group", "backend", "missing-skill"], "UNKNOWN_SKILL"],
+  [["add", "all", "--group", "backend"], "ALL_SKILLS_REQUEST_CONFLICT"],
+  [["remove", "--group", "backend"], "INVALID_COMMAND_FLAG"],
+  [["init", "--group", "backend"], "INVALID_COMMAND_FLAG"],
+  [["groups", "--group", "backend"], "INVALID_COMMAND_FLAG"],
+  [["add", "--group=backend"], "UNKNOWN_FLAG"]
 ]) {
   test(`invalid selection ${args.join(" ")} fails before mutation`, async (t) => {
     const f = await fixture(t);
@@ -338,18 +388,18 @@ test("malformed group files and unknown registry references fail read-only", asy
   const f = await fixture(t);
   for (const invalid of [null, { schemaVersion: 2, groups: {} }, { schemaVersion: 1, groups: [] },
     { schemaVersion: 1, groups: {} },
-    { schemaVersion: 1, groups: { Base: { description: "bad name", skills: [f.registry.skills[0].name] } } },
-    { schemaVersion: 1, groups: { base: { description: "", skills: [f.registry.skills[0].name] } } },
-    { schemaVersion: 1, groups: { base: { description: "Empty", skills: [] } } },
-    { schemaVersion: 1, groups: { base: { description: "Wrong type", skills: [12] } } },
-    { schemaVersion: 1, groups: { base: { description: "Unknown", skills: ["missing-skill"] } } },
+    { schemaVersion: 1, groups: { Backend: { description: "bad name", skills: [f.registry.skills[0].name] } } },
+    { schemaVersion: 1, groups: { backend: { description: "", skills: [f.registry.skills[0].name] } } },
+    { schemaVersion: 1, groups: { backend: { description: "Empty", skills: [] } } },
+    { schemaVersion: 1, groups: { backend: { description: "Wrong type", skills: [12] } } },
+    { schemaVersion: 1, groups: { backend: { description: "Unknown", skills: ["missing-skill"] } } },
     { schemaVersion: 1, unexpected: true, groups: canonicalGroups.groups },
     { schemaVersion: 1, groups: { all: { description: "Reserved", skills: [f.registry.skills[0].name] } } },
-    { schemaVersion: 1, groups: { base: { description: "Extra field", skills: [f.registry.skills[0].name], unexpected: true } } },
-    { schemaVersion: 1, groups: { base: { description: "Duplicate", skills: [f.registry.skills[0].name, f.registry.skills[0].name] } } }
+    { schemaVersion: 1, groups: { backend: { description: "Extra field", skills: [f.registry.skills[0].name], unexpected: true } } },
+    { schemaVersion: 1, groups: { backend: { description: "Duplicate", skills: [f.registry.skills[0].name, f.registry.skills[0].name] } } }
   ]) {
     f.writeGroups(invalid);
-    for (const args of [["groups", "--json"], ["add", "--group", "base", "--json"]]) {
+    for (const args of [["groups", "--json"], ["add", "--group", "backend", "--json"]]) {
       const result = await f.invoke(args);
       assert.equal(result.payload.code, "INVALID_SKILL_GROUPS", result.stderr);
     }
@@ -369,7 +419,7 @@ test("group definitions validate against the effective local catalog override", 
   fs.mkdirSync(path.join(override, "templates"));
   fs.mkdirSync(path.join(override, ".agents/skills"), { recursive: true });
   fs.writeFileSync(path.join(override, "registry.json"), JSON.stringify({ ...f.registry, skills: [] }));
-  for (const args of [["groups", "--json"], ["add", "--group", "base", "--json"]]) {
+  for (const args of [["groups", "--json"], ["add", "--group", "backend", "--json"]]) {
     const result = await f.invoke(args, { repositoryUrl: pathToFileURL(override).href });
     assert.equal(result.payload.code, "INVALID_SKILL_GROUPS", result.stderr);
     assert.match(result.payload.message, /effective catalog/);
@@ -397,7 +447,7 @@ test("plain individual add and add all retain installation and tracking behavior
 
 test("repeated group add preserves safeguards and safe refresh preserves AGENTS and model choices", async (t) => {
   const f = await fixture(t);
-  assert.equal((await f.invoke(["add", "--group", "base", "--json"])).exitCode, 0);
+  assert.equal((await f.invoke(["add", "--group", "backend", "--json"])).exitCode, 0);
   const configPath = path.join(f.project, ".agents/vasir.json");
   const config = JSON.parse(fs.readFileSync(configPath));
   config.agents = { ...config.agents, modelRouting: { codex: { execution: { model: "gpt-6.1-sol", reasoningEffort: "high" } } } };
@@ -408,29 +458,29 @@ test("repeated group add preserves safeguards and safe refresh preserves AGENTS 
   const expectedConfig = readProjectConfig({ projectPaths: buildProjectPaths({ currentWorkingDirectory: f.project }) });
   const agentsBytes = fs.readFileSync(path.join(f.project, "AGENTS.md"));
   const before = snapshot(f.project);
-  const repeated = await f.invoke(["add", "--group", "base", "--json"]);
+  const repeated = await f.invoke(["add", "--group", "backend", "--json"]);
   assert.equal(repeated.payload.code, "PROJECT_SKILL_EXISTS");
   assert.deepEqual(snapshot(f.project), before);
-  const replaced = await f.invoke(["add", "--group", "base", "--replace", "--json"]);
+  const replaced = await f.invoke(["add", "--group", "backend", "--replace", "--json"]);
   assert.equal(replaced.exitCode, 0, replaced.stderr);
-  assert.deepEqual(replaced.payload.replacedSkills, expectedUnion("base"));
+  assert.deepEqual(replaced.payload.replacedSkills, expectedUnion("backend"));
   assert.deepEqual(fs.readFileSync(path.join(f.project, "AGENTS.md")), agentsBytes);
   assert.deepEqual(JSON.parse(fs.readFileSync(configPath)).agents, expectedConfig.agents);
-  const target = path.join(f.project, ".agents/skills", expectedUnion("base")[0], "SKILL.md");
+  const target = path.join(f.project, ".agents/skills", expectedUnion("backend")[0], "SKILL.md");
   fs.appendFileSync(target, "\nLocal customization\n");
   const modified = snapshot(f.project);
-  const blocked = await f.invoke(["add", "--group", "base", "--replace", "--json"]);
+  const blocked = await f.invoke(["add", "--group", "backend", "--replace", "--json"]);
   assert.equal(blocked.payload.code, "PROJECT_SKILL_MODIFIED");
   assert.deepEqual(snapshot(f.project), modified);
 });
 
 test("update honors the group snapshot and refuses modified skills", async (t) => {
   const f = await fixture(t);
-  const names = expectedUnion("base");
-  assert.equal((await f.invoke(["add", "--group", "base", "--json"])).exitCode, 0);
+  const names = expectedUnion("backend");
+  assert.equal((await f.invoke(["add", "--group", "backend", "--json"])).exitCode, 0);
   const extra = f.registry.skills.find((entry) => !names.includes(entry.name)).name;
   const expanded = structuredClone(canonicalGroups);
-  expanded.groups.base.skills.push(extra);
+  expanded.groups.backend.skills.push(extra);
   f.writeGroups(expanded);
   const sourceSkill = path.join(f.bundle, ".agents/skills", names[0], "SKILL.md");
   fs.appendFileSync(sourceSkill, "\nUpdated managed fixture content\n");

@@ -1,30 +1,106 @@
 {
   "schemaVersion": 1,
   "groups": {
-    "base": {
-      "description": "General planning, documentation, debugging, review, and proof skills for any engineering project.",
+    "software-development": {
+      "description": "Shared engineering plus the combined frontend and backend catalog. Overlapping groups reference the same canonical skill.",
       "skills": [
-        "documentation-writing",
-        "doc-guard-drift",
-        "writing-response-quality-style-guide",
-        "code-fixing-bugs",
         "code-auditing",
-        "plan-maintain-work-spec",
-        "plan-question-spec",
-        "eval-design-proof-gates",
+        "code-fixing-bugs",
+        "code-crafting-dev-ux",
+        "code-enforcing-principles",
+        "plan-question-spec-architecture",
+        "security-auditing-code",
         "testing-auditing",
+        "testing-enforcing-mandate",
         "prompt-perform-root-cause-analysis",
-        "plan-project-milestones"
+        "design-frontend-foundations",
+        "design-building-frontend-interfaces",
+        "design-designing-typography",
+        "design-animating-interfaces",
+        "design-visualizing-data",
+        "explaining-creating-interactive-articles",
+        "audit-optimizing-node-backend",
+        "plan-question-spec-infra",
+        "ops-maintain-incident-postmortem"
       ]
     },
     "frontend": {
-      "description": "Frontend foundations, interface implementation, data visualization, typography, and animation.",
+      "description": "Web interface implementation and shared engineering review. Security review applies when the work crosses backend or privileged boundaries.",
+      "skills": [
+        "code-auditing",
+        "code-fixing-bugs",
+        "code-crafting-dev-ux",
+        "code-enforcing-principles",
+        "plan-question-spec-architecture",
+        "security-auditing-code",
+        "testing-auditing",
+        "testing-enforcing-mandate",
+        "prompt-perform-root-cause-analysis",
+        "design-frontend-foundations",
+        "design-building-frontend-interfaces",
+        "design-designing-typography",
+        "design-animating-interfaces",
+        "design-visualizing-data",
+        "explaining-creating-interactive-articles"
+      ]
+    },
+    "backend": {
+      "description": "Service architecture, APIs, performance, infrastructure, security, verification, and diagnosis.",
+      "skills": [
+        "code-auditing",
+        "code-fixing-bugs",
+        "code-crafting-dev-ux",
+        "code-enforcing-principles",
+        "plan-question-spec-architecture",
+        "security-auditing-code",
+        "testing-auditing",
+        "testing-enforcing-mandate",
+        "prompt-perform-root-cause-analysis",
+        "audit-optimizing-node-backend",
+        "plan-question-spec-infra",
+        "ops-maintain-incident-postmortem"
+      ]
+    },
+    "specs-and-documentation": {
+      "description": "Clarify work, keep specs and plans current, define and implement software proof gates, audit handoffs, and document the system and its evidence.",
+      "skills": [
+        "plan-question-spec",
+        "plan-maintain-work-spec",
+        "plan-project-milestones",
+        "plan-prepare-goal",
+        "plan-prepare-summary",
+        "eval-design-proof-gates",
+        "eval-implement-proof-gate",
+        "handoff-final-quality-gate",
+        "documentation-writing",
+        "doc-guard-drift",
+        "writing-response-quality-style-guide",
+        "ops-maintain-incident-postmortem"
+      ]
+    },
+    "design": {
+      "description": "Visual foundations, interface design, typography, motion, data evidence, interactive explanations, and terminal interfaces. Web design skills also belong to frontend.",
       "skills": [
         "design-frontend-foundations",
         "design-building-frontend-interfaces",
-        "design-visualizing-data",
         "design-designing-typography",
-        "design-animating-interfaces"
+        "design-animating-interfaces",
+        "design-visualizing-data",
+        "explaining-creating-interactive-articles",
+        "design-designing-cli"
+      ]
+    },
+    "llm-tools": {
+      "description": "Analyze and write prompts, select expert framing, author and review reusable skills, and maintain folder guidance for agents.",
+      "skills": [
+        "prompt-create-analysis",
+        "prompt-improving-rewriting",
+        "prompt-reverse-engineering",
+        "prompt-writing-persona",
+        "persona-selecting",
+        "skills-create-analysis",
+        "skills-create-skill",
+        "agents-creating-folder-agents"
       ]
     },
     "gamedev": {
@@ -59,33 +135,6 @@
         "code-threejs-rapier-performance",
         "threejs-improve-performance",
         "product-designing-viral-social-loops"
-      ]
-    },
-    "miscellaneous": {
-      "description": "Additional engineering, security, architecture, prompting, skill authoring, and workflow tools.",
-      "skills": [
-        "agents-creating-folder-agents",
-        "audit-optimizing-node-backend",
-        "code-crafting-dev-ux",
-        "code-enforcing-principles",
-        "design-designing-cli",
-        "eval-implement-proof-gate",
-        "explaining-creating-interactive-articles",
-        "handoff-final-quality-gate",
-        "ops-maintain-incident-postmortem",
-        "persona-selecting",
-        "plan-prepare-goal",
-        "plan-prepare-summary",
-        "plan-question-spec-architecture",
-        "plan-question-spec-infra",
-        "prompt-create-analysis",
-        "prompt-improving-rewriting",
-        "prompt-reverse-engineering",
-        "prompt-writing-persona",
-        "security-auditing-code",
-        "skills-create-analysis",
-        "skills-create-skill",
-        "testing-enforcing-mandate"
       ]
     }
   }

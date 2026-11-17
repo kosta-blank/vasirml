@@ -69,11 +69,9 @@ function createFixtureRepository() {
   };
 
   writeFile(path.join(repositoryDirectory, "registry.json"), `${JSON.stringify(registry, null, 2)}\n`);
-  writeFile(path.join(repositoryDirectory, "skill-groups.json"), `${JSON.stringify({
+  writeFile(path.join(repositoryDirectory, "skill-priorities.json"), `${JSON.stringify({
     schemaVersion: 1,
-    groups: {
-      base: { description: "Core skills", skills: ["react", "roguelike"] }
-    }
+    tiers: { A: ["react"], B: ["roguelike"], C: [] }
   }, null, 2)}\n`);
   writeFile(
     path.join(repositoryDirectory, "templates", "agents", "AGENTS.md"),
@@ -262,7 +260,7 @@ test("init creates the canonical global catalog and compatibility aliases", asyn
   assert.match(capturedOutput.readStdout(), /Global catalog ready/);
 });
 
-test("init inside a repo installs and tracks the base group", async () => {
+test("init inside a repo installs and tracks Tier A from the local catalog override", async () => {
   const { repositoryUrl } = createFixtureRepository();
   const homeDirectory = createTemporaryDirectory();
   const projectDirectory = createTemporaryDirectory();
@@ -286,14 +284,14 @@ test("init inside a repo installs and tracks the base group", async () => {
 
   assert.equal(statusCode, 0);
   assert.ok(fs.existsSync(path.join(projectDirectory, ".agents", "skills", "react", "SKILL.md")));
-  assert.ok(fs.existsSync(path.join(projectDirectory, ".agents", "skills", "roguelike", "SKILL.md")));
+  assert.equal(fs.existsSync(path.join(projectDirectory, ".agents", "skills", "roguelike")), false);
   assert.ok(fs.existsSync(path.join(projectDirectory, "AGENTS.md")));
   assert.ok(fs.existsSync(path.join(projectDirectory, "CLAUDE.md")));
   const projectConfig = JSON.parse(
     fs.readFileSync(path.join(projectDirectory, ".agents", "vasir.json"), "utf8")
   );
   assert.equal(projectConfig.tracking.mode, "selected");
-  assert.deepEqual(projectConfig.tracking.skillNames, ["react", "roguelike"]);
+  assert.deepEqual(projectConfig.tracking.skillNames, ["react"]);
   const installState = JSON.parse(
     fs.readFileSync(path.join(projectDirectory, ".agents", "vasir-install-state.json"), "utf8")
   );

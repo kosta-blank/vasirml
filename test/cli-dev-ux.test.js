@@ -250,7 +250,7 @@ test("help output documents json support across commands and the explicit replac
   assert.match(capturedOutput.readStdout(), /doctor is the repair-oriented command/i);
   assert.match(capturedOutput.readStdout(), /repair is the one-command recovery path/i);
   assert.match(capturedOutput.readStdout(), /diff is the review command/i);
-  assert.match(capturedOutput.readStdout(), /in a new repo, install and track the base group/i);
+  assert.match(capturedOutput.readStdout(), /in a new repo, install and track Tier A skills/i);
   assert.match(capturedOutput.readStdout(), /refreshes the skills tracked by the current repo/i);
   assert.match(capturedOutput.readStdout(), /adopt never copies or overwrites skill files/i);
   assert.match(capturedOutput.readStdout(), /mutates only the current repo/i);

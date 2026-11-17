@@ -22,7 +22,7 @@ test("real CLI JSON success keeps stdout parseable and stderr empty", (testConte
   const payload = JSON.parse(result.stdout);
   assert.equal(payload.command, "groups");
   assert.equal(payload.status, "success");
-  assert.deepEqual(payload.selectedGroups, ["base", "frontend", "gamedev", "miscellaneous"]);
+  assert.deepEqual(payload.selectedGroups, ["software-development", "frontend", "backend", "specs-and-documentation", "design", "llm-tools", "gamedev"]);
   assert.equal(payload.skillCount, 67);
   assert.equal(result.stderr, "");
 });

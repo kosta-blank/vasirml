@@ -33,14 +33,16 @@ const release = JSON.parse(fs.readFileSync(path.join(sourceTree, "package.json")
 const archive = path.resolve(process.argv[2] || path.join(root, `${release.name}-${release.version}.tgz`));
 const groupDefinitions = JSON.parse(fs.readFileSync(path.join(sourceTree, "skill-groups.json"), "utf8"));
 const groupNames = Object.keys(groupDefinitions.groups);
+const tierANames = JSON.parse(fs.readFileSync(path.join(sourceTree, "skill-priorities.json"), "utf8")).tiers.A;
 const combinedGroupSkills = [...new Set(groupNames.flatMap((name) => groupDefinitions.groups[name].skills))];
-const baseFrontendSkills = [...new Set(["base", "frontend"].flatMap((name) => groupDefinitions.groups[name].skills))];
+const backendFrontendSkills = [...new Set(["backend", "frontend"].flatMap((name) => groupDefinitions.groups[name].skills))];
+const expandedTierASkills = [...new Set([...tierANames, ...groupDefinitions.groups.frontend.skills])];
 const gamedevSkills = groupDefinitions.groups.gamedev.skills;
 const expectedNames = registry.skills.map((entry) => entry.name).sort();
 assert.equal(expectedNames.length, 67);
 assert.equal(gamedevSkills.length, 29);
 assert.equal(combinedGroupSkills.length, expectedNames.length);
-assert.equal(groupDefinitions.groups.miscellaneous.skills.length, 22);
+assert.equal(tierANames.length, 20);
 assert.ok(fs.existsSync(archive));
 const hash = (file) => crypto.createHash("sha256").update(fs.readFileSync(file)).digest("hex");
 const archiveBefore = hash(archive);
@@ -175,11 +177,11 @@ try {
     assert.equal(listed.skillCount, expectedNames.length);
     for (const skill of listed.skills) {
       assert.ok(skill.description.length > 0 && skill.description.length <= 160);
-      assert.equal(skill.groups.length, 1);
+      assert.deepEqual(skill.groups, groupNames.filter((name) => groupDefinitions.groups[name].skills.includes(skill.name)));
     }
-    const misc = cliJson("skills-miscellaneous", ["skills", "miscellaneous"], rejectedGroupProject);
-    assert.deepEqual(misc.skills.map((skill) => skill.name).sort(), [...groupDefinitions.groups.miscellaneous.skills].sort());
-    assert.match(cli("skills-readable", ["skills", "base"], rejectedGroupProject).stdout, /vasir add --group/);
+    const design = cliJson("skills-design", ["skills", "design"], rejectedGroupProject);
+    assert.deepEqual(design.skills.map((skill) => skill.name).sort(), [...groupDefinitions.groups.design.skills].sort());
+    assert.match(cli("skills-readable", ["skills", "backend"], rejectedGroupProject).stdout, /vasir add --group/);
     assert.equal(cliJson("skills-unknown-group", ["skills", "unknown"], rejectedGroupProject, 1).code, "UNKNOWN_SKILL_GROUP");
     assert.equal(fs.existsSync(path.join(taskHome, ".agents", "vasir")), false);
     assert.equal(fs.existsSync(path.join(rejectedGroupProject, ".agents")), false);
@@ -206,19 +208,19 @@ try {
   check("invalid group requests fail before project changes", () => {
     const rejected = cliJson("unknown-group", ["add", "--group", "nonexistent"], rejectedGroupProject, 1);
     assert.equal(rejected.code, "UNKNOWN_SKILL_GROUP");
-    const conflict = cliJson("group-all-conflict", ["add", "all", "--group", "base"], rejectedGroupProject, 1);
+    const conflict = cliJson("group-all-conflict", ["add", "all", "--group", "backend"], rejectedGroupProject, 1);
     assert.equal(conflict.code, "ALL_SKILLS_REQUEST_CONFLICT");
     assert.equal(fs.existsSync(path.join(rejectedGroupProject, ".agents")), false);
     assert.equal(fs.existsSync(path.join(rejectedGroupProject, "AGENTS.md")), false);
   });
-  check("base plus frontend installs exact reviewed union and selected tracking", () => {
-    const installed = cliJson("add-base-frontend", ["add", "--group", "base", "--group", "frontend", "--group", "base", "code-auditing", "--agents-profile", "frontend"], groupProject);
-    assert.deepEqual(installed.selectedGroups, ["base", "frontend"]);
-    assert.deepEqual([...installed.installedSkills].sort(), [...baseFrontendSkills].sort());
-    verifySkills(groupProject, baseFrontendSkills);
+  check("backend plus frontend installs exact reviewed union and selected tracking", () => {
+    const installed = cliJson("add-backend-frontend", ["add", "--group", "backend", "--group", "frontend", "--group", "backend", "code-auditing", "--agents-profile", "frontend"], groupProject);
+    assert.deepEqual(installed.selectedGroups, ["backend", "frontend"]);
+    assert.deepEqual([...installed.installedSkills].sort(), [...backendFrontendSkills].sort());
+    verifySkills(groupProject, backendFrontendSkills);
     const config = JSON.parse(fs.readFileSync(path.join(groupProject, ".agents", "vasir.json"), "utf8"));
     assert.equal(config.tracking.mode, "selected");
-    assert.deepEqual([...config.tracking.skillNames].sort(), [...baseFrontendSkills].sort());
+    assert.deepEqual([...config.tracking.skillNames].sort(), [...backendFrontendSkills].sort());
     assert.equal(config.agents.profile, "frontend");
     for (const host of [".codex", ".claude"]) assert.equal(fs.realpathSync(path.join(groupProject, host, "skills")), fs.realpathSync(path.join(groupProject, ".agents", "skills")));
   });
@@ -235,7 +237,7 @@ try {
     assert.equal(updated.unchangedSkills.length, gamedevSkills.length);
     verifySkills(gamedevProject, gamedevSkills);
   });
-  check("all four groups install the exact deduplicated catalog union", () => {
+  check("all seven groups install the exact deduplicated catalog union", () => {
     const installed = cliJson("add-all-groups", ["add", ...groupNames.flatMap((name) => ["--group", name]), "--group", "gamedev", "whitepaper-analyze-mmo-whitepaper"], combinedGroupProject);
     assert.deepEqual(installed.selectedGroups, groupNames);
     assert.deepEqual(installed.installedSkills, combinedGroupSkills);
@@ -252,15 +254,15 @@ try {
     saveJson(configFile, config);
     const configBefore = hash(configFile);
     const rootBefore = [hash(path.join(groupProject, "AGENTS.md")), hash(path.join(groupProject, "CLAUDE.md"))];
-    const duplicate = cliJson("group-repeat-needs-replace", ["add", "--group", "base", "--group", "frontend"], groupProject, 1);
+    const duplicate = cliJson("group-repeat-needs-replace", ["add", "--group", "backend", "--group", "frontend"], groupProject, 1);
     assert.equal(duplicate.code, "PROJECT_SKILL_EXISTS");
     assert.equal(hash(configFile), configBefore);
-    cliJson("group-safe-refresh", ["add", "--group", "base", "--group", "frontend", "--replace"], groupProject);
+    cliJson("group-safe-refresh", ["add", "--group", "backend", "--group", "frontend", "--replace"], groupProject);
     assert.deepEqual(JSON.parse(fs.readFileSync(configFile, "utf8")).agents.modelRouting, config.agents.modelRouting);
     assert.deepEqual([hash(path.join(groupProject, "AGENTS.md")), hash(path.join(groupProject, "CLAUDE.md"))], rootBefore);
     const updated = cliJson("group-selected-update", ["update"], groupProject);
-    assert.equal(updated.unchangedSkills.length, baseFrontendSkills.length);
-    verifySkills(groupProject, baseFrontendSkills);
+    assert.equal(updated.unchangedSkills.length, backendFrontendSkills.length);
+    verifySkills(groupProject, backendFrontendSkills);
   });
   check("modified group members remain protected", () => {
     const file = path.join(groupProject, ".agents", "skills", "design-frontend-foundations", "SKILL.md");
@@ -268,18 +270,18 @@ try {
     try {
       fs.appendFileSync(file, "\nLocal group journey customization.\n");
       const modifiedHash = hash(file);
-      const rejected = cliJson("group-modified-refresh-rejected", ["add", "--group", "base", "--group", "frontend", "--replace"], groupProject, 1);
+      const rejected = cliJson("group-modified-refresh-rejected", ["add", "--group", "backend", "--group", "frontend", "--replace"], groupProject, 1);
       assert.equal(rejected.code, "PROJECT_SKILL_MODIFIED");
       assert.equal(hash(file), modifiedHash);
     } finally {
       fs.writeFileSync(file, original);
     }
-    verifySkills(groupProject, baseFrontendSkills);
+    verifySkills(groupProject, backendFrontendSkills);
   });
   check("group members can be removed individually without re-enrollment", () => {
     const removedName = "design-animating-interfaces";
     cliJson("remove-group-member", ["remove", removedName], groupProject);
-    const remaining = baseFrontendSkills.filter((name) => name !== removedName);
+    const remaining = backendFrontendSkills.filter((name) => name !== removedName);
     verifySkills(groupProject, remaining);
     const updated = cliJson("update-after-group-member-removal", ["update"], groupProject);
     assert.equal(updated.unchangedSkills.length, remaining.length);
@@ -295,17 +297,18 @@ try {
       assert.equal(skill.description, expected.description);
     }
   });
-  check("init installs only base and supports explicit expansion to all 67", () => {
+  check("init installs only Tier A and supports explicit expansion to all 67", () => {
+    assert.equal(hash(path.join(installRoot, "node_modules", "vasir-slim", "skill-priorities.json")), hash(path.join(sourceTree, "skill-priorities.json")));
     const initialized = cliJson("init", ["init"]);
     assert.equal(initialized.trackingMode, "selected");
-    verifySkills(allProject, groupDefinitions.groups.base.skills);
-    assert.equal(cliJson("base-update", ["update"]).unchangedSkills.length, groupDefinitions.groups.base.skills.length);
-    assert.equal(cliJson("base-reinit", ["init"]).unchangedSkills.length, groupDefinitions.groups.base.skills.length);
-    verifySkills(allProject, groupDefinitions.groups.base.skills);
-    cliJson("expand-frontend", ["add", "--group", "frontend"]);
-    verifySkills(allProject, baseFrontendSkills);
+    verifySkills(allProject, tierANames);
+    assert.equal(cliJson("tier-a-update", ["update"]).unchangedSkills.length, tierANames.length);
+    assert.equal(cliJson("tier-a-reinit", ["init"]).unchangedSkills.length, tierANames.length);
+    verifySkills(allProject, tierANames);
+    cliJson("expand-frontend", ["add", "--group", "frontend", "--replace"]);
+    verifySkills(allProject, expandedTierASkills);
     assert.equal(cliJson("expanded-selected-reinit", ["init"]).trackingMode, "selected");
-    verifySkills(allProject, baseFrontendSkills);
+    verifySkills(allProject, expandedTierASkills);
     cliJson("explicit-add-all", ["add", "all", "--replace"]);
     assert.equal(JSON.parse(fs.readFileSync(path.join(allProject, ".agents", "vasir.json"), "utf8")).tracking.mode, "all");
     verifySkills(allProject, expectedNames);

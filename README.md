@@ -72,11 +72,11 @@ Run these commands from a target project root after installing the CLI:
 ```sh
 npm exec -- vasir init
 npm exec -- vasir skills
-npm exec -- vasir add --group frontend
+npm exec -- vasir add --group frontend --replace
 npm exec -- vasir agents sync
 ```
 
-In a fresh repo, `init` syncs the bundled catalog into `~/.agents/vasir`, copies only the 11 `base` skills into `.agents/skills/`, creates config and install state with selected-skill tracking, creates host skill links, and seeds missing root contracts. Browse short descriptions with `vasir skills`, then expand with `vasir add --group frontend`, `vasir add --group gamedev`, `vasir add --group miscellaneous`, or individual skill IDs. To opt into all 67 skills after init, use `vasir add all --replace`; unchanged tracked skills can be replaced safely, while local edits remain protected. Rerunning `init` preserves an existing repo's selected or full-catalog tracking and does not remove installed skills.
+In a fresh repo, `init` syncs the bundled catalog into `~/.agents/vasir`, copies the 20 Tier A skills into `.agents/skills/`, creates config and install state with selected-skill tracking, creates host skill links, and seeds missing root contracts. Browse short descriptions with `vasir skills`, then expand with `vasir add --group frontend --replace`, `vasir add --group gamedev`, `vasir add --group llm-tools --replace`, or individual skill IDs. To opt into all 67 skills after init, use `vasir add all --replace`; unchanged tracked skills can be replaced safely, while local edits remain protected. Rerunning `init` preserves an existing repo's selected or full-catalog tracking and does not remove installed skills.
 
 `agents sync` selects an inferred or explicit `frontend`, `backend`, `ios`, or `generic` profile, fills purpose and routing from project context, and injects the sidecar into Section 2. It validates both twins and their 32 KiB limits before writing. Edit `AGENTS__non-obvious.md`, then rerun `agents sync`.
 
@@ -124,91 +124,37 @@ npm exec -- vasir groups
 npm exec -- vasir groups gamedev
 npm exec -- vasir groups --json
 npm exec -- vasir skills
-npm exec -- vasir skills miscellaneous
+npm exec -- vasir skills llm-tools
 npm exec -- vasir skills frontend gamedev --json
-npm exec -- vasir add --group base --group frontend --repo-root /path/to/project
-npm exec -- vasir add --group gamedev --repo-root /path/to/project
-npm exec -- vasir add --group base --group frontend --group gamedev --repo-root /path/to/project
-npm exec -- vasir add code-auditing --group frontend --repo-root /path/to/project
-npm exec -- vasir add --group frontend --agents-profile frontend --repo-root /path/to/project
+npm exec -- vasir add --group backend --group frontend --replace --repo-root /path/to/project
+npm exec -- vasir add --group gamedev --replace --repo-root /path/to/project
+npm exec -- vasir add --group backend --group frontend --group gamedev --replace --repo-root /path/to/project
+npm exec -- vasir add code-auditing --group frontend --replace --repo-root /path/to/project
+npm exec -- vasir add --group frontend --agents-profile frontend --replace --repo-root /path/to/project
 ```
 
 Groups expand to tracked individual skill snapshots when you run `add`. Later `update` refreshes the tracked skills; editing a group definition does not automatically install new group members. To select current members when some are already installed, run `npm exec -- vasir add --group <name> --replace --repo-root /path/to/project`. Replacement succeeds for unchanged tracked files; local edits still block replacement. Use `update` for routine refreshes. `remove` remains per-skill. `all` cannot be combined with groups or individual skills.
 
-For a globally installed CLI, use the same commands directly: `vasir groups gamedev` and `vasir add --group gamedev --repo-root /path/to/project`.
+For a globally installed CLI, use the same commands directly: `vasir groups gamedev` and `vasir add --group gamedev --replace --repo-root /path/to/project`.
 
 Group definitions live in the repository's root `skill-groups.json`. To add a named group, add a key under `groups` with a `description` and a `skills` array of canonical IDs from the catalog; to edit a group, change those fields. Keep `schemaVersion: 1`, use lowercase hyphenated group names, and list each member once. The CLI validates definitions against the bundled registry before installing. This changes selection metadata without editing any skill content. Install dependencies with `npm ci` first. After editing definitions, update the documented memberships below and in `docs/catalog.md`, rebuild the registry, run `node bin/vasir.js groups` to inspect the result, and use `npm pack` to create an archive with your definitions.
 
 
-### base (11 skills)
+Fresh `vasir init` installs the 20 Tier A skills. Groups organize domains; tiers express frequency of use. Each non-game group includes its Tier A and Tier B members. Tier C is the unchanged game catalog. Shared skills have one canonical file and install once. Software development is the union of frontend and backend.
 
-General planning, documentation, debugging, review, and proof skills for any engineering project.
+| Group | Skills | Install |
+| --- | ---: | --- |
+| `software-development` | 18 | `vasir add --group software-development --replace` |
+| `frontend` | 15 | `vasir add --group frontend --replace` |
+| `backend` | 12 | `vasir add --group backend --replace` |
+| `specs-and-documentation` | 12 | `vasir add --group specs-and-documentation --replace` |
+| `design` | 7 | `vasir add --group design --replace` |
+| `llm-tools` | 8 | `vasir add --group llm-tools --replace` |
+| `gamedev` | 29 | `vasir add --group gamedev --replace` |
 
-- `documentation-writing`
-- `doc-guard-drift`
-- `writing-response-quality-style-guide`
-- `code-fixing-bugs`
-- `code-auditing`
-- `plan-maintain-work-spec`
-- `plan-question-spec`
-- `eval-design-proof-gates`
-- `testing-auditing`
-- `prompt-perform-root-cause-analysis`
-- `plan-project-milestones`
+Use `--replace` when expanding an existing install: unchanged tracked files can be refreshed, while local edits block replacement. On a fresh project, `vasir add --group <name>` selects only that group without first installing Tier A.
 
-### frontend (5 skills)
-
-Frontend foundations, interface implementation, data visualization, typography, and animation.
-
-- `design-frontend-foundations`
-- `design-building-frontend-interfaces`
-- `design-visualizing-data`
-- `design-designing-typography`
-- `design-animating-interfaces`
-
-### gamedev (29 skills)
-
-Game design, implementation, art, onboarding, playable QA, performance, and product growth skills. This group contains source imports pending review.
-
-The [import provenance](registry/gamedev-imports.json) records source hashes, metadata normalization, and corrected reference filenames. The original `game-qa` bundle refers to six documents absent from the supplied source; those references remain recorded for repair.
-
-- `art-direction-defining-game-art`
-- `code-threejs-rapier-performance`
-- `design-designing-end-screen`
-- `design-designing-game-ui-for-idavoll`
-- `game-adding-juice`
-- `game-ai-architecting-ai`
-- `game-art-directing`
-- `game-assets-generating-images`
-- `game-building-combat-damage`
-- `game-building-core-loop`
-- `game-building-inventory-system`
-- `game-building-loot-systems`
-- `game-creation-selecting-initial-template`
-- `game-creation-writing-game-spec`
-- `game-design-ensuring-design-coherence`
-- `game-designing-systems`
-- `game-directing`
-- `game-generating-procedural-content`
-- `game-genre-routing`
-- `game-onboarding-designing-game-onboarding`
-- `game-orchestrating-playable-build`
-- `game-proof-auditing-first-playable-comprehension`
-- `game-qa`
-- `game-tuning-economy-progression`
-- `physics-creating-interaction-system`
-- `threejs-improve-performance`
-- `ui-revamping-game-shell-ui`
-- `whitepaper-analyze-mmo-whitepaper`
-- `product-designing-viral-social-loops`
-
-### miscellaneous (22 skills)
-
-Additional engineering, security, architecture, prompting, skill authoring, and workflow tools. These are the skills outside the other three groups. Run `vasir skills miscellaneous` for short descriptions or `vasir add --group miscellaneous` to install them.
-
-`base`, `frontend`, `gamedev`, and `miscellaneous` contain 11, 5, 29, and 22 skills. Together they cover all 67 catalog skills. Group selection does not automatically choose an AGENTS profile.
-
-`vasir skills [group...]` shows each canonical skill ID, group membership, and a short description (at most 160 characters), with installation examples. Optional group arguments filter to their deduplicated union. `--json` returns `selectedGroups`, `skillCount`, and `skills` entries with `name`, `description`, and `groups`. This command is read-only and works without initializing a project or global cache. `vasir list` retains full descriptions and metadata.
+See [installation and defaults](docs/installation.md) for exact Tier A membership and [catalog](docs/catalog.md#named-installation-groups) for all group memberships.
 
 ## Source and checks
 
@@ -234,7 +180,7 @@ npm run check:package -- ./vasir-slim-0.1.0-ml.tgz
 
 The original inventory contains 66 top-level skills and one nested whitepaper skill. The existing reviewed set remains 38 skills; 39 completed reviews of selected sources and imports, including the custom project planner, supported that set after two frontend skills were consolidated into one. The 29 restored source imports are active and pending review. Old underscore-style IDs such as `code__fixing-bugs` are not CLI aliases; use canonical hyphenated IDs from the [skill catalog](docs/catalog.md). Removed or merged skills do not imply a one-to-one automatic rename.
 
-The [review evidence guide](docs/review/README.md), [interactive skill map](docs/review/skill-map.html), and [change tracker](docs/review/change-tracker.json) document the review history and reviewed skill hashes. Recommendation tiers in the map and tracker are review metadata; the CLI's actual named installation groups are `base`, `frontend`, `gamedev`, and `miscellaneous`, defined in root `skill-groups.json`.
+The [review evidence guide](docs/review/README.md), [interactive skill map](docs/review/skill-map.html), and [change tracker](docs/review/change-tracker.json) document the review history and reviewed skill hashes. Recommendation tiers in the map and tracker are review metadata; the CLI's actual named installation groups are the seven domain groups defined in root `skill-groups.json`. Current priorities and the fresh-init default are in `skill-priorities.json`; the older review map tiers are historical curation.
 
 Before migrating an existing project, back up edited skills, config, install state, and authored or generated contracts. The safest path is to initialize a separate fresh project tree with this release, select the desired groups or canonical skills, and reconcile local customizations there. For an in-place migration, inspect `vasir status`, `vasir diff`, and `vasir update --dry-run`; explicitly remove obsolete tracked skills using the release that recognizes their old IDs, then select canonical skills with the new CLI. Use `vasir adopt` only when deliberately adopting an existing tree of current-catalog canonical IDs; it records matching files and reports unknown directories as unmanaged.
 

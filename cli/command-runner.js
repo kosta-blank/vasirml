@@ -27,6 +27,7 @@ import {
 } from "./docs-ref.js";
 import { readPackageMetadata } from "./package-metadata.js";
 import { readSkillGroups, resolveSkillGroups } from "./skill-groups.js";
+import { readDefaultSkillNames } from "./skill-priorities.js";
 import {
   inspectGlobalCatalog,
   readCatalogSourceRegistry,
@@ -457,13 +458,13 @@ function inspectProjectSurface({
 
   const nextSteps = [];
   if (!repoDetected) {
-    nextSteps.push("Run `vasir init` inside a repo to start with the base group, or `vasir add <skill>` in a specific repo root.");
+    nextSteps.push("Run `vasir init` inside a repo to start with Tier A skills, or `vasir add <skill>` in a specific repo root.");
   } else if (repoStatus === "invalid-install-state") {
     nextSteps.push("Run `vasir repair` in this repo to rebuild Vasir metadata and aliases from the current repo state.");
   } else if (repoStatus === "adoption-required") {
     nextSteps.push("Run `vasir repair` in this repo to bring the existing `.agents/skills` tree under Vasir management.");
   } else if (repoStatus === "not-initialized") {
-    nextSteps.push("Run `vasir init` in this repo to install the base group, then `vasir add --group <name>` to expand it.");
+    nextSteps.push("Run `vasir init` in this repo to install Tier A skills, then `vasir add --group <name> --replace` to expand it.");
   } else if ((syncPlan?.updatedSkillNames.length ?? 0) > 0 || (syncPlan?.installedSkillNames.length ?? 0) > 0) {
     nextSteps.push("Run `vasir update --dry-run`, then `vasir update`, to refresh the tracked skills in this repo.");
   } else {
@@ -911,7 +912,7 @@ function assertRepoReadyForDiff(projectState) {
   throw new VasirCliError({
     code: "DIFF_REPO_NOT_TRACKED",
     message: "This repo is not tracking any Vasir skills yet.",
-    suggestion: "Run `vasir init` for the base group, or `vasir add <skill>` for specific skills, then rerun `vasir diff`.",
+    suggestion: "Run `vasir init` for Tier A skills, or `vasir add <skill>` for specific skills, then rerun `vasir diff`.",
     docsRef: DIFF_REFERENCE_DOCS_REF
   });
 }
@@ -1274,7 +1275,7 @@ function buildContextActionPlan(projectState) {
     return [
       createContextAction({
         argv: ["vasir", "init"],
-        reason: "Run this inside the repo you want Vasir to manage to install the base group.",
+        reason: "Run this inside the repo you want Vasir to manage to install Tier A skills.",
         mutatesFiles: true
       })
     ];
@@ -1299,7 +1300,7 @@ function buildContextActionPlan(projectState) {
     return [
       createContextAction({
         argv: ["vasir", "init"],
-        reason: "Install the base group into this repo and track those skills for future updates.",
+        reason: "Install Tier A skills into this repo and track those skills for future updates.",
         mutatesFiles: true
       }),
       createContextAction({
@@ -1361,7 +1362,7 @@ Usage:
   vasir doctor [--json] [--repo-root <path>]       Diagnose drift, alias problems, and blocked skill updates
   vasir repair [--json] [--repo-root <path>]       Repair repo-local Vasir metadata, aliases, and missing tracked skills without auto-upgrading content
   vasir diff [skill...] [--json] [--exit-code] [--repo-root <path>] Review the exact repo-local skill changes pending from the installed Vasir bundle
-  vasir init [--json] [--repo-root <path>]         Sync ~/.agents/vasir; in a new repo, install and track the base group
+  vasir init [--json] [--repo-root <path>]         Sync ~/.agents/vasir; in a new repo, install and track Tier A skills
   vasir update [--json] [--dry-run] [--repo-root <path>] Sync ~/.agents/vasir and update the tracked Vasir skills in this repo
   vasir list [--json]                               Show available skills from the global catalog
   vasir groups [group...] [--json]                 Inspect named skill groups without mutating files
@@ -1390,7 +1391,7 @@ Notes:
   repair is the one-command recovery path: it rebuilds safe repo metadata, repairs aliases, and restores missing tracked skills.
   diff is the review command: it shows the exact tracked skill files that would change before you run update.
   init outside a repo mutates only the global catalog under ~/.agents/vasir.
-  init inside a new repo installs the base group; rerunning it preserves the repo's existing tracking selection.
+  init inside a new repo installs Tier A skills; rerunning it preserves the repo's existing tracking selection.
   init/update automatically quarantine dirty global cache contents to ~/.agents/vasir.dirty-backup.<timestamp> before rebuilding.
   update mutates the global catalog under ~/.agents/vasir and refreshes the skills tracked by the current repo.
   update --dry-run shows the global refresh, dirty-cache quarantine, and repo-local skill changes without mutating either location.
@@ -1398,7 +1399,7 @@ Notes:
   adopt never copies or overwrites skill files; it snapshots the existing .agents/skills tree into .agents/vasir.json and .agents/vasir-install-state.json.
   Pass --repo-root <path> to target an explicit repo root, including monorepo subprojects.
   Use "vasir add all" to install every catalog skill into the current repo.
-  Use "vasir groups" to inspect group membership and "vasir add --group base --group frontend" to compose groups.
+  Use "vasir groups" to inspect group membership and "vasir add --group frontend --group backend" to compose groups.
   Repeat --group once per name; individual skills may be combined with groups. Group installs track the resolved skills as a snapshot.
   "all" cannot be combined with groups.
   add auto-initializes the global catalog if needed.
@@ -1545,7 +1546,7 @@ function parseCommandInvocation(argumentVector) {
         throw new VasirCliError({
           code: "GROUP_FLAG_VALUE_REQUIRED",
           message: "`--group` requires exactly one group name.",
-          suggestion: "Use `vasir add --group base --group frontend`; run `vasir groups` for valid names.",
+          suggestion: "Use `vasir add --group frontend --group backend`; run `vasir groups` for valid names.",
           docsRef: ADD_REFERENCE_DOCS_REF
         });
       }
@@ -1732,7 +1733,7 @@ async function runInit({
         ui.formatStatusLine({
           kind: "info",
           text: "Repo setup",
-          detail: "Run `vasir init` inside a repo to install and track the base group there."
+          detail: "Run `vasir init` inside a repo to install and track Tier A skills there."
         })
       );
       stdoutWriter(
@@ -1788,8 +1789,7 @@ async function runInit({
   let wroteClaudeFile = false;
 
   if (syncPlan.trackingMode === null) {
-    const definitions = readSkillGroups({ registry, sourceDirectory });
-    const baseSelection = resolveSkillGroups({ definitions, requestedGroupNames: ["base"] });
+    const defaultSkillNames = readDefaultSkillNames({ registry, sourceDirectory });
     const projectAgentsFilePath = path.join(managedProjectSkills.projectPaths.projectRootDirectory, "AGENTS.md");
     const projectClaudeFilePath = path.join(managedProjectSkills.projectPaths.projectRootDirectory, "CLAUDE.md");
     const agentsSelection = fs.existsSync(projectAgentsFilePath) || fs.existsSync(projectClaudeFilePath)
@@ -1805,7 +1805,7 @@ async function runInit({
     const initResult = installSkillsIntoProject({
       registry,
       globalCatalogDirectory: globalPaths.globalCatalogDirectory,
-      skillNames: baseSelection.skills,
+      skillNames: defaultSkillNames,
       agentsProfileName: agentsSelection.profileName,
       catalogProvenance: catalogState,
       trackingMode: "selected",
@@ -1946,7 +1946,7 @@ async function runInit({
         kind: "info",
         text: "Next",
         detail: projectInitialized
-          ? "Browse `vasir skills`, expand with `vasir add --group <name>`, and run `vasir update` to keep tracked skills current."
+          ? "Browse `vasir skills`, expand with `vasir add --group <name> --replace`, and run `vasir update` to keep tracked skills current."
           : "Run `vasir update` later in this repo to keep the tracked skills current."
       })
     );
@@ -3009,7 +3009,7 @@ function runRepair({
     throw new VasirCliError({
       code: "REPAIR_NOTHING_TO_DO",
       message: "This repo does not have any Vasir-managed state to repair yet.",
-      suggestion: "Run `vasir init` for the base group, or `vasir add <skill>` for specific skills, before using `vasir repair`.",
+      suggestion: "Run `vasir init` for Tier A skills, or `vasir add <skill>` for specific skills, before using `vasir repair`.",
       docsRef: REPAIR_REFERENCE_DOCS_REF
     });
   }
@@ -3484,7 +3484,7 @@ function runUpdate({
         ui.formatStatusLine({
           kind: "warn",
           text: "Repo not initialized",
-          detail: "Run `vasir init` in this repo to install and track the base group, or `vasir add <skill>` to track specific skills."
+          detail: "Run `vasir init` in this repo to install and track Tier A skills, or `vasir add <skill>` to track specific skills."
         })
       );
     }
