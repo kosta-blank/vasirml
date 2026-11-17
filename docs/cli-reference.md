@@ -11,7 +11,7 @@ npm install --offline --no-audit --no-fund /absolute/path/vasir-slim-0.1.0-ml.tg
 ./node_modules/.bin/vasir --version
 ```
 
-The dependency is bundled. See [local installation and pnpm instructions](../README.md#local-install).
+The CLI has no external runtime dependencies. See [local installation and pnpm instructions](../README.md#local-install).
 
 ## Commands
 
@@ -248,7 +248,7 @@ Groups expand to tracked individual skill snapshots when you run `add`. Later `u
 
 For a globally installed CLI, use the same commands directly: `vasir groups` and `vasir add --group backend --group frontend --replace --repo-root /path/to/project`.
 
-Group definitions live in the repository's root `skill-groups.json`. To add a named group, add a key under `groups` with a `description` and a `skills` array of canonical IDs from the catalog; to edit a group, change those fields. Keep `schemaVersion: 1`, use lowercase hyphenated group names, and list each member once. The CLI validates definitions against the bundled registry before installing. This changes selection metadata without editing any skill content. Install dependencies with `npm ci`, inspect definitions with `node bin/vasir.js groups`, and use `npm pack` to create an archive. Update the documented memberships and regenerate the public review catalog when changing group definitions.
+Group definitions live in the repository's root `skill-groups.json`. To add a named group, add a key under `groups` with a `description` and a `skills` array of canonical IDs from the catalog; to edit a group, change those fields. Keep `schemaVersion: 1`, use lowercase hyphenated group names, and list each member once. The CLI validates definitions against the bundled registry before installing. This changes selection metadata without editing any skill content. Verify the lockfile with `npm ci`, inspect definitions with `node bin/vasir.js groups`, and use `npm pack` to create an archive. Update the documented memberships and regenerate the public review catalog when changing group definitions.
 
 Fresh `vasir init` installs the 20 Tier A skills. Groups organize domains; tiers express frequency of use. Each non-game group includes its Tier A and Tier B members. Tier C is the unchanged game catalog. Shared skills have one canonical file and install once. Software development is the union of frontend and backend.
 

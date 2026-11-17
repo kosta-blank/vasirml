@@ -1,17 +1,9 @@
-import fs from "node:fs";
-import { createRequire } from "node:module";
 import process from "node:process";
-import { pathToFileURL } from "node:url";
 
 import { ansi } from "./ansi.js";
 
-// The pinned cli-spinners package publishes this data beside its entrypoint.
-// Loading the JSON as data avoids the JSON-module warning on supported Node
-// lower bounds, where the warning would contaminate CLI JSON error streams.
-const spinnerEntryPath = createRequire(import.meta.url).resolve("cli-spinners");
-const cliSpinners = JSON.parse(
-  fs.readFileSync(new URL("./spinners.json", pathToFileURL(spinnerEntryPath)), "utf8")
-);
+// Keep the startup UI self-contained for both Git and archive installations.
+const defaultSpinner = { interval: 80, frames: [..."⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏"] };
 
 export function canRenderLiveProgress(stream = process.stdout) {
   return Boolean(stream?.isTTY && typeof stream.write === "function");
@@ -19,11 +11,11 @@ export function canRenderLiveProgress(stream = process.stdout) {
 
 export function createLiveProgress({
   stream = process.stdout,
-  spinner = cliSpinners.dots,
+  spinner = defaultSpinner,
   setIntervalImplementation = globalThis.setInterval,
   clearIntervalImplementation = globalThis.clearInterval
 } = {}) {
-  const spinnerDefinition = spinner ?? cliSpinners.dots;
+  const spinnerDefinition = spinner ?? defaultSpinner;
   let active = false;
   let timerHandle = null;
   let frameIndex = 0;

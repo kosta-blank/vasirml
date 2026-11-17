@@ -18,7 +18,9 @@ export function runCommand(commandName, argumentList, currentWorkingDirectory, e
   let executable = commandName;
   let commandArguments = argumentList;
   if (commandName === "npm") {
-    const npmCliPath = process.env.VASIR_TEST_NPM_CLI || process.env.npm_execpath;
+    const bundledNpmCli = path.join(path.dirname(process.execPath), "node_modules", "npm", "bin", "npm-cli.js");
+    const npmCliPath = process.env.VASIR_TEST_NPM_CLI || process.env.npm_execpath ||
+      (fs.existsSync(bundledNpmCli) ? bundledNpmCli : null);
     if (npmCliPath && /\.(?:c?js|mjs)$/i.test(npmCliPath)) {
       executable = process.execPath;
       commandArguments = [npmCliPath, ...argumentList];

@@ -10,4 +10,4 @@ The [gamedev import record](registry/gamedev-imports.json) records original IDs,
 
 The CLI, AGENTS/CLAUDE generation, persistent model routing, documentation, tests, and development workflows retain the upstream implementation plus the derived repository changes. Historical model-routing evidence is preserved in [the implementation work spec](docs/work/agents/project-model-routing/work-spec.md); its verification describes the earlier source snapshot, not the current release checks.
 
-The private package `vasir-slim` version `0.1.0-slim.2` is distributed by packed archive. Its unchanged production dependency, `cli-spinners` 3.4.0, is bundled with its own MIT license. Named installation groups select catalog members without altering accepted skill content.
+The private package `vasir-slim` is distributed through Git and packed archives. Earlier archives bundled MIT-licensed `cli-spinners` 3.4.0. The CLI now keeps its small dots spinner definition in the runtime and has no external runtime dependencies. Named installation groups select catalog members without altering accepted skill content.

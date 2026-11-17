@@ -12,7 +12,7 @@ vasir --version
 vasir groups
 ```
 
-From this source checkout, after dependencies are installed:
+To build and install an archive from this source checkout:
 
 ```sh
 npm run build:agents

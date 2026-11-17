@@ -2,12 +2,6 @@
   "bin": {
     "vasir": "./bin/vasir.js"
   },
-  "bundledDependencies": [
-    "cli-spinners"
-  ],
-  "dependencies": {
-    "cli-spinners": "3.4.0"
-  },
   "description": "Local Vasir CLI with 67 canonical skills, including a gamedev group",
   "engines": {
     "node": "^18.20.0 || >=20.10.0"

@@ -1,6 +1,6 @@
 # Vasir — skills and project contracts
 
-This repository combines Vasir's CLI and generated AGENTS/CLAUDE workflow with 67 active skills: 38 reviewed skills and 29 source imports pending review. Skill folders and CLI requests use canonical hyphenated identifiers; old collection IDs are provenance only and are not CLI aliases. The release label is `0.1.ml` (shown by `vasir --version`); the npm-compatible package version is `0.1.0-ml`. The package is `vasir-slim`, marked `private: true`, and distributed as a packed archive rather than published to npm.
+This repository combines Vasir's CLI and generated AGENTS/CLAUDE workflow with 67 active skills: 38 reviewed skills and 29 source imports pending review. Skill folders and CLI requests use canonical hyphenated identifiers; old collection IDs are provenance only and are not CLI aliases. The release label is `0.1.ml` (shown by `vasir --version`); the npm-compatible package version is `0.1.0-ml`. The package is `vasir-slim`, marked `private: true`, and distributed through Git and packed archives rather than published to npm.
 
 Vasir gives each project generated root contracts, an authored source for local constraints, and a managed skill tree:
 
@@ -23,7 +23,7 @@ npm run check:registry
 npm pack
 ```
 
-`npm test` runs the portable `node scripts/run-tests.js` entrypoint. Install dependencies before using the source CLI. The archive bundles the existing MIT-licensed `cli-spinners` 3.4.0 production dependency.
+`npm test` runs the portable `node scripts/run-tests.js` entrypoint. The CLI has no external runtime dependencies; its progress spinner is built in.
 
 ## Local install
 
@@ -35,7 +35,7 @@ npm install --offline --no-audit --no-fund ../vasirml/vasir-slim-0.1.0-ml.tgz
 ./node_modules/.bin/vasir context --json --repo-root .
 ```
 
-With pnpm, use `pnpm add --offline ../vasirml/vasir-slim-0.1.0-ml.tgz` and `pnpm exec vasir --version`. The packed archive supports offline installation; building from a fresh source checkout requires installing its declared dependency first.
+With pnpm, use `pnpm add --offline ../vasirml/vasir-slim-0.1.0-ml.tgz` and `pnpm exec vasir --version`. The packed archive supports offline installation.
 
 For subsequent local commands, use `npm exec -- vasir ...`, `pnpm exec vasir ...`, or invoke the installed shim directly. In Windows PowerShell the direct shim is `./node_modules/.bin/vasir.cmd`.
 
@@ -46,7 +46,7 @@ npm install -g --offline --no-audit --no-fund ./vasir-slim-0.1.0-ml.tgz
 vasir --version
 ```
 
-Installing the global CLI does not automatically install skills or contracts into any project. Run `vasir init` or `vasir add` in each target project. A direct Git installation requires dependency resolution and uses `main`:
+Installing the global CLI does not automatically install skills or contracts into any project. Run `vasir init` or `vasir add` in each target project. A direct Git installation uses `main`:
 
 ```sh
 npm install -g "git+https://github.com/kosta-blank/vasirml.git#main"
@@ -139,7 +139,7 @@ Groups expand to tracked individual skill snapshots when you run `add`. Later `u
 
 For a globally installed CLI, use the same commands directly: `vasir groups gamedev` and `vasir add --group gamedev --replace --repo-root /path/to/project`.
 
-Group definitions live in the repository's root `skill-groups.json`. To add a named group, add a key under `groups` with a `description` and a `skills` array of canonical IDs from the catalog; to edit a group, change those fields. Keep `schemaVersion: 1`, use lowercase hyphenated group names, and list each member once. The CLI validates definitions against the bundled registry before installing. This changes selection metadata without editing any skill content. Install dependencies with `npm ci` first. After editing definitions, update the documented memberships below and in `docs/catalog.md`, rebuild the registry, run `node bin/vasir.js groups` to inspect the result, and use `npm pack` to create an archive with your definitions.
+Group definitions live in the repository's root `skill-groups.json`. To add a named group, add a key under `groups` with a `description` and a `skills` array of canonical IDs from the catalog; to edit a group, change those fields. Keep `schemaVersion: 1`, use lowercase hyphenated group names, and list each member once. The CLI validates definitions against the bundled registry before installing. This changes selection metadata without editing any skill content. Use `npm ci` to verify the lockfile. After editing definitions, update the documented memberships below and in `docs/catalog.md`, rebuild the registry, run `node bin/vasir.js groups` to inspect the result, and use `npm pack` to create an archive with your definitions.
 
 
 Fresh `vasir init` installs the 20 Tier A skills. Groups organize domains; tiers express frequency of use. Each non-game group includes its Tier A and Tier B members. Tier C is the unchanged game catalog. Shared skills have one canonical file and install once. Software development is the union of frontend and backend.
@@ -160,7 +160,7 @@ See [installation and defaults](docs/installation.md) for exact Tier A membershi
 
 ## Source and checks
 
-The source repository includes the CLI, templates, reviewed skills and source imports pending review, documentation, regression tests, group definitions, generators, and a Git ignore file. Install dependencies with `npm ci` before running the CLI or tests. Run `npm test` (or `node scripts/run-tests.js`) for the complete suite; use `node --test test/project-install-state.test.js test/skill-groups.test.js` for focused Windows nested-file safety and named-group checks.
+The source repository includes the CLI, templates, reviewed skills and source imports pending review, documentation, regression tests, group definitions, generators, and a Git ignore file. The CLI and tests need no external runtime packages. Run `npm test` (or `node scripts/run-tests.js`) for the complete suite; use `node --test test/project-install-state.test.js test/skill-groups.test.js` for focused Windows nested-file safety and named-group checks.
 
 After changing templates, skills, packaged docs, groups, or package metadata, regenerate agent templates before the registry:
 

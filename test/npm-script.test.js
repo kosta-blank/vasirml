@@ -16,7 +16,6 @@ function createWrapperFixture(testContext) {
   for (const directoryName of ["cli", "templates", "scripts", "registry"]) {
     fs.cpSync(path.join(REPO_ROOT, directoryName), path.join(repositoryDirectory, directoryName), { recursive: true });
   }
-  fs.cpSync(path.join(REPO_ROOT, "node_modules", "cli-spinners"), path.join(repositoryDirectory, "node_modules", "cli-spinners"), { recursive: true });
   const packageDefinition = JSON.parse(fs.readFileSync(path.join(REPO_ROOT, "package.json"), "utf8"));
   fs.writeFileSync(path.join(repositoryDirectory, "package.json"), JSON.stringify({
     name: "vasir-eval-test-fixture",
