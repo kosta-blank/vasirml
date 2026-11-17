@@ -396,6 +396,39 @@ try {
     assert.equal(rejected.code, "UNKNOWN_SKILL");
     verifySkills(coreProject, coreNames);
   });
+  check("batch uninstall previews and backs up managed files while preserving unrelated content", () => {
+    const targets = ["uninstall-one", "uninstall-two"].map((name) => {
+      const directory = path.join(sandbox, name);
+      fs.mkdirSync(directory);
+      seedProject(directory, name);
+      cliJson(`${name}-init`, ["init"], directory);
+      return directory;
+    });
+    const edited = path.join(targets[0], ".agents", "skills", "code-auditing", "SKILL.md");
+    fs.appendFileSync(edited, "\nKeep this local customization in the uninstall backup.\n");
+    const editedHash = hash(edited);
+    const custom = path.join(targets[0], ".agents", "skills", "my-private-skill");
+    fs.mkdirSync(custom);
+    fs.writeFileSync(path.join(custom, "SKILL.md"), "Private unrelated skill.\n");
+    cliJson("uninstall-batch-preview", ["uninstall", ...targets, "--dry-run"], installRoot);
+    assert.equal(hash(edited), editedHash);
+    for (const directory of targets) assert.equal(fs.existsSync(path.join(directory, ".vasir-backups")), false);
+    cliJson("uninstall-batch", ["uninstall", ...targets], installRoot);
+    for (const directory of targets) {
+      assert.equal(fs.existsSync(path.join(directory, ".agents", "vasir.json")), false);
+      assert.equal(fs.existsSync(path.join(directory, ".agents", "vasir-install-state.json")), false);
+      assert.equal(fs.existsSync(path.join(directory, "AGENTS.md")), false);
+      assert.ok(fs.existsSync(path.join(directory, "src", "index.js")));
+      assert.ok(fs.existsSync(path.join(directory, ".vasir-backups")));
+    }
+    assert.equal(fs.readFileSync(path.join(custom, "SKILL.md"), "utf8"), "Private unrelated skill.\n");
+    const backupRoot = path.join(targets[0], ".vasir-backups");
+    const savedFiles = ordinaryFiles(backupRoot);
+    const savedSkill = savedFiles.find((file) => file.endsWith("/.agents/skills/code-auditing/SKILL.md"));
+    assert.ok(savedSkill, "Edited skill must be recoverable from the backup");
+    assert.equal(hash(path.join(backupRoot, savedSkill)), editedHash);
+    cliJson("uninstall-repeat", ["uninstall", ...targets], installRoot);
+  });
   check("delivered archive remains unchanged", () => assert.equal(hash(archive), archiveBefore));
   report("passed");
   console.log(JSON.stringify({ status: "passed", checks: checks.length, commands: commandIndex, evidence: path.join(sandbox, "results.json") }));

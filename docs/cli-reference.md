@@ -30,6 +30,7 @@ The dependency is bundled. See [local installation and pnpm instructions](../REA
 | `skills` | `vasir skills [group...] [--json]` | Browse canonical skill IDs, short descriptions, and group memberships without creating cache or project files |
 | `adopt` | `vasir adopt [--json] [--repo-root <path>]` | Snapshot an existing `.agents/skills` tree into Vasir-managed state without copying or overwriting files |
 | `remove` | `vasir remove <skill> [skill...] [--json] [--repo-root <path>]` | Remove project-local skills from the current repo root |
+| `uninstall` | `vasir uninstall [project-path...] [--repo-root <path>] [--dry-run] [--json]` | Back up and remove Vasir-owned project files and matching aliases from one or several explicit project roots; preserve unrelated content and the global CLI |
 | `agents sync` | `vasir agents sync [--scope <path>] [--profile <backend\|frontend\|ios\|generic>] [--json] [--dry-run] [--repo-root <path>]` | Reconcile root or nested root `AGENTS.md` and `CLAUDE.md` from the canonical templates, local context, and `AGENTS__non-obvious.md` |
 | `agents init` | `vasir agents init <backend\|frontend\|ios\|generic> [--json] [--replace] [--repo-root <path>]` | Write canonical `AGENTS.md` and `CLAUDE.md` starters in the current repo root |
 | `agents draft-purpose` | `vasir agents draft-purpose [--json] [--write] [--model <name>] [--repo-root <path>]` | Draft a repo-specific `Purpose` paragraph for the current repo root `AGENTS.md` |
@@ -343,6 +344,14 @@ vasir remove design-building-frontend-interfaces
 vasir remove design-building-frontend-interfaces testing-enforcing-mandate
 vasir remove
 ```
+
+### `uninstall`
+
+Back up and remove a project-local Vasir installation. Use `vasir uninstall --dry-run` for a read-only preview, then `vasir uninstall` in the project. Pass several explicit project paths for a batch, or one `--repo-root` path. Mixed selection forms and nested batch roots are rejected.
+
+Tracked skill directories (including edits and user-added files inside each bundle), Vasir tracking/configuration, local Vasir evaluation history, and identifiable generated root contracts move into `.vasir-backups/` inside each target. Matching host skill aliases are removed without following their targets. Untracked skills, authored root contracts, unrelated host files, and the global CLI/cache are preserved. The output reports preserved content and backups. All targets are validated before mutation; runtime filesystem failures can still interrupt a batch after earlier projects have completed.
+
+See [removal examples and ownership rules](installation.md#remove-vasir-from-projects). A project with ambiguous legacy ownership needs reconciliation before uninstall; the command does not infer ownership from a skill's name alone.
 
 ## Agents
 

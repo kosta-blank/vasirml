@@ -96,6 +96,8 @@ npm exec -- vasir repair
 
 ## Root, nested root, and folder contracts
 
+To remove a project installation, use `vasir uninstall --dry-run` to preview, then `vasir uninstall`. For several projects, pass their paths: `vasir uninstall /path/to/one /path/to/two`. Managed files are backed up; the global CLI remains installed. See [project removal](docs/installation.md#remove-vasir-from-projects).
+
 Use root sync for project-wide rules. Use `--scope` only when a subfolder is a nested application or package root:
 
 ```sh

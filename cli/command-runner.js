@@ -57,6 +57,7 @@ import {
   readProjectInstallState,
   writeProjectInstallState
 } from "./project-install-state.js";
+import { uninstallProjects } from "./project-uninstall.js";
 import { listSkillFiles } from "./skill-metadata.js";
 import { canPromptInteractively, promptForMissingProviderCredential } from "./eval/interactive.js";
 import { inspectSkillEval } from "./eval/inspect-skill-eval.js";
@@ -1370,6 +1371,7 @@ Usage:
   vasir add [skill...] [--group <name>]... [--json] [--replace] [--agents-profile <name>] [--repo-root <path>] Copy skills into the current repo root at .agents/skills
   vasir adopt [--json] [--repo-root <path>]        Bring an existing .agents/skills tree under Vasir management without copying files
   vasir remove <skill> [skill...] [--json] [--repo-root <path>] Remove project-local skills from the current repo root
+  vasir uninstall [project-path...] [--repo-root <path>] [--dry-run] [--json] Back up and remove Vasir from one or more projects
   vasir agents sync [--scope <path>] [--profile <name>] [--json] [--dry-run] [--repo-root <path>] Reconcile root or nested root AGENTS.md from the canonical template and AGENTS__non-obvious.md
   vasir agents init <profile> [--json] [--replace] [--repo-root <path>] Write AGENTS.md from the canonical template plus a stack snippet
   vasir agents draft-purpose [--json] [--write] [--model <name>] [--repo-root <path>] Draft a repo-specific AGENTS purpose paragraph
@@ -1482,6 +1484,7 @@ function parseCommandInvocation(argumentVector) {
   let exitCodeRequested = false;
   let modelArguments = [];
   let projectRootArgument = null;
+  let repeatedProjectRoot = false;
   let replaceExistingSkills = false;
   let requestedTrialCount = null;
   let versionRequested = false;
@@ -1535,6 +1538,7 @@ function parseCommandInvocation(argumentVector) {
         });
       }
 
+      repeatedProjectRoot ||= projectRootArgument !== null;
       projectRootArgument = projectRootValue;
       argumentIndex += 1;
       continue;
@@ -1668,6 +1672,14 @@ function parseCommandInvocation(argumentVector) {
   }
 
   const commandName = positionalArguments[0] ?? "status";
+  if (commandName === "uninstall" && repeatedProjectRoot) {
+    throw new VasirCliError({
+      code: "INVALID_UNINSTALL_TARGETS",
+      message: "Uninstall accepts at most one --repo-root.",
+      suggestion: "Pass multiple project paths as positional arguments for a batch.",
+      docsRef: COMMANDS_REFERENCE_DOCS_REF
+    });
+  }
   return {
     commandName,
     commandArguments: positionalArguments.slice(1),
@@ -4150,12 +4162,12 @@ async function runSelectedCommand({
 
   if (
     dryRunRequested &&
-    !(commandName === "update" || (commandName === "agents" && commandArguments[0] === "sync"))
+    !(["update", "uninstall"].includes(commandName) || (commandName === "agents" && commandArguments[0] === "sync"))
   ) {
     throw new VasirCliError({
       code: "INVALID_COMMAND_FLAG",
-      message: "--dry-run is only supported by `vasir update` and `vasir agents sync`.",
-      suggestion: "Use `vasir update --dry-run` for skill refresh previews, or `vasir agents sync --dry-run` for AGENTS.md previews.",
+      message: "--dry-run is only supported by `vasir update`, `vasir uninstall`, and `vasir agents sync`.",
+      suggestion: "Run `vasir --help` to see the supported dry-run commands.",
       docsRef: COMMANDS_REFERENCE_DOCS_REF
     });
   }
@@ -4180,14 +4192,44 @@ async function runSelectedCommand({
 
   if (
     projectRootArgument !== null &&
-    !["status", "context", "doctor", "repair", "diff", "init", "update", "add", "adopt", "remove", "agents", "eval"].includes(commandName)
+    !["status", "context", "doctor", "repair", "diff", "init", "update", "add", "adopt", "remove", "uninstall", "agents", "eval"].includes(commandName)
   ) {
     throw new VasirCliError({
       code: "INVALID_COMMAND_FLAG",
       message: "--repo-root is only supported by repo-bound commands.",
-      suggestion: "Use `--repo-root <path>` with `vasir status`, `context`, `doctor`, `repair`, `diff`, `init`, `update`, `add`, `adopt`, `remove`, `agents`, or `eval`.",
+      suggestion: "Use `--repo-root <path>` with `vasir status`, `context`, `doctor`, `repair`, `diff`, `init`, `update`, `add`, `adopt`, `remove`, `uninstall`, `agents`, or `eval`.",
       docsRef: COMMANDS_REFERENCE_DOCS_REF
     });
+  }
+
+  if (commandName === "uninstall") {
+    const result = uninstallProjects({
+      projectRootArgument,
+      targetPaths: commandArguments,
+      currentWorkingDirectory,
+      dryRun: dryRunRequested
+    });
+    if (!jsonOutput) {
+      for (const project of result.projects) {
+        writeLine(stdoutWriter, project.projectRootDirectory);
+        if (project.entries.length === 0) {
+          writeLine(stdoutWriter, "  No Vasir project artifacts found.");
+        }
+        for (const entry of project.entries) {
+          writeLine(stdoutWriter, `  ${result.dryRun ? "Would remove" : "Removed"} ${entry.path}`);
+        }
+        for (const preservedPath of project.preservedPaths) {
+          writeLine(stdoutWriter, `  Preserved ${preservedPath}`);
+        }
+        for (const warning of project.warnings) {
+          writeLine(stdoutWriter, `  ${warning}`);
+        }
+        if (project.backupDirectory) {
+          writeLine(stdoutWriter, `  Backup: ${project.backupDirectory}`);
+        }
+      }
+    }
+    return result;
   }
 
   const projectRootDirectory = resolveProjectRootDirectoryFlag(projectRootArgument);

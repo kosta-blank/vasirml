@@ -54,7 +54,7 @@ function normalizeTrackedSkillEntry(rawSkillEntry) {
   };
 }
 
-function normalizeProjectInstallState(parsedInstallState) {
+export function normalizeProjectInstallState(parsedInstallState) {
   if (
     !parsedInstallState ||
     typeof parsedInstallState !== "object" ||
@@ -70,10 +70,11 @@ function normalizeProjectInstallState(parsedInstallState) {
     throw new Error("Unexpected install state schema.");
   }
 
-  const normalizedSkills = {};
-  for (const [skillName, rawSkillEntry] of Object.entries(parsedInstallState.skills)) {
-    normalizedSkills[skillName] = normalizeTrackedSkillEntry(rawSkillEntry);
-  }
+  const normalizedSkills = Object.fromEntries(
+    Object.entries(parsedInstallState.skills).map(([skillName, rawSkillEntry]) => [
+      skillName, normalizeTrackedSkillEntry(rawSkillEntry)
+    ])
+  );
 
   const catalog = parsedInstallState.catalog && typeof parsedInstallState.catalog === "object" && !Array.isArray(parsedInstallState.catalog)
     ? {

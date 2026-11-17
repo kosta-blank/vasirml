@@ -90,3 +90,29 @@ vasir add code-auditing code-crafting-dev-ux code-enforcing-principles code-fixi
 ```
 
 This retains other installed skills. Use `vasir remove <skill>` for deliberate removal, or `vasir add all --replace` to opt into the entire catalog.
+
+## Remove Vasir from projects
+
+Preview removal in the current project:
+
+```sh
+vasir uninstall --dry-run
+vasir uninstall
+```
+
+Remove it from several explicit project roots in one command (quote paths containing spaces):
+
+```powershell
+vasir uninstall "C:\Projects\app-one" "C:\Projects\app-two" --dry-run
+vasir uninstall "C:\Projects\app-one" "C:\Projects\app-two"
+```
+
+For one explicit root, `vasir uninstall --repo-root /path/to/project` is equivalent. Do not combine `--repo-root` with positional paths. Targets are not discovered recursively; nested projects must be handled separately. All targets are preflighted before changes begin.
+
+The command moves tracked skills, Vasir configuration/install state, local Vasir evaluation history, and identifiable generated root contracts into a timestamped `.vasir-backups/` directory inside each project. A tracked skill directory is removed as one bundle, including edits and user-added files inside it; all of those files remain in the backup. Separate untracked skill directories stay in place. Matching host skill aliases are removed without following their targets. Unrelated skills, authored contracts, and other host configuration remain; output lists preserved content. Ambiguous legacy ownership requires reconciliation rather than guessing which files belong to Vasir.
+
+Only root contracts bearing the current Vasir-generated ownership header are removed automatically. Older templates without that header and authored contracts are reported as preserved and need manual review. Empty shared `.agents`, `.codex`, or `.claude` containers may remain.
+
+The global CLI and global catalog remain installed. A dry run creates no backup or other files. A repeated uninstall reports no remaining managed installation. Runtime failures can leave earlier projects already processed; inspect the reported backups before retrying. Keep backups until you have checked the result.
+
+To start that project again later, run `vasir init`.
